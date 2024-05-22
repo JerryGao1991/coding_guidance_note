@@ -44,3 +44,45 @@ eg : var buttonInnerHTML = this.innerHTML;
 
        default: console.log(buttonInnerHTML);
      } 
+
+
+// constructor Function 构造函数
+eg:   function BellBoy (name, age, hasWorkPermit, languages) {
+        this.name = name;
+        this.age = age;
+        this.hasWorkPermit = hasWorkPermit;
+        this.languages = languages;
+      }     
+      var bellBoy1 = new BellBoy("Timmy", 19, true, ["French", "English"]);
+
+    1. 函数名的第一个字母必须大写。
+    2. 调用的时候前面要加关键字 new。
+
+
+// object method function:
+eg:   var bellboy1 = {
+        name: "Timmy",
+        age: 19,
+        hasWorkPermit: true,
+        languages: ["French", "English"],
+        moveSuitcase: function() {
+          alert("May I take your suitcase?");
+          pickUpSuitcase();
+          move();    
+        }
+      }   
+      bellboy1.moveSuitcase();
+
+
+// constructor Function with method
+eg:   function BellBoy (name, age, hasWorkPermit, languages) {
+        this.name = name;
+        this.age = age;
+        this.hasWorkPermit = hasWorkPermit;
+        this.languages = languages;
+        this.moveSuitcase = function() {
+          alert("May I take your suitcase?");
+          pickUpSuitcase();
+          move();    
+        }
+      }     
