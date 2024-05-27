@@ -85,4 +85,42 @@ eg:   function BellBoy (name, age, hasWorkPermit, languages) {
           pickUpSuitcase();
           move();    
         }
-      }     
+      }   
+      
+
+// 事件对象的传递机制:
+
+document.addEventListener("keypress", function(event) {
+    console.log(event.key);
+});
+在这段代码中：
+1. document.addEventListener("keypress", ...)：注册一个键盘按键事件的处理函数。
+2. 当用户按下键盘上的任意键时，keypress 事件触发。
+3. 浏览器创建一个 KeyboardEvent 对象，该对象包含了按键事件的详细信息。
+4. 浏览器调用注册的处理函数，并将 KeyboardEvent 对象作为参数传递给函数。
+5. 函数接收到 KeyboardEvent 对象，通过 event.key 可以访问按下的键。
+
+
+//callback function
+function anotherAddEventListener(typeOfEvent, callback) {
+  // detect event code...
+  var eventThatHappened = {
+    eventType: "keypress",
+    key: "p",
+    durationOfKeypress: 2
+  }
+
+  if(eventThatHappened.eventType === typeOfEvent) {
+    callback(eventThatHappened);
+  }
+}
+
+anotherAddEventListener("keypress", function(event) {
+  console.log(event);
+});
+
+// setTimeout function : 等待多长时间后，执行命令。
+eg:  setTimeout(function() {
+       activeButton.classList.remove("pressed"); 
+     }, 100);
+     
