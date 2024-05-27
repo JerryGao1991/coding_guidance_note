@@ -64,7 +64,7 @@ margin-inline-end：右边距
 eg: text-shadow: 5px 0 0 #232931; 
 
 /* 可以用 width: {百分比}; margin: auto; 来替代定义 margin-left 和margin-right
-   我的理解是 如果margin 为auto， 就是不设定。 比如 margin: 10% auto; 意思就是 上下10%的margin， 而左右没有。
+   margin: auto 存在的意思就是让块状元素在设定了宽度的前提下，边距自动计算，从而可以实现居中对齐。 比如 margin: 10% auto; 意思就是 上下10%的margin， 而左右自动计算，从而居中对齐。
 */
 
 // 类似的百分比的表示，一般是指相对于其父元素的百分比。eg： margin: 5%;
@@ -102,3 +102,84 @@ eg: text-shadow: 5px 0 0 #232931;
 
 // CSS for background image insert:  
    background-image: url("");
+
+// ul 的default value:   margin-top: 1em; margin-bottom: 1em; padding-left: 40px; list-style-type: disc;
+// 所以如果要清除格式， 一般可以:
+   margin: 0;
+   padding: 0;
+   list-style-type: none;
+
+// position 一般有：
+   static: 按正常排列， 不受 top，right，bottom，left的影响。
+   relative：相对其正常位置进行定位。
+   absolute：相对于最近的非static的祖先元素进行定位，如果没有这样的祖先元素，则相对于根元素进行定位。
+     // 实际操作中，可以将上一个元素设为 position: relative;
+   fixed: 相对于浏览器窗口进行定位，即使滚动页面，元素也会保持在浏览器的相对位置。
+
+// 箭头函数 和 常规函数 比较
+const toggleButton = document.getElementById('toggle-theme');
+
+toggleButton.addEventListener('click', () => {
+  document.body.classList.toggle('dark-theme');
+});
+
+const toggleButton = document.getElementById('toggle-theme');
+
+toggleButton.addEventListener('click', function() {
+  document.body.classList.toggle('dark-theme');
+});
+
+适合使用箭头函数的场景：
+回调函数：例如数组方法中的回调、事件处理程序等。
+需要继承外部 this 的函数：例如在类的方法中访问实例的属性。
+
+适合使用常规函数的场景：
+需要自己的 this 绑定：例如对象的方法。
+需要访问 arguments 对象：例如在需要传递可变参数的函数中。
+作为构造函数使用：例如定义构造函数和创建实例。
+
+// box-sizing 
+content-box（默认）：宽度和高度不包括内边距和边框。
+border-box：宽度和高度包括内边距和边框，有助于简化布局。
+//通常开发者会在整个文档中设置 box-sizing: border-box 以简化布局管理
+eg:  box-sizing: border-box;
+
+//scroll-behavior
+scroll-behavior: auto：默认行为，滚动立即发生。
+scroll-behavior: smooth：滚动时有平滑过渡效果，提高用户体验。
+eg:  html {
+       scroll-behavior: smooth;
+     }
+
+// text-decoration: none;     
+
+// cursor：
+default：默认光标（通常是箭头）。
+pointer：指针（通常是手形），表示该元素是可点击的。
+text：文本光标（通常是 I 形），表示该元素是可编辑的文本区域。
+move：移动光标（通常是十字箭头），表示该元素是可拖动的。
+not-allowed：禁止光标（通常是一个带斜杠的圆圈），表示该元素是不可点击的。
+wait：等待光标（通常是一个沙漏或旋转圆圈），表示程序正在处理。
+crosshair：十字线光标，通常用于精确选择。
+help：帮助光标（通常是一个问号），表示可以获得帮助。
+
+eg:  cursor: pointer;
+
+// class 的命名方法
+BEM（Block Element Modifier）方法
+
+Block：代表独立的功能块，例如 header、container。
+Element：代表块内的组成部分，用双下划线连接，例如 header__logo、container__item。
+Modifier：代表块或元素的变体，用双破折号连接，例如 button--primary、header__logo--large。
+示例：
+<div class="header">
+    <div class="header__logo header__logo--large"></div>
+    <nav class="header__nav">
+        <a class="header__nav-item header__nav-item--active">Home</a>
+        <a class="header__nav-item">About</a>
+    </nav>
+</div>
+
+// z-index:
+在具有position属性，且不为default的 static 时，才会生效。
+较大 z-index 的元素会显示在 较小的 z-index的元素之上。
