@@ -53,3 +53,49 @@ let 和 const 声明的变量有块级作用域，只在声明它们的代码块
 
 var 声明的变量有函数作用域，在函数内部任何地方都可以访问。
 在第二段代码中，blockVar 可以在整个 showBlockScope 函数内部访问，包括 if 块外部。
+
+
+//break 只能用于以下两种情况：
+1. 在循环结构中 (for, while, do...while).
+2. 在 switch 语句中。
+
+
+
+箭头函数：简洁且可以避免this 绑定的问题。
+const getRandomColor = () => {
+  // 函数体
+};
+上面的箭头函数实际等价于： 传统函数：
+function getRandomColor() {
+  // 函数体
+}
+
+
+// 函数表达式 vs 函数声明
+// 有两种定义函数的方法：函数声明和函数表达式。
+函数声明：
+function getRandomColor() {
+  const randomNum = Math.floor(Math.random() * colorList.length);
+  return colorList[randomNum];
+}
+这是一个传统的函数声明方式。它在 JavaScript 解析代码时被提升（hoisting），意味着它在定义之前就可以被调用。
+
+函数表达式：
+const getRandomColor = function() {
+  const randomNum = Math.floor(Math.random() * colorList.length);
+  return colorList[randomNum];
+};
+这里，我们使用一个匿名函数并将其赋值给一个变量 getRandomColor。这个函数表达式在定义之前不能被调用。
+
+箭头函数
+箭头函数是一种简写的函数表达式，语法更加简洁，并且在处理 this 关键字时有一些不同的行为。
+
+const getRandomColor = () => {
+  const randomNum = Math.floor(Math.random() * colorList.length);
+  return colorList[randomNum];
+};
+
+为什么使用 const
+使用 const 声明函数表达式（包括箭头函数）有几个好处：
+不可重新赋值：确保函数不会被意外地重新赋值。这对于代码的稳定性和可预测性非常重要。
+代码风格一致：当我们希望某个变量或函数在整个代码生命周期中保持不变时，使用 const 可以明确表达这一意图。
