@@ -99,3 +99,44 @@ const getRandomColor = () => {
 使用 const 声明函数表达式（包括箭头函数）有几个好处：
 不可重新赋值：确保函数不会被意外地重新赋值。这对于代码的稳定性和可预测性非常重要。
 代码风格一致：当我们希望某个变量或函数在整个代码生命周期中保持不变时，使用 const 可以明确表达这一意图。
+
+forEach: 只可以用于数组。
+eg: const array = [1, 2, 3, 4, 5];
+    array.forEach(function(element, index, array) {
+      console.log('Element:', element);
+      console.log('Index:', index);
+      console.log('Array:', array);
+    });
+
+在使用 forEach 方法时，这三个参数 (element, index, array) 并不是必须的，名字也可以改变。你可以根据需要选择性地使用它们。以下是对这三个参数的详细说明：
+element（必须）：当前数组元素，这是必须的参数。通常用来执行主要操作。
+index（可选）：当前元素的索引位置，这是可选的。
+array（可选）：当前被遍历的数组本身，这是可选的。
+
+如果你想跳过index，只用element 和array， 那你可以在index参数的位置上，用 占位符 _ 或者 undefined 来替代之。
+
+// if false value：
+false
+0 (数字零)
+-0 (负零)
+0n (BigInt 零)
+"" (空字符串)
+null
+undefined
+NaN (Not a Number)
+
+// event loop 事件循环
+事件循环的工作流程
+调用栈（Call Stack）：存放要执行的函数调用。当函数调用完成，它会从调用栈中移除。
+消息队列（Message Queue）：存放异步操作完成后需要执行的回调函数。
+事件循环（Event Loop）：不断检查调用栈是否为空。如果调用栈为空，它会将消息队列中的第一个回调函数推入调用栈执行。
+以下是一个简单的事件循环示例：
+
+console.log('Start'); // 1. 调用栈中执行
+
+setTimeout(() => {
+  console.log('Timeout callback'); // 4. 消息队列中的回调函数被推入调用栈执行
+}, 0);
+
+console.log('End'); // 2. 调用栈中执行
+// 3. 调用栈为空，事件循环检查消息队列，将回调函数推入调用栈

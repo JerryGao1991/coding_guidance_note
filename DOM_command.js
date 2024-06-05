@@ -16,6 +16,10 @@ document.querySelector().attributes; // get all the attributes that attached to 
 document.querySelector().getAttribute(); // get a specific attribute's value.
 document.querySelector().setAttribute("href", "https://www.bing.com");
 
+document.querySelector() 无法读取外部CSS的参数，只能读取inline的参数：
+window.getComputedStyle() 可以读取inline, intenal 和external CSS读取之后的最终参数。
+
+
 document.querySelector().addEventListener("{function.eg: click}", {function});
 eg : 1. document.querySelector().addEventListener("click", handleClick);
         function handleClick() {
@@ -123,4 +127,3 @@ anotherAddEventListener("keypress", function(event) {
 eg:  setTimeout(function() {
        activeButton.classList.remove("pressed"); 
      }, 100);
-     

@@ -183,3 +183,36 @@ Modifier：代表块或元素的变体，用双破折号连接，例如 button--
 // z-index:
 在具有position属性，且不为default的 static 时，才会生效。
 较大 z-index 的元素会显示在 较小的 z-index的元素之上。
+
+
+// 图片等比例增加或缩小方法：
+1. 使用 max-width 和 height: auto
+  .responsive-img {
+    max-width: 100%;
+    height: auto;
+  }
+2. 使用 width 和 height 设置百分比
+  .responsive-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 确保图片等比例缩放 */
+  }
+3. 使用 flexbox 和 align-items: center
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* 高度为视口高度 */
+  }
+  .responsive-img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+  }
+4. 使用 aspect-ratio（现代浏览器（直接设定比例）
+  .responsive-img {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* 设置宽高比为 16:9 */
+    object-fit: contain; /* 确保图片等比例缩放 */
+  }
