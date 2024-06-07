@@ -216,3 +216,141 @@ Modifier：代表块或元素的变体，用双破折号连接，例如 button--
     aspect-ratio: 16 / 9; /* 设置宽高比为 16:9 */
     object-fit: contain; /* 确保图片等比例缩放 */
   }
+
+
+// 固定头部导航栏：
+设置 body 的 margin-top 为 var(--header-height) 是为了在页面内容与固定头部（header）之间留出空间。这种做法通常用于拥有固定头部导航栏的网站布局中，以确保页面内容不会被固定头部遮挡。
+在许多网页设计中，头部导航栏是固定在页面顶部的。当用户滚动页面时，头部导航栏保持在视口的顶部，而页面内容在其下方滚动。为了确保页面内容不会被固定头部遮挡，需要在 body 或主要内容容器的顶部留出与头部相同高度的空间。
+eg：
+假设你的头部导航栏高度是 3rem，并且是固定定位的：
+/*
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fixed Header Example</title>
+<style>
+  :root {
+    --header-height: 3rem;
+  }
+
+  body {
+    margin: var(--header-height) 0 0 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    background-color: #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+</style>
+</head>
+<body>
+  <header class="header">
+    Fixed Header
+  </header>
+  <main class="main">
+    <p>This is the main content of the page. Scroll down to see more content.</p>
+    <p>More content...</p>
+    <p>Even more content...</p>
+    <p>And more...</p>
+    <p>Keep scrolling...</p>
+    <p>Almost there...</p>
+    <p>Reached the end!</p>
+  </main>
+</body>
+</html>
+*/
+
+// box-shadow
+是一个 CSS 属性，用于在元素的框周围添加阴影效果。该属性可以创建内阴影或外阴影，并且可以控制阴影的颜色、模糊半径、扩展半径以及阴影的位置。下面是 box-shadow 属性的详细说明和使用示例：
+box-shadow: [inset] offset-x offset-y blur-radius spread-radius color;
+参数说明
+inset（可选）：指定为内阴影。如果不使用 inset，则为外阴影。
+offset-x：阴影相对于元素框的水平偏移。正值表示向右，负值表示向左。
+offset-y：阴影相对于元素框的垂直偏移。正值表示向下，负值表示向上。
+blur-radius（可选）：模糊半径。值越大，阴影越模糊。默认为 0，表示阴影是锐利的。
+spread-radius（可选）：扩展半径。正值使阴影扩大，负值使阴影缩小。
+color（可选）：阴影的颜色。如果不指定，默认使用元素的文本颜色。
+eg: 
+.box {
+  width: 200px;
+  height: 200px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+}
+此示例中，阴影向右和向下偏移 10 像素，模糊半径为 5 像素，颜色为半透明的黑色
+
+
+/* transition 用法 */
+用于控制元素属性变化时的过渡效果。它可以使元素的属性变化变得更加平滑
+transition: property duration timing-function delay;
+eg:
+过度单个属性：
+  .box {
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+    transition: background-color 0.5s ease;
+  }
+
+  .box:hover {
+    background-color: red;
+  }
+过度多个属性：
+  .box {
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+    transition: width 0.5s ease, height 0.5s ease, background-color 1s ease;
+  }
+
+  .box:hover {
+    width: 200px;
+    height: 200px;
+    background-color: red;
+  }
+
+// grid layout
+// default setup will try to take up the full width, but only content-height for height, so normally no need to set height, or you can set the height as 100vh  
+一些常见的参数和它可能对应的values:
+for grid container:
+display: grid;
+grid-template-columns: 1fr 2fr;   (can be fraction, can be pixels(not responsive), or em、rem(not responsive))
+grid-template-rows: 1fr 1fr;
+gap: 10px;
+grid-template: 100px 200px / 400px 800px;  (100px 200px is for rows, 400px 800px stands for columns)
+grid-template-columns: 100px auto; (给予了一些responsiveness， 因为default width会尝试占据full width)
+grid-template-rows: 100px auto;     (给予了一些responsiveness， 因为 height会尝试fit content)
+grid-template-columns: 200px minmax(400px, 800px);
+grid-template-columns: repeat(2, 200px);
+// warning: eg: 如果你定义了 2*2 的grid, 但是你实际有五个div，那么最后一个div的显示方式会为：width和设定的column保持一致，row的height为content height.
+// 所以，你可以设置 eg: grid-auto-rows: 200px; 这样的话，一旦你有新的div进来，那么你便可以很好地控制他的大小。
+
+for grid items:
+// 如果想控制每个item的位置，例如居中，我们可以在 grid item里引入 flex。grid + flex 是很好的排列方法。
+// 最左上角的“坐标” 为 (1, 1)
+grid-column: span 2;// equals to grid-column: span 2 / auto; equals to grid-column-start: span 2; grid-column-end: auto;从自动分配的网格线开始， 跨越 2 列。 负数 -1 代表 最右边（针对column）
+                    // 反过来也没问题，表示的面积是一致的。 eg: grid-column-start: 2; grid-column-end: 4;  ==   grid-column-start: 4; grid-column-end: 2;
+                                                      eg: grid-column-start: span 2; grid-column-end: auto;  ==   grid-column-start: auto; grid-column-end: span 2;
+order: 1;   // 这个order 决定了 grid item的顺序， default 所有的items都为0, 设为1，则在后面，设为-1 则在前面。 这个数值是相对的，最大的在最后，最小的在最前。
+grid-area: 2 / 1 / 3 / 3;   ==   grid-column-start: 1; grid-column-start: 3; grid-row-start: 2; grid-row-end: 3;
+
+
+// color 
+1. rgb:  #E58331 == R:58; G:83; B:31;      #E5833180 == R:58; G:83; B:31; Alpha:80; (这个80大概等于50%的透明度)
+2. hsl:  hsl(171, 64%, 15%);  ==  hue:171; saturation: 64%; brightness:15%;     hsla(171, 64%, 15%, .15);  ==  hue:171; saturation: 64%; brightness:15%; Alpha: 15%; 
