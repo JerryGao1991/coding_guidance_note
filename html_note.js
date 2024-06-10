@@ -354,3 +354,123 @@ grid-area: 2 / 1 / 3 / 3;   ==   grid-column-start: 1; grid-column-start: 3; gri
 // color 
 1. rgb:  #E58331 == R:58; G:83; B:31;      #E5833180 == R:58; G:83; B:31; Alpha:80; (这个80大概等于50%的透明度)
 2. hsl:  hsl(171, 64%, 15%);  ==  hue:171; saturation: 64%; brightness:15%;     hsla(171, 64%, 15%, .15);  ==  hue:171; saturation: 64%; brightness:15%; Alpha: 15%; 
+
+
+// 图片全屏布景图的实现 一个方法。
+eg : .home__img {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100vh;
+       object-fit: cover;
+       object-position: 83%;
+     }
+position: absolute;：将 .home__img 元素的定位设置为绝对定位，使其脱离文档流，相对于其最近的定位祖先进行定位（如果没有，则相对于初始包含块）。
+top: 0; 和 left: 0;：将元素定位在包含块的左上角。
+width: 100%; 和 height: 100vh;：设置元素的宽度为其包含块的 100%，高度为视口高度的 100%（即全屏高度）。
+object-fit: cover;：确保图像的内容覆盖整个元素的宽高，同时保持图像的宽高比。图像可能会被裁剪，以适应元素的宽高。
+object-position: 83%;：调整图像在元素中的位置，将图像垂直偏移，使其中心位置位于元素高度的 83% 处。这个图像的内容会水平和垂直都偏移到容器的 83% 位置。
+// ps: object-position: 50% 83%; 表示图像的内容在水平上居中（50%），在垂直上偏移到 83%。
+
+
+// position: relative; 会创建了一个新的层叠上下文， 会让其类似于向上升一层的效果。
+eg：   .home__img 的position: abosolute; 会让其脱离文档流（不会再推挤相邻元素），按父元素.home 定位（从而和父元素一级？）置于原来的同级的.home__container之上。
+       当 .home__container 从position: static; 改为 position: relative; 会让其置于 .home__img 之上。
+/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Position Relative Example</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  .home {
+    position: relative;
+  }
+
+  .home__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    object-position: 83%;
+  }
+
+  .home__container {
+    position: relative;       创建新的层叠上下文 
+  }
+
+  .home__data {
+    position: relative;
+    color: white;
+    padding: 20px;
+  } 
+</style>
+</head>
+<body>
+  <section class="home" id="home">
+    <img src="https://via.placeholder.com/1920x1080" alt="Background Image" class="home__img">
+    <div class="home__container container grid">
+      <div class="home__data">
+        <span class="home__data-subtitle">Discover your place</span>
+        <h1 class="home__data-title">Explore The <br> Best <b>Beautiful <br> Beaches</b></h1>
+        <a href="#" class="button">Explore</a>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
+*/
+
+// 文档流， 脱离文档流。
+文档流： 在标准的文档流中，元素按照它们在 HTML 中出现的顺序从上到下，从左到右依次布局。
+脱离文档流： 使其在布局时不再占据空间，也不影响其他元素的布局。常见的使元素脱离文档流的属性有 position、float 和 display
+position里absolute 和 fixed 会脱离文档流。
+
+
+// grid 也可以用 justify-content, align-items, 和 align-content：
+在 CSS Grid 布局中，align-content、align-items 和 justify-content 这些属性同样可以起作用。尽管这些属性在 Flexbox 布局中也被广泛使用，但它们在 Grid 布局中的作用是类似的，用于控制网格容器内项目的对齐方式。
+1. align-content
+align-content 控制的是整个网格内容块在容器内的垂直对齐方式。当网格内容的总高度小于容器高度时，align-content 会生效。
+可选值：start, end, center, stretch, space-around, space-between, space-evenly
+2. align-items
+align-items 控制的是网格项目（单元格）在网格区域内的垂直对齐方式。
+可选值：start, end, center, stretch
+3. justify-content
+justify-content 控制的是整个网格内容块在容器内的水平对齐方式。当网格内容的总宽度小于容器宽度时，justify-content 会生效。
+可选值：start, end, center, stretch, space-around, space-between, space-evenly
+
+// width: max-content;
+width: max-content;：使元素的宽度根据内容的最大宽度自动调整，不会换行。相反，假如设定了固定宽度例如， width: 100px; 那假如内容超出，则会超过元素的限制。
+适用场景：适用于需要自适应内容宽度的情况，例如按钮、标签、导航菜单等。
+
+// overflow 
+visible：默认值，内容不会被剪裁，会溢出容器。
+hidden：内容会被剪裁，溢出部分不可见。
+scroll：内容会被剪裁，溢出部分可滚动查看。
+auto：如果内容溢出，浏览器会自动提供滚动条查看溢出部分。
+overflow: hidden; 是用于控制一个元素的内容在其容器中溢出时的显示方式。具体来说，它会隐藏溢出的内容，使其不显示在元素的边界之外。这个属性对于处理内容溢出的问题非常有用。
+
+// scale
+scale() 是一个用于变换（transform）的函数。它可以用于缩放元素，使元素在 X 和 Y 轴方向上按比例放大或缩小。
+eg: scale(1.1);  scale(1.1) 表示将元素按 1.1 倍的比例缩放，即：宽度放大 1.1 倍。高度放大 1.1 倍。
+用法eg:
+  .image-container img {
+    width: 100%;
+    transition: transform 0.5s;
+  }
+
+  .image-container:hover img {
+    transform: scale(1.1);
+  }
+
+//

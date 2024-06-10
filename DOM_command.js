@@ -2,8 +2,8 @@ document.firstElementChild;
 document.lastElementChild;
 document.querySelector();      // return the first element. can select element, class, or ID.
 document.querySelectorAll();    // return an array, get all the elements satisfy the condition.
-document.getElementsByTagName(); // return an array.
-document.getElementsByClassName(); // return an array.
+document.getElementsByTagName(); // return an array like HTML collection. cannot use array method(forEach, map, filter) 可以通过 Array.from 转换成数组。 eg: Array.from(object)
+document.getElementsByClassName(); // return an array like HTML collection. cannot use array method(forEach, map, filter) 可以通过 Array.from 转换成数组。 eg: Array.from(object)
 document.getElementsById(); // return the first element. Actually only one element. because it is id. 
 
 document.querySelector().classList.add(); // add a class to an selected element.
