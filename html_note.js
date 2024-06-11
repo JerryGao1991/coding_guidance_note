@@ -352,7 +352,7 @@ grid-area: 2 / 1 / 3 / 3;   ==   grid-column-start: 1; grid-column-start: 3; gri
 
 
 // color 
-1. rgb:  #E58331 == R:58; G:83; B:31;      #E5833180 == R:58; G:83; B:31; Alpha:80; (这个80大概等于50%的透明度)
+1. rgb:  #E58331 == R:E5; G:83; B:31;      #E5833180 == R:E5; G:83; B:31; Alpha:80; (这个80大概等于50%的透明度)
 2. hsl:  hsl(171, 64%, 15%);  ==  hue:171; saturation: 64%; brightness:15%;     hsla(171, 64%, 15%, .15);  ==  hue:171; saturation: 64%; brightness:15%; Alpha: 15%; 
 
 
