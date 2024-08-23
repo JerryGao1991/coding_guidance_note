@@ -1,0 +1,127 @@
+#include <stdio.h>    // always exist at beginning of your script, it is a header file library.
+
+C 一般 printf， 没有print这个函数。
+
+// 不同编程语言中数据类型的内存大小可能有所不同，具体大小通常取决于以下几个因素：
+
+// 编程语言：不同编程语言可能对数据类型有不同的定义和实现。
+// 编译器：同一编程语言的不同编译器可能会对数据类型的大小有不同的实现。
+// 平台/架构：数据类型的大小通常也依赖于运行程序的硬件架构（如 32 位或 64 位）。
+// 以下是一些常见编程语言中数据类型的内存大小概览：
+
+// 1. C 语言
+int: 2 或 4 字节，取决于平台（16 位系统上通常为 2 字节，32 位或 64 位系统上通常为 4 字节）。
+float: 4 字节。
+double: 8 字节。
+char: 1 字节。
+
+// 2. C++ 语言
+C++ 的数据类型大小通常与 C 一致，但也可能根据具体的编译器或平台而有所不同。
+
+int: 通常是 4 字节（在 32 位和 64 位系统上）。
+float: 4 字节。
+double: 8 字节。
+char: 1 字节。
+
+// 3. Java 语言
+Java 的数据类型大小是平台无关的，它们由 Java 语言规范定义，因此在任何平台上都是一致的。
+
+int: 4 字节。
+float: 4 字节。
+double: 8 字节。
+char: 2 字节（Java 的 char 是 16 位 Unicode 字符）。
+
+// 4. Python 语言
+Python 是一种动态类型语言，变量的类型和大小由对象的实际内容决定。
+
+int: 在 Python 3 中，int 是任意精度的整数类型，所以它的大小可以根据值的大小动态调整。实际存储时大小取决于底层实现。
+float: 8 字节（通常对应于 C 语言的 double）。
+char: Python 没有单独的 char 类型，字符串中的每个字符是一个长度为 1 的字符串。
+
+// 5. JavaScript
+JavaScript 是一种动态类型语言，所有数字都存储为双精度浮点数。
+
+Number: JavaScript 的 Number 类型是 8 字节的双精度浮点数。
+String: 字符串在 JavaScript 中是 UTF-16 编码的，通常每个字符占用 2 字节。
+
+// 6. C# 语言
+C# 的数据类型大小与平台无关，由 .NET 框架定义。
+
+int: 4 字节。
+float: 4 字节。
+double: 8 字节。
+char: 2 字节（C# 的 char 是 16 位 Unicode 字符）。
+
+// 总结
+平台依赖：C 和 C++ 的数据类型大小可能因平台而异，特别是在不同的硬件架构上。
+平台无关：Java、C# 等语言的数据类型大小通常是平台无关的，语言规范规定了每种数据类型的大小。
+动态类型语言：Python 和 JavaScript 等动态类型语言的数据类型大小由运行时环境决定，通常与底层实现相关。
+
+
+// 整数除法和浮点数除法， 和其带来的转换问题。
+整数除法： C, C++, Java  (所以要进行显式转换)
+eg: 
+int a = 5;
+int b = 2;
+float result = a / b;  // 结果是 2.0
+result = (float) a / b;  // 结果是 2.5
+
+浮点数除法：python, javascript 
+eg:
+result = 5 / 2  # 结果是 2.5
+
+
+// array 在各个编程语言中的表现形式：
+// C:
+int myNumbers[] = {25, 50, 75, 100};
+// java:
+int[] myNumbers = {25, 50, 75, 100};   // 也可以像C 一样这么写: int myNumbers[] = {25, 50, 75, 100};   但java实际开发中一般还是把 [] 放在变量名前面。
+// python:
+myNumbers = [25, 50, 75, 100]
+// javascript: 
+let myNumbers = [25, 50, 75, 100];
+
+//主要差异点
+大小是否固定：C、C++、Java、C# 中的数组在声明时大小固定；Python、JavaScript、Ruby 中的数组（或列表）可以动态调整大小。
+类型检查：静态类型语言（如 C、C++、Java、C#）的数组通常只能存储同一类型的数据。动态类型语言（如 Python、JavaScript、Ruby）的数组（或列表）可以包含不同类型的元素。
+数组 vs 列表：一些语言，如 Python 和 Ruby，更常用动态列表而不是静态数组；C++ 和 C# 提供了既有静态数组又有动态数组（或类似的集合）。
+
+// array length:
+// sizeof
+int myNumbers[] = {10, 25, 50, 75, 100};
+int length = sizeof(myNumbers) / sizeof(myNumber[0]);
+printf("%d", length); // print 5
+
+// multi dimensional arrays 
+int matrix[2][3] = { {1, 4, 2}, {3, 6, 8} };
+matrix[0][0] = 9;
+printf("%d", matrix[0][0]);  // Now outputs 9 instead of 1
+
+// string:
+char greetings[] = "Hello World!"; 
+
+
+// function:（注意，必须始终是 int main来执行主程序！！！ regardless of any return data type）
+带返回内容：（某个data type 来替代 void）
+int myFunction(int x) {
+  return 5 + x;
+}
+
+int main() {
+  printf("Result is: %d", myFunction(3));
+  return 0;
+}
+
+不带返回内容：（void）
+void myFunction(int myNumbers[5]) {
+  for (int i = 0; i < 5; i++) {
+    printf("%d\n", myNumbers[i]);
+  }
+}
+
+int main() {
+  int myNumbers[5] = {10, 20, 30, 40, 50};
+  myFunction(myNumbers);
+  return 0;
+}
+
