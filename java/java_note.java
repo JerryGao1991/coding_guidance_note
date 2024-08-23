@@ -313,16 +313,16 @@ public class Main {
   }
 }
 
-// public method 和 static method
-// public 必须通过创建 object 来调用， static 可以直接调用。
-
+// static method
+// 非static 必须通过创建 object 来调用， static 可以直接调用。
+// eg 1
 public class Main {
   // Static method
   static void myStaticMethod() {
     System.out.println("Static methods can be called without creating objects");
   }
 
-  // Public method
+  // 非 static method
   public void myPublicMethod() {
     System.out.println("Public methods must be called by creating objects");
   }
@@ -333,11 +333,31 @@ public class Main {
     // myPublicMethod(); This would compile an error
 
     Main myObj = new Main(); // Create an object of Main
-    myObj.myPublicMethod(); // Call the public method on the object
+    myObj.myPublicMethod(); // Call the method on the object
   }
 } 
+// eg 2
+public class MyClass {
+    static int count = 0;
 
-// eg
+    public static void incrementCount() {
+        count++;
+    }
+
+    public static void displayCount() {
+        System.out.println("Count: " + count);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyClass.incrementCount();
+        MyClass.incrementCount();
+        MyClass.displayCount(); // 输出：Count: 2
+    }
+}
+
+// eg 3
 public class Main {
  
   // Create a fullThrottle() method
@@ -357,6 +377,7 @@ public class Main {
     myCar.speed(200);          // Call the speed() method
   }
 }
+
 
 // printf 在多种编程语言中的用法：
 主要格式说明符：
@@ -405,3 +426,57 @@ for (int number : numbers) {
 }
 
 // 一些语言中的数组大小在创建时固定（如 C、C++、Java、C#），而其他语言（如 Python、JavaScript、Ruby、Swift）则支持动态数组，可以在运行时调整大小。
+
+
+// java 访问修饰符
+// public , protected, default, private
+// public：方法可以被任何其他类访问。
+// protected：方法可以被同一个包中的类或任何子类访问。
+// 默认（包级访问）：没有访问修饰符时，方法只能被同一个包中的类访问。
+// private：方法只能在同一个类中访问，其他类无法访问。
+eg:
+// 文件：MyClass.java
+public class MyClass {
+    // Public 方法
+    public void publicMethod() {
+        System.out.println("This is a public method.");
+    }
+
+    // Default (Package-private) 方法
+    void defaultMethod() {
+        System.out.println("This method has default (package) access.");
+    }
+
+    // Protected 方法
+    protected void protectedMethod() {
+        System.out.println("This is a protected method.");
+    }
+
+    // Private 方法
+    private void privateMethod() {
+        System.out.println("This is a private method.");
+    }
+
+    // 方法用于测试 privateMethod 的访问性
+    public void accessPrivateMethod() {
+        privateMethod(); // 内部调用 private 方法是允许的
+    }
+}
+
+// 文件：AnotherClass.java
+public class AnotherClass {
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+
+        // 尝试调用各种方法
+        obj.publicMethod(); // 可以调用，因为它是 public 的
+
+        obj.defaultMethod(); // 可以调用，因 AnotherClass 和 MyClass 在同一个包中
+
+        obj.protectedMethod(); // 可以调用，因 AnotherClass 和 MyClass 在同一个包中
+
+        // obj.privateMethod(); // 编译错误！无法直接调用 private 方法
+
+        obj.accessPrivateMethod(); // 可以调用，通过公共方法间接调用 private 方法
+    }
+}
