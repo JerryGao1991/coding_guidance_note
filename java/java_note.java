@@ -480,3 +480,25 @@ public class AnotherClass {
         obj.accessPrivateMethod(); // 可以调用，通过公共方法间接调用 private 方法
     }
 }
+
+// Java JDK 结构:
+JVM（Java Virtual Machine）位于最内层，它是负责执行 Java 字节码的虚拟机。
+JRE（Java Runtime Environment）包含 JVM 以及运行 Java 程序所需的类库和资源。
+JDK（Java Development Kit）是最外层的，它包含 JRE 以及用于开发 Java 应用程序的工具，如 Java 编译器（javac）、Java 调试器（jdb）、Java 文档生成器（javadoc）和 Java 打包工具（jar）等。
+
+Java源码本质上是一个文本文件，我们需要先用javac把Hello.java编译成字节码文件Hello.class，然后，用java命令执行这个字节码文件：
+
+┌──────────────────┐
+│    Hello.java    │◀── source code
+└──────────────────┘
+          │ compile
+          ▼
+┌──────────────────┐
+│   Hello.class    │◀── byte code
+└──────────────────┘
+          │ execute
+          ▼
+┌──────────────────┐
+│    Run on JVM    │
+└──────────────────┘
+
