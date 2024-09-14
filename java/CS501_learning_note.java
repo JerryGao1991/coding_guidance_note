@@ -354,3 +354,195 @@ num = Float.parseFloat(str);
 
 // 浮点数在java里会默认为 double 而不是float
 例如 4.0 会被当成double, 如果要float 则要写成 4.0f
+// 操作数类型提升规则：
+在 Java 中，当你对 short、byte、或 char 类型的变量进行算术运算时，Java 会自动将这些类型提升为 int 类型。这意味着即使 intNum 和 a 都是 short 类型，intNum + a 的结果类型也会被提升为 int 类型。
+
+// 二进制补码
+// 在 Java 中，整数溢出是由二进制补码表示法（Two's Complement）引发的。当你在 short 类型中对数字进行运算并超出其表示范围时，溢出会导致数值从最大正数翻转为最小负数。我们可以通过理解 二进制补码 来解释这个现象。
+// 1. 二进制补码表示法简介
+// 在计算机中，有符号整数通常使用 二进制补码来表示：
+// 正数和负数都可以用二进制来表示。
+// 最高位（最左边的位）是符号位：
+// 最高位为 0 表示正数。
+// 最高位为 1 表示负数。
+// 正数的二进制表示与无符号二进制数相同。
+// 负数通过取正数的补码（将所有位取反然后加 1）来表示。
+// 2. short 类型的范围
+// 在 Java 中，short 是 16 位有符号整数。
+// short 类型的范围是 -32768 到 32767：
+// 32767 的二进制表示为：0111 1111 1111 1111（最高位 0 表示正数）。
+// -32768 的二进制表示为：1000 0000 0000 0000（最高位 1 表示负数）。
+// 3. 溢出是如何发生的？
+// 当我们在 short 类型的最大正数（32767）的基础上加 1 时，结果超出了 short 类型的正数范围。这时，二进制数在运算时会发生进位，导致最高位从 0 变为 1，这就会导致结果被解释为负数。
+
+
+// The operators should not be used with strings; string comparison methods equals() and compareTo() will be used instead.
+// Floating-point types should not be compared using the equality operators, due to the imprecise representation of floating-point numbers
+
+// logical operator (&&、||) 在所有优先级里排在最后
+// && 的 优先级 比 || 高:
+x == 5 || y == 10 && z != 10 is evaluated as (x == 5) || ((y == 10) && (z != 10)) because && has precedence over ||.
+
+// switch syntax:
+// expression: integer, char, string (boolean, floating-point not allowed)
+// case expression cannot be a variable
+switch (expression) {
+   case constantExpr1: 
+      // Statements
+      break;
+
+   case constantExpr2:
+      // Statements
+      break;
+   
+   ...
+   
+   default: // If no other case matches
+      // Statements
+      break;
+}
+
+// switch 里 的 fall-through 行为:
+// 如果某个 case 分支中没有 break;，那么程序会继续执行后续的 case 分支代码，即使这些分支的条件不匹配当前的 case 值。
+char userChar = 'E';
+int encodedVal;
+
+switch (userChar) {
+   case 'B':
+      encodedVal = 2;
+      break;
+   case 'C':
+   case 'D':
+      encodedVal = 4;
+      break;
+   case 'E':
+      encodedVal = 5;  // 进入 case 'E'，encodedVal 现在是 5
+      // 没有 break;，fall-through 继续执行下面的 case
+   case 'F':
+      encodedVal = 6;  // 继续执行 case 'F' 的代码，encodedVal 被重置为 6
+      break;
+   default:
+      encodedVal = -1;
+      break;
+}
+
+System.out.println("Encoded value: " + encodedVal);  // Encoded value: 6
+
+
+// Using Boolean variables to simplify expressions.
+/*
+An expression that combines logical and relational operators can be simplified by assigning boolean variables with the result of the expression using relational operators. 
+The if-else expression can then consist of only logical operations using those variables.
+*/
+isHot = (currentTemp > desiredTemp);
+isReallyHot = (currentTemp > (desiredTemp + 5.0));
+isHumid = (currentHumidity > 0.50);
+   
+if (isReallyHot) {
+   // Use A/C and evaporative cooler
+   acOn = true;
+   evapCoolerOn = true;
+}
+else if (isHot && isHumid) {
+   // Use A/C
+   acOn = true;
+   evapCoolerOn = false;
+}
+else if (isHot && !isHumid) {
+   // Use evaporative cooler
+   acOn = false;
+   evapCoolerOn = true;
+}
+else {
+   acOn = false;
+   evapCoolerOn = false;
+}
+
+
+// char 的比较:
+// char是原始数据类型， 比较和equality 都用 : <, >, ==, >=, <=
+// 比较 ASCII 十进制码
+
+// String的比较
+equals()：比较的是字符串的内容，因此是判断两个字符串值是否相等的正确方式。 // str1.equals(str2)
+equalsIgnoreCase()                                              // 忽略大小写
+==：比较的是对象的引用，只有当两个字符串引用的是同一个对象时，才会返回 true。
+
+| 语言          | 运算符      | 比较内容                  | 备注                                                           |
+|---------------|-------------|---------------------------|----------------------------------------------------------------|
+| **Python**    | `==`        | 比较字符串的内容           | 推荐使用 `==` 比较内容。                                        |
+| **Python**    | `is`        | 比较对象是否是同一个实例    | `is` 比较的是引用，判断两个对象是否指向相同的内存地址。          |
+| **JavaScript**| `==`        | 比较字符串的内容           | `==` 会进行类型转换，比较不同类型时可能会产生意外结果。         |
+| **JavaScript**| `===`       | 严格比较内容和类型         | 推荐使用 `===` 进行字符串比较，避免隐式类型转换带来的问题。     |
+
+// String relational compare:
+字符编码比较：字符串比较时会使用字符的编码（例如 ASCII 值）来逐字符进行比较。   // 因为 'A' 的 ASCII 编码 65 小于 'a' 的 97，所以 "Apples" 被认为小于 "apples"。
+逐字符比较：从索引 0 开始比较，直到找到第一个不同的字符或者比较到字符串的末尾。  // "Banana" 大于 "Apple"，因为 'B'（66）的编码大于 'A'（65）。
+大写 vs 小写：大写字母的编码比小写字母小，例如 'A'（65）小于 'a'（97）。
+长度影响：如果两个字符串的所有字符都相同，但其中一个字符串更短，那么较短的字符串被认为较小。 // "Apple" 比 "Apples" 小，因为 "Apple" 短于 "Apples"，尽管前 5 个字符相同。
+
+compareTo() 
+str1.compareTo(str2)
+compareToIgnoreCase()       // 忽略大小写
+返回值：
+负数：str1 小于 str2（按字母顺序靠前）。
+零：str1 等于 str2。
+正数：str1 大于 str2（按字母顺序靠后）。
+
+// userString = "Run!";
+// x = userString.charAt(4);    // return error
+
+// 注意原本是 String, 假如 charAt() 取了某个单个字符， 则取的这个单个字符的 类型是 char
+
+// character(char) method:    注意 只有char类型能用!!
+Character.isLetter(c)
+Character.isDigit(c)         //  isDigit('x')  false
+                             //  isDigit('6')  true
+Character.toUpperCase(c)     //  toUpperCase('3')   3
+Character.isWhitespace(c)    //  isWhitespace(' ')  true
+                             //  isWhitespace('\n') true
+Character.toLowerCase(c)     //  toLowerCase('3')   3
+
+// String (String) method
+indexOf()        // str.indexOf('z')  str.indexOf("me")     return indexnum; if cannot find, return -1
+lastIndexOf()    // str.lastIndexOf()                       return indexnum; if cannot find, return -1
+substring()      // str.substring()
+                 //     substring(startIndex)               startIndex(inclusive)直到最后
+                 //     substring(startIndex, endIndex)     startIndex(inclusive) 到 endIndex(exclusive)
+                 //     startIndex 是 inclusive， endIndex 是 exclusive
+concat()         // char 也能用 ！
+replace()        // char 也能用 ！ 
+str1 + str2
+str1 += str2
+
+// char 和 String的 method 总结:
+1. is类的那些只有char 类型能用!!
+2. 比较值大小和是否相等:
+   char  : >, >=, ==, <, <=
+   String: equals(), compareTo()
+
+// String is immutable , string的不可变性: (可以参考 java_note.java 笔记里的内容)
+// 如果要改变变量的字符串，可以重新赋值
+// userText = userText.concat("ning")
+
+// conditional expression 条件表达式
+if (condition) {
+  myVar = expr1;
+}
+else {
+  myVar = expr2;
+}
+
+myVar = (condition) ? expr1 : expr2;
+
+// floating-point number comparison 浮点数的比较
+浮点数不应使用 == 进行直接比较，因为浮点数在计算机中存储时，由于精度限制，不能精确表示某些值。
+由于这些精度问题，两个浮点数即使看起来相等，也可能并不完全相等。
+正确比较方法示例:
+Math.abs(x - y) < 0.0001          // 这表示如果 x 和 y 之间的差值小于 0.0001，则认为它们相等。
+Epsilon 是用于判断浮点数相等的差值阈值, Epsilon 的值取决于程序的具体要求和浮点数的预期范围，但常用值为 0.0001
+
+// loop issue remainder:
+从 0 开始循环已成为标准，便于与数组等数据结构统一。
+++i 更安全，初学者应优先使用前缀形式的自增操作符。
+如有可能哈哈，避免在循环中声明变量，有助于降低初学者的出错率。
