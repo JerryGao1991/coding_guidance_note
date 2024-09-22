@@ -48,6 +48,7 @@ txt.length()
 txt.toUpperCase()
 txt.toLowerCase()
 txt.indexOf()
+txt.substring()
 eg:
 String txt = "Please locate where 'locate' occurs!";
 System.out.println(txt.indexOf("locate")); // Outputs 7
@@ -192,7 +193,120 @@ print(c.sell())  # 输出: Selling Price: 1000
 // print(dog.speak())  # 输出: Buddy says Woof!
 // print(cat.speak())  # 输出: Whiskers says Meow!
 
-//如何理解多态？
+// 继承的关键概念在 Java 中的实现：
+Java 也可以通过创建父类和子类来实现继承。子类可以重用父类的属性和方法，同时可以重写父类的方法来实现不同的行为。
+1. extends 关键字：在 Java 中，子类通过 extends 关键字继承父类。比如 Dog extends Animal 表示 Dog 继承了 Animal。
+2. super() 调用父类构造方法：子类的构造方法可以通过 super() 调用父类的构造方法。比如 super(name) 用来调用父类的构造函数，并初始化 name。
+3. 方法重写（Override）：子类可以通过使用 @Override 注解来重写父类的方法，提供自己的实现。比如 Dog 和 Cat 分别重写了 speak() 方法。
+4. protected 访问控制：在 Java 中，如果父类的属性是 protected，子类可以直接访问父类的属性。否则，子类必须通过 getter/setter 方法来访问父类的私有属性。
+
+eg:
+// 父类
+public class Animal {
+    protected String name; // 子类可以访问父类的protected属性
+
+    // 构造方法
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    // 抽象的行为方法
+    public void speak() {
+        System.out.println("This is an animal.");
+    }
+}
+// 子类
+public class Dog extends Animal {
+
+    // 构造方法
+    public Dog(String name) {
+        super(name); // 调用父类构造方法
+    }
+
+    // 重写父类的 speak 方法
+    @Override
+    public void speak() {
+        System.out.println(name + " says Woof!");
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        // 创建 Dog 和 Cat 对象
+        Dog dog = new Dog("Buddy");
+        Cat cat = new Cat("Whiskers");
+
+        // 调用 speak 方法
+        dog.speak();  // 输出: Buddy says Woof!
+        cat.speak();  // 输出: Whiskers says Meow!
+    }
+}
+
+// 多态
+多态是面向对象编程（OOP）中的一个核心概念，允许同一操作在不同对象上表现出不同的行为。多态有两种主要形式：
+编译时多态（静态多态）：通过方法重载（Method Overloading）实现。
+运行时多态（动态多态）：通过方法重写（Method Overriding）和父类引用指向子类对象来实现。
+1. 编译时多态（静态多态） - 方法重载
+编译时多态通过方法重载实现，也就是说，同一个类中可以有多个方法，它们具有相同的方法名，但参数的类型或数量不同。编译器会根据参数类型或数量来决定调用哪个方法。
+eg:
+public class OverloadExample {
+    
+    // 同名方法：参数不同
+    public void print(int num) {
+        System.out.println("Integer: " + num);
+    }
+
+    public void print(String str) {
+        System.out.println("String: " + str);
+    }
+
+    public static void main(String[] args) {
+        OverloadExample example = new OverloadExample();
+        example.print(5);        // 输出: Integer: 5
+        example.print("Hello");  // 输出: String: Hello
+    }
+}
+// 在这个例子中，print() 方法被重载了。根据传入的参数类型，Java 会选择调用合适的 print() 方法。这就是编译时多态，因为在编译期间已经确定了调用哪个方法。
+2. 运行时多态（动态多态） - 方法重写
+运行时多态通过方法重写（Method Overriding）实现。父类的引用可以指向子类的对象，并根据实际的对象类型调用子类的方法。即使你通过父类引用调用方法，最终执行的是子类的重写方法。这就是运行时多态。
+eg:
+// 父类
+class Animal {
+    public void speak() {
+        System.out.println("The animal makes a sound");
+    }
+}
+
+// 子类 Dog
+class Dog extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("The dog says: Woof!");
+    }
+}
+
+// 子类 Cat
+class Cat extends Animal {
+    @Override
+    public void speak() {
+        System.out.println("The cat says: Meow!");
+    }
+}
+
+public class PolymorphismExample {
+    public static void main(String[] args) {
+        // 父类引用指向子类对象
+        Animal myDog = new Dog();
+        Animal myCat = new Cat();
+
+        // 调用 speak 方法时会根据对象的实际类型来调用
+        myDog.speak();  // 输出: The dog says: Woof!
+        myCat.speak();  // 输出: The cat says: Meow!
+    }
+}
+
+
+
+// 如何理解多态？
 // 多态是面向对象编程中的一个关键概念，它允许通过共同的接口来访问不同类的对象，并且每个类的对象能够提供自己独特的实现。这意味着同一个接口可以用于不同的数据类型，而具体使用哪种数据类型由运行时决定。
 
 // 多态的优点
@@ -218,8 +332,8 @@ print(c.sell())  # 输出: Selling Price: 1000
 //     def speak(self):
 //         return "Meow!"
 
-// def animal_sound(animal):
-//     print(animal.speak())
+//     def animal_sound(animal):
+//         print(animal.speak())
 
 // # 创建 Dog 和 Cat 的实例
 // dog = Dog()
@@ -501,4 +615,133 @@ Java源码本质上是一个文本文件，我们需要先用javac把Hello.java�
 ┌──────────────────┐
 │    Run on JVM    │
 └──────────────────┘
+
+// 为什么需要构造函数？
+1. 如果不定义构造函数，Java 会提供一个默认的无参构造函数，用于初始化对象的实例变量为默认值。（数字类型默认为 0，引用类型默认为 null，布尔类型默认为 false）
+public class Car {
+    String make;  // 实例变量默认是 null
+    String model; // 实例变量默认是 null
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 使用 new 关键字创建对象
+        Car myCar = new Car();
+
+        // 打印默认值
+        System.out.println("Make: " + myCar.make);   // 输出: null
+        System.out.println("Model: " + myCar.model); // 输出: null
+    }
+}
+
+2. 构造函数的作用是初始化对象，为实例变量赋值，并确保对象在创建时处于有效状态。
+自定义构造函数的优势在于简化初始化过程，并确保对象在创建时已经拥有正确的状态。
+没有构造函数时，虽然可以使用 new 来创建对象，但对象的属性将需要手动赋值，可能导致代码冗长和初始化错误。
+虽然 Java 提供了一个默认的无参构造函数，但如果你不定义自己的构造函数，你就无法在对象创建时给实例变量赋值或执行初始化操作。也就是说，所有属性都会是默认值，你需要通过其他方法手动赋值。
+public class Car {
+    String make;
+    String model;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Car myCar = new Car();
+
+        // 手动赋值
+        myCar.make = "Toyota";
+        myCar.model = "Corolla";
+
+        System.out.println("Make: " + myCar.make);   // 输出: Toyota
+        System.out.println("Model: " + myCar.model); // 输出: Corolla
+    }
+}
+3. 构造函数允许你在创建对象时直接赋值和初始化，这比手动赋值更简洁、高效，并确保对象在创建时处于有效状态。
+public class Car {
+    String make;
+    String model;
+
+    // 自定义构造函数
+    public Car(String make, String model) {
+        this.make = make;
+        this.model = model;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 通过构造函数直接赋值并创建对象
+        Car myCar = new Car("Toyota", "Corolla");
+
+        System.out.println("Make: " + myCar.make);   // 输出: Toyota
+        System.out.println("Model: " + myCar.model); // 输出: Corolla
+    }
+}
+4. 如果你定义了一个有参数的构造函数，Java 就不会再提供默认的无参构造函数。如果你还需要无参构造函数，你必须显式定义一个。
+public class Car {
+    String make;
+    String model;
+
+    // 无参构造函数
+    public Car() {}
+
+    // 有参构造函数
+    public Car(String make, String model) {
+        this.make = make;
+        this.model = model;
+    }
+}
+
+// 实例变量与类变量
+| **对比项**         | **实例变量（Instance Variable）**                    | **类变量（Class Variable / Static Variable）**          |
+|--------------------|----------------------------------------------------|---------------------------------------------------------|
+| **定义**           | 属于每个对象的变量。                                | 属于类的变量，所有对象共享。                              |
+| **声明**           | 在类中声明，不使用 `static` 关键字。                    | 在类中声明，使用 `static` 关键字。                         |
+| **存储位置**       | 每个对象有自己独立的实例变量，存储在堆内存中。               | 类变量存储在内存的静态区，所有对象共享。                      |
+| **内存分配**       | 每创建一个对象就分配一次内存。                            | 类加载时分配一次内存，所有对象共享同一个变量。                  |
+| **生命周期**       | 对象创建时开始，销毁时结束。                             | 类加载时开始，程序结束时销毁。                               |
+| **访问方式**       | 必须通过对象来访问。                                    | 可以通过类名直接访问，也可以通过对象访问。                      |
+| **是否独立**       | 每个对象有自己独立的实例变量，互不影响。                      | 所有对象共享类变量，任何对象的修改会影响所有对象。                 |
+| **示例**           | `car1.make` 与 `car2.make` 是不同的实例变量。            | `Car.carCount` 是类变量，所有对象共享。                       |
+
+public class Car {
+    // 实例变量
+    String make;
+    String model;
+
+    // 类变量
+    static int carCount;
+
+    // 构造函数
+    public Car(String make, String model) {
+        this.make = make;
+        this.model = model;
+        carCount++;  // 每次创建一个新对象，类变量 carCount 加 1
+    }
+
+    // 实例方法
+    public void displayInfo() {
+        System.out.println("Make: " + make + ", Model: " + model);
+    }
+
+    // 静态方法
+    public static void displayCarCount() {
+        System.out.println("Total Cars: " + carCount);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建两个对象
+        Car car1 = new Car("Toyota", "Corolla");
+        Car car2 = new Car("Honda", "Civic");
+
+        // 调用实例方法
+        car1.displayInfo();
+        car2.displayInfo();
+
+        // 调用类方法，输出静态变量 carCount 的值
+        Car.displayCarCount();  // 输出: Total Cars: 2
+    }
+}
+
 

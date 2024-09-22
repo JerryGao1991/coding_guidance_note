@@ -546,3 +546,318 @@ Epsilon 是用于判断浮点数相等的差值阈值, Epsilon 的值取决于�
 从 0 开始循环已成为标准，便于与数组等数据结构统一。
 ++i 更安全，初学者应优先使用前缀形式的自增操作符。
 如有可能哈哈，避免在循环中声明变量，有助于降低初学者的出错率。
+
+// 代码块 (Block): 
+由大括号 {...} 包围的一组语句。常见于 if-else、for 循环或 while 循环等控制结构中。
+
+// 变量的作用域 (Variable Scope):
+变量的作用域从其声明开始，到对应的代码块的闭合大括号 } 结束。也就是说，变量只能在它声明所在的代码块内使用。
+
+// 注意事项 和 javascript的 let, const 的块级作用域的区别
+Java 中的变量声明是块级作用域。这意味着变量在其被声明的代码块 {} 内有效，离开该代码块后，变量就不可访问了。
+然而，Java 对变量的重新声明有严格的限制：不能在嵌套的内部代码块中重新声明与外部代码块中已声明的变量同名的变量。
+eg:
+int a = 5;
+{
+    int a = 10;  // 编译错误：变量 'a' 已在外部作用域中声明，不能重复声明
+    System.out.println(a);
+}
+System.out.println(a);
+
+
+// 枚举类型（Enumeration Type）
+定义：枚举类型（enum）是 Java 中一种特殊的数据类型，允许我们为变量定义一组预先确定的常量值。这些常量值称为 枚举常量（enumerators）。
+用途：当一个变量只需要存储一小组固定的命名值时，枚举类型非常有用。例如，表示交通信号灯的状态，只需存储 GREEN、YELLOW 或 RED 三种状态。
+//声明枚举类型：
+public class TrafficLightControl {
+   // 枚举类型的声明，位于 main 方法之外
+   public enum LightState {RED, GREEN, YELLOW, DONE}
+
+   public static void main(String[] args) {
+// 声明枚举变量：
+LightState lightVal;
+// 赋值与比较：
+lightVal = LightState.RED;  // 赋值
+if (lightVal == LightState.GREEN) { ... }  // 比较
+// 枚举的优势:
+避免无效值: 如果使用字符串或整数，可能会赋予非法的值（如 "ORANGE" 或 -1），枚举可以防止这种情况。
+类型安全： 枚举类型提供了编译时的类型检查，防止将无效的值赋给枚举变量。
+可读性和维护性：枚举使代码更具可读性，明确了变量可以接受的合法值，减少了错误的可能性。
+
+// 数组形式:
+dataType[] arrayName = new dataType[numElements];
+
+// 声明时候可以直接带上数组个数, 也可以不带, 也可以直接给值(这种不用带new的关键字)
+int[] gameScores = new int[4];
+
+or 
+
+int[] gameScores;
+gameScores = new int[4];
+
+or 
+
+int[] myArray = {5, 7, 11};
+
+// 术语区分：[] 称为“方括号”（brackets），{} 称为“花括号”（braces）
+
+// 数组未赋值元素的默认值: 当创建一个数组时，未显式赋值的元素会自动初始化为数据类型的默认值。对于 int 类型数组，默认值为 0。
+| 数据类型   | 默认值         |
+|------------|----------------|
+| `int`      | 0              |
+| `short`    | 0              |
+| `long`     | 0L             |
+| `float`    | 0.0f           |
+| `double`   | 0.0d           |
+| `char`     | '\u0000' (空字符) |
+| `boolean`  | false          |
+| `byte`     | 0              |
+| `Object`   | null           |
+
+// length 对于字符串和数组的syntax 区别:
+对于 字符串，使用 length() 方法。          eg: str.length()
+对于 数组，使用 length 属性（没有括号)      eg: array.length
+
+// 几种常见的遍历数组用法套路:
+1. 求最大值：
+maxVal = userVals[0];                   // Largest so far
+      
+      for (i = 0; i < userVals.length; ++i) {
+         if (userVals[i] > maxVal) {
+            maxVal = userVals[i];
+         }
+
+2. 求总值:
+     sumVal = 0;
+      for (i = 0; i < userVals.length; ++i) {
+         sumVal = sumVal + userVals[i];
+      }
+
+3. reverse an array
+      for (i = 0; i < (userVals.length / 2); ++i) {
+         tempVal = userVals[i];                           // Temp for swap
+         userVals[i] = userVals[userVals.length - 1 - i]; // First part of swap
+         userVals[userVals.length - 1 - i] = tempVal;     // Swap complete
+      }
+
+// 注意 ！！
+// System.out.print(90 + "*");   // 90*      "*" 是一个String
+// System.out.print(90 + '*');   // 132      '*' 是一个char, 在Java中，字符实际上是一个整数，它的值是该字符的ASCII码
+
+// two-demensional arrays
+int[][] myArray = new int[R][C] represents a table of int variables with R rows and C columns, so R*C elements total.
+myArray[0][0] = 33
+
+int[][] numVals = {
+      {22, 44, 66}, // Row 0
+      {97, 98, 99}  // Row 1
+};
+
+// for-each loop 
+eg:
+for (String playerName : teamRoster) {
+  System.out.println(playerName);
+}
+
+// for-each loop common error:
+for (String playerName : teamRoster) {      // 实际未改动到 array!!
+  playerName = "Dennis";
+}
+
+// A parameter, like a variable declaration, cannot be an expression.
+int myMthd(int userNum + 5) { ... }  ----> this is false!!!
+
+// terminology : testbench, test harness, test vector
+
+// Assert operator
+// Assert is an operator that prints an error message and exits the program if the provided test expression evaluates to false, having the form:
+assert testExpression : detailedMessage;
+eg:
+assert (hrMinToMin(0, 0) == 0) : "Assertion (hrMinToMin(0, 0) == 0) failed";
+eg:
+   public static void main(String[] args) {
+      System.out.println("Testing started");
+
+      assert (hrMinToMin(0, 0) == 0) : "Assertion (hrMinToMin(0, 0) == 0) failed";
+      assert (hrMinToMin(0, 1) == 1) : "Assertion (hrMinToMin(0, 1) == 1) failed";
+      assert (hrMinToMin(0, 99) == 99) : "Assertion (hrMinToMin(0, 99) == 99) failed";
+      assert (hrMinToMin(1, 0) == 60) : "Assertion (hrMinToMin(1, 0) == 60) failed";
+      assert (hrMinToMin(5, 0) == 300) : "Assertion (hrMinToMin(5, 0) == 300) failed";
+      assert (hrMinToMin(2, 30) == 150) : "Assertion (hrMinToMin(2, 30) == 150) failed";
+      // Many more test vectors would be typical...
+
+      System.out.println("Testing completed");
+   }
+// 在 Java 中，断言功能默认是未启用的。为了使用断言，程序员需要在运行程序时添加命令行参数 -ea 来启用断言。
+// 启用断言的命令：要在运行时启用断言，使用以下命令：
+// java -ea ClassName 例如：java -ea HrMinToMinTestHarness
+// 测试输出检查：使用断言，可以轻松检查程序输出的正确性。如果程序没有检测到错误，输出通常是：
+// "Testing started" 然后是 "Testing completed"，表明测试过程没有发现问题。
+
+// Method Stub
+// 方法存根的主体内容往往只有一个简单的 return 语句或者一个打印输出，表示这个方法的调用是成功的，但并没有执行任何真正的逻辑。
+// 方法存根是软件开发的一种策略，用来分阶段开发程序。它允许程序员首先定义程序结构，逐步实现每个部分的细节。这种方法有助于保持代码的组织性，并在开发过程中进行阶段性的测试。
+eg:
+public class RoadTrip {
+   // Method stub for calculating fuel cost
+   public static double calculateFuelCost(double distance, double fuelEfficiency) {
+      // This is a stub, the logic hasn't been written yet
+      System.out.println("Fuel cost calculation not yet implemented.");
+      return 0.0;
+   }
+
+   public static void main(String[] args) {
+      double tripDistance = 300.0; // Example distance in miles
+      double carEfficiency = 25.0; // Example fuel efficiency in miles per gallon
+
+      // Main logic that uses the stub
+      double fuelCost = calculateFuelCost(tripDistance, carEfficiency);
+
+      System.out.println("Fuel cost: $" + fuelCost);
+   }
+}
+
+
+// method 的调用机制
+Each method call creates a new set of local variables, forming part of what is known as a stack frame. A return causes those local variables to be discarded.
+
+eg: 
+public class MethodExample {
+    public static int calcSum(int a, int b) {
+        return a + b;  // 方法执行，将 a 和 b 的和返回
+    }
+
+    public static void main(String[] args) {
+        int result = calcSum(10, 20);  // 调用 calcSum 方法
+        System.out.println("Result: " + result);  // 输出结果
+    }
+}
+在这个例子中，程序的执行流程如下：
+
+1. main 方法开始执行，调用 calcSum(5, 10)。
+2. 在调用 calcSum 方法之前，Java 会将 main 方法的当前指令位置（即 System.out.println() 这一行的内存地址）存储在栈帧中。
+3. 跳转到 calcSum 方法，执行 a + b，计算出结果 15。
+4. 当 calcSum 执行完毕时，返回到 main 方法：
+返回地址：Java 使用第二步中存储的返回地址，跳回 main 方法调用 calcSum 的地方（即 System.out.println()）。
+返回值：方法的返回值 15 被传递回 main 方法，并赋值给变量 result。
+5. System.out.println("Result: " + result) 打印 Result: 15。
+
+// 总结一下method 调用机制的要点
+1. 方法执行前:
+a. 参数传递:                                                    // 参数(parameter), 局部变量（local variables）, 返回值(return value) 和 储存地址(return add)都会放在堆栈中 stack frame (call stack)
+在方法执行之前，所有传递的参数都会被复制到该方法的局部变量表中。
+10 和 20 被复制到 calcSum() 的局部变量 a 和 b 中。
+b. 返回储存地址：
+程序记录调用 calcSum() 的位置，以便方法执行完后可以返回。
+
+2. 方法执行后:
+当方法执行完毕，遇到 return 语句时，Java 会执行跳转，根据调用栈中的返回地址，让程序回到调用该方法的地方。
+方法的返回值会通过栈传递回去, 会将返回值存储在调用栈中，供调用者使用。
+
+// 数组参数传递 // 涉及primitive data type 和 non- primitive data type的区别
+1. 原始类型的参数传递
+当你将基本数据类型（如 int、char 等）作为参数传递给方法时，传递的是值的副本。也就是说，方法接收的是这个变量的一个复制品。
+结果：在方法中对参数的修改不会影响原始变量，因为它们是独立的拷贝。
+eg:
+public static void changeValue(int x) {
+    x = 10; // 修改的是副本，不会影响原始变量
+}
+
+public static void main(String[] args) {
+    int myVar = 5;
+    changeValue(myVar);
+    System.out.println(myVar); // 输出 5
+}
+
+2. 数组的参数传递
+当你将数组作为参数传递给方法时，传递的是数组引用的副本，而不是数组的副本。换句话说，方法接收到的是指向原始数组的引用地址的拷贝，而不是数组内容的副本。
+结果：方法内对数组元素的修改会影响原始数组，因为它们指向同一个内存地址。
+eg:
+public static void changeArray(int[] arr) {
+    arr[0] = 100; // 修改数组中的元素，原始数组会受影响
+}
+
+public static void main(String[] args) {
+    int[] myArray = {1, 2, 3};
+    changeArray(myArray);
+    System.out.println(myArray[0]); // 输出 100
+}
+
+3. 数组引用本身的变化
+虽然方法可以通过数组引用修改数组的内容，但如果你在方法中试图将数组引用指向另一个数组，这不会影响到调用者的原始数组引用。因为数组引用本身是值传递的。
+结果：改变数组引用不会改变原始数组的引用指向，只会改变方法内部的局部引用。
+eg:
+public static void changeReference(int[] arr) {
+    arr = new int[]{10, 20, 30}; // 修改的是局部引用，不影响原始数组引用
+}
+
+public static void main(String[] args) {
+    int[] myArray = {1, 2, 3};
+    changeReference(myArray);
+    System.out.println(myArray[0]); // 输出 1，不受影响
+}
+// 3. 数组引用本身的变化   以下是这一点的引申解释
+引用的值传递：当你将 myArray 传递给方法时，方法中的 arr 只是引用的副本。方法内部重新给 arr 赋值，只是改变了 arr 自己的指向，并没有改变 myArray 的指向。
+更简单的类比：
+可以把引用理解为一个指向某个房子的地址。当你给别人一张地址的副本，别人可以通过这个副本找到同一个房子并且在房子里做一些改动（修改数组内容）。但如果他用这张副本去找另一个房子（改变引用的指向），原来的房子和地址并没有变，只是副本找到了新的房子。
+
+
+// variable/method Scope
+局部变量（Local Variable):在方法中声明的变量，其作用域仅限于方法内部，无法被其他方法访问。局部变量的作用域从声明处开始，直到方法结束。
+类成员变量（class member variable or Field): 在类中声明但不在任何方法内的变量。它们的作用域从类的开始 { 到结束 }，可以在类中的任何方法中访问。
+
+// 同名变量与字段的冲突
+如果方法中的局部变量（包括方法参数）与类的字段同名，那么在该方法内使用变量名时，优先指向局部变量，类的字段将被屏蔽。
+// 避免使用全局变量
+有些初学者为了避免参数传递，可能倾向于使用全局变量（类成员变量）。这虽然可以避免参数的使用，但会导致代码难以维护，是一种不良的编程习惯。
+
+// 方法重载(method overloading)
+// 定义:
+指的是在同一个类中，可以定义多个同名但参数数量或类型不同的方法。这样，方法名称相同，但它们的行为可以根据不同的参数进行区分。
+编译器通过方法调用时传递的参数类型来决定调用哪个重载的方法。
+// 重载的规则
+可以有多个同名方法，只要每个方法的参数类型或数量不同。
+参数的名称不影响方法的重载，方法的区分仅依赖于参数类型和数量。
+
+// 关于在method中用Scanner
+对每个输入流（如 System.in）只使用一个 Scanner 对象。
+将 Scanner 对象在 main() 中创建，并通过参数传递给需要使用输入的其他方法。
+避免在同一个输入流上创建多个 Scanner，防止意外的读取问题。
+eg: 
+import java.util.Scanner;
+
+public class CalculatePizzaCalories {
+
+   public static double calcCircleArea(double circleDiameter) {
+      double circleRadius;
+      double circleArea;
+      double piVal = 3.14159265;
+
+      circleRadius = circleDiameter / 2.0;
+      circleArea = piVal * circleRadius * circleRadius;
+
+      return circleArea;
+   }
+
+   public static double getPizzaCalories(Scanner scnr) {
+      double pizzaDiameter;
+      double totalCalories;
+      double caloriesPerSquareInch = 16.7;    // Regular crust pepperoni pizza
+
+      System.out.print("Enter pizza's diameter (inches): ");
+      pizzaDiameter = scnr.nextDouble();
+
+      totalCalories = calcCircleArea(pizzaDiameter) * caloriesPerSquareInch;
+
+      return totalCalories;
+   }
+
+   public static void main (String [] args) {
+      Scanner scnr = new Scanner(System.in);
+
+      System.out.println("Pizza has " + getPizzaCalories(scnr) + " calories.");
+      System.out.println("Pizza has " + getPizzaCalories(scnr) + " calories.");
+   }
+}
+
+
