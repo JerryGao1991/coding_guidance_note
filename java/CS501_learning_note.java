@@ -511,7 +511,7 @@ substring()      // str.substring()
                  //     substring(startIndex, endIndex)     startIndex(inclusive) 到 endIndex(exclusive)
                  //     startIndex 是 inclusive， endIndex 是 exclusive
 concat()         // char 也能用 ！
-replace()        // char 也能用 ！ 
+replace()        // char F ！ 
 str1 + str2
 str1 += str2
 
@@ -599,6 +599,8 @@ or
 
 int[] myArray = {5, 7, 11};
 
+// vowels = {'a', 'e', 'i', 'o', 'u', 'y'};    注意，这种是错的 ！！
+
 // 术语区分：[] 称为“方括号”（brackets），{} 称为“花括号”（braces）
 
 // 数组未赋值元素的默认值: 当创建一个数组时，未显式赋值的元素会自动初始化为数据类型的默认值。对于 int 类型数组，默认值为 0。
@@ -668,6 +670,8 @@ for (String playerName : teamRoster) {      // 实际未改动到 array!!
 int myMthd(int userNum + 5) { ... }  ----> this is false!!!
 
 // terminology : testbench, test harness, test vector
+A testbench is a program whose job is to thoroughly test another program (or portion) via a series of input/output checks known as test cases. 
+Unit testing means to create and run a testbench for a specific item (or "unit") like a method or a class.
 
 // Assert operator
 // Assert is an operator that prints an error message and exits the program if the provided test expression evaluates to false, having the form:
@@ -860,4 +864,1504 @@ public class CalculatePizzaCalories {
    }
 }
 
+// 方法内部创建数组并返回数组引用，表示这是一个完美大小数组。
+// 如方法返回数组时意味着返回一个完美大小数组
+eg: The method signature char[] fromString(String inputWords) returns a perfect size array.
+eg：The method signature void shuffleCards(int[] cards, int size) indicates that cards is not a perfect size array.
+eg: The method signature void shuffleCards(int[] cards) indicates that cards is a perfect size array.
 
+// oversize array
+是指一个数组的容量可能大于实际存储的数据量。通常情况下，程序会为数组预分配较大的空间，而当前存储的数据量可能小于分配的容量。使用超大数组可以为后续增加数据预留空间，避免频繁调整数组大小。
+// 超大数组的三大变量
+数组引用：指向实际存储数据的数组。
+当前大小（current size）：表示当前存储的数据量，即数组中有效元素的数量。
+数组容量常量（array capacity constant）：表示数组的最大容量，通常声明为常量，用来明确数组最大可以存储多少元素。
+// 例如，一个程序需要存储一份真/假测试的答案，可能会定义以下三个变量：
+final int QUIZ_CAPACITY = 100;  // 数组的最大容量
+boolean[] quizAnswers = new boolean[QUIZ_CAPACITY];  // 数组引用
+int currentSize = 0;  // 当前数组中存储的有效答案数量
+// 好处
+避免了频繁的内存分配操作（重新创建数组）和数据复制操作。
+
+///////////////////////////////
+// Methods with Oversize Arrays
+/////////////////////////////// 
+当超大数组作为参数传递给方法时，通常需要传递两个参数：一个是数组的引用，另一个是数组的当前大小（currentSize）。
+例如，printOversizeArray() 方法应使用 arraySize 而不是 arrayRef.length，以避免打印出未使用的数组元素。
+
+// Method with oversize array has parameters for array reference and current size.
+// 遍历数组
+public static void printOversizeArray(String[] arrayRef, int arraySize) {
+   int index;
+
+   System.out.print("[");
+   for (index = 0; index < arraySize; ++index) {
+      System.out.print(arrayRef[index]);
+      if (index != arraySize - 1) {  // Don't print trailing , for last element
+         System.out.print(", ");
+      }
+   }
+   System.out.println("]");
+}
+
+// 方法更新超大数组：添加元素
+检查数组是否已满，如果已满，方法直接返回，不进行任何操作。
+如果数组有可用空间，将新元素添加到下一个可用索引，并增加 currentSize。
+返回新数组大小：方法返回新的 currentSize，调用方需要将新的数组大小存储起来，否则新增的元素将无法被访问，因为 currentSize 将不正确。
+常见错误：忘记返回并更新数组的 currentSize，导致新添加的元素“丢失”，因为当前数组大小未正确更新。
+final int LIST_SIZE = 4;
+String[] toDoList = new String[LIST_SIZE];
+int toDoListSize = 0;
+                
+toDoListSize = addElement(toDoList, toDoListSize, "Study");
+
+...
+
+public static int addElement(String[] arrayRef,
+                            int currentSize,
+                            String addMe) {
+   // Check that array has space 
+   if (currentSize == arrayRef.length) {    
+      return currentSize;  
+   }
+
+   // If array has space, add the element to the array 
+   arrayRef[currentSize] = addMe; 
+   ++currentSize; 
+   return currentSize;
+}
+
+// 方法更新超大数组：移除元素
+循环遍历数组，找到匹配的元素。
+找到匹配元素后，将后续元素向前移动一位，覆盖被删除的元素。
+更新 currentSize 以反映数组大小的变化。
+在方法结束时使用布尔值 targetFound 来检查是否找到了匹配的元素，并相应地更新数组的大小。
+
+public static int removeFirst(int[] arrayRef, int arraySize, int targetVal) {
+   boolean targetFound;
+   int index;
+
+   targetFound = false;
+
+   // Step through the array one element at a time
+   for (index = 0; index < arraySize; ++index) {
+      // If matching element found, move each element to the previous index
+      if (targetFound) {
+         arrayRef[index-1] = arrayRef[index];
+      }
+
+      // Check if matching element found
+      if (arrayRef[index] == targetVal) {
+         targetFound = true;
+      }
+   }
+
+   // If matching element found, array size is one element smaller
+   // otherwise array size hasn't changed 
+   if (targetFound) {
+      return arraySize - 1;
+   }
+   else {
+      return arraySize;
+   }
+}
+
+// Comparing perfect size and oversize arrays
+完美大小数组：方法只接受数组引用，不需要数组大小参数，通常返回数组引用。
+超大数组：方法需要传递数组引用和当前数组大小两个参数，方法返回整数时，通常表示新的数组大小。
+通过方法签名可以推断该方法是操作完美大小数组还是超大数组，这对理解方法的行为至关重要。
+
+// 有关超大数组方法:
+1. 超大数组的两个必要数据项
+数组引用：用于访问和操作数组的数据。
+数组的当前大小：指示数组中实际使用的元素数量，而不是数组的总容量。
+超大数组通常具有大于当前存储数据的容量，因此我们需要额外的一个变量来记录当前有效的数据量（currentSize），而不是使用 array.length 来获取数组大小。
+
+2. 方法只能返回一个值
+在 Java 中，一个方法最多只能返回一个值。因此，如果你希望方法返回超大数组的结果，你不能同时返回数组引用和数组的当前大小。
+示例：你不能让一个方法返回 {int[] array, int currentSize}，因为方法只能返回一个值，不能同时返回两个项目。
+3. 超大数组的处理方式
+为了处理这个限制，超大数组通常在方法调用之前就创建好，并且被传递给方法。方法可以通过传入的数组引用修改数组内容，同时返回新的数组大小。
+方法返回新数组大小：方法的返回值通常是新的数组大小（currentSize），以指示数组的变化。
+数组内容的修改：方法可以通过传递的数组引用修改数组内容，比如添加或删除元素。
+
+| **Situation**                                       | **Perfect size array**                         | **Oversize array**                        |
+|-----------------------------------------------------|------------------------------------------------|-------------------------------------------|
+|                                                     | **Parameter(s)**  | **Return**            | **Parameter(s)**          | **Return**            |
+| Array not modified                                  | Array reference   |                      | Array reference and      |                       |
+|                                                     |                   |                      | array size               |                       |
+| Array contents modified, but array size not modified| Array reference   |                      | Array reference and      |                       |
+|                                                     |                   |                      | array size               |                       |
+| Array size modified                                 | Consider if an    | Array reference       | Array reference and      | New array size         |
+|                                                     | oversize array    |                      | array size               |                       |
+|                                                     | should be used    |                      |                           |                       |
+| Array reference returned                            |                   | Must be perfect size  | Impossible               |                       |
+
+
+// 完美大小数组和超大数组的优缺点
+// 完美
+优点: 方法参数较少、内存占用精确，适合静态或固定大小的数据集。
+缺点: 扩展性差：当需要增加新元素时，完美大小数组需要创建新的数组并进行数据复制
+// 超大
+优点: 避免频繁的数组重新分配和复制操作，在需要频繁添加或删除数据的场景下表现更好
+缺点: 参数复杂, 内存消耗多
+// Methods for adding elements to perfect size and oversize arrays.
+// Method uses a perfect size array.
+public static String[] addElement(String[] arrayRef, String addMe) {
+   String[] returnArray = new String[arrayRef.length + 1];
+   int index;
+           
+   // Copy the array elements to the newly constructed array
+   for (index = 0; index < arrayRef.length; ++index) {
+      returnArray[index] = arrayRef[index];
+   }
+
+   // Add in the new element to the end of the array
+   returnArray[arrayRef.length] = addMe;
+         
+   return returnArray;
+}
+
+// Method uses an oversize array.
+public static int addElement(String[] arrayRef, int currentSize, String addMe) {
+   if (currentSize == arrayRef.length) return currentSize;
+   
+   arrayRef[currentSize] = addMe;
+   ++currentSize;
+
+   return currentSize;
+}
+
+// primitive data type 和 array 在method 中 储存方式的差异
+基本数据类型（如 int 和 double）的变量在方法中是直接存储在栈（stack frame）中的。
+数组内容在内存中**存储在堆（heap）**中，而不是直接存储在栈帧中。在栈中只存储了对数组的引用（即指向堆中数组数据的内存地址），而不是数组本身的内容。
+eg: 
+int[] topScores = {100, 99, 99};  
+// topScores stores in stack
+// topScores[0] stores in heap
+
+// 存储方式的差异导致的行为差异：
+当你将一个基本数据类型（如 int）传递给方法时，方法操作的是这个变量的副本，对该变量的修改不会影响到原始变量。
+但是当你将数组传递给方法时，方法操作的是数组的引用，因此在方法中修改数组的内容会直接影响原始数组（因为堆中的数组是共享的）。
+
+
+/*
+1. 数组引用的传递方式：
+当你将一个数组作为参数传递给方法时，数组引用本身是按值传递的，这意味着方法获得的是数组引用的副本，而不是引用的原始值。
+方法中操作的数组引用和原始数组引用是两个不同的副本，虽然它们最初指向同一个数组，但引用本身在两个不同的栈帧中独立存储。
+2. 数组内容可以修改：
+虽然引用是按值传递的，但方法中仍然可以通过这个引用修改数组的内容，因为它们都指向堆中的同一个数组。
+修改数组的内容（如 arr[0] = 10）会影响原始数组，因为无论是在方法中还是在调用者处，两个引用都指向相同的数组。
+3. 不能修改数组引用本身：
+常见错误：有人误以为可以在方法中通过修改数组引用（如 arr = new int[10]）来改变原始数组的引用。但实际上，这只是改变了方法中的数组引用副本，不会影响原始数组引用。
+这种操作在方法中修改了局部引用的指向，但并没有改变调用方传入的原始数组引用。
+4. 总结：
+数组内容：方法可以通过引用修改数组内容，因为它们都指向相同的内存位置。
+数组引用：方法不能修改传入数组的引用，因为方法获得的是数组引用的副本，改变它只会影响方法内部的引用，而不会改变调用者的原始引用。
+*/
+
+
+// 数组大小修改方案
+// 数组大小不能直接修改：
+Java 中的数组一旦创建，大小是固定的，不能直接增加或减少。
+这是因为内存中的相邻位置可能已经被其他数据占用，或者被其他程序使用。
+// 修改数组大小的替代方案：
+当需要改变数组的大小时，必须构造一个新的数组，新数组的大小可以是所需的大小。
+之后，将原数组的元素复制到新数组 中，并返回新数组的引用。
+// resize() method changes the size of an array by constructing a new array and copying the array's elements.
+String[] originalArray = {"Raven", "Daisy", "Jasmine"};
+originalArray = resize(originalArray, 5);
+
+...
+
+public static String[] resize(String[] arrayReference, int newSize) {
+   String[] resultArray = new String[newSize];
+   int index;
+   int numToCopy;
+
+   // Determine the number of array elements to copy
+   numToCopy = Math.min(newSize, arrayReference.length);
+
+   // Copy elements from arrayReference to resultArray
+   for (index = 0; index < numToCopy; ++index) {
+      resultArray[index] = arrayReference[index];
+   }
+   
+   return resultArray;
+}
+
+
+// method signature design 数组方法的功能需要单一化
+//  三种常见的数组操作方法
+1.  计算并返回结果，数组不变：
+这些方法基于数组的数据进行计算，但不会修改数组的内容。
+返回值：该方法必须返回某种结果。
+示例：int binarySearch(int[] arrayReference, int target)：通过搜索数组中的 target 来计算目标值的索引，数组内容不变，返回索引或负数（若未找到）。
+2. 修改数组内容，但不改变数组大小：
+方法的目的是修改数组中的元素，但不会改变数组的大小。
+返回值类型：通常为 void，因为不需要返回新数组或数据。
+示例：void sort(int[] arrayReference)：排序数组，将数组中的元素重新排列为升序，方法没有返回值。
+3. 创建新数组或改变数组大小：  // 这种情况下 建议在方法中创建一个新数组来return， 而不要使用argument的原数组。
+方法需要创建一个新的数组或调整数组大小。
+返回值：方法必须返回一个数组引用，因为数组的引用不能在方法内修改。
+示例：double[] copyOf(double[] arrayReference, int newLength)：该方法返回一个新的数组，其大小为 newLength，并将旧数组中的数据复制到新数组中。
+
+
+// Unintended side effects 
+副作用是指方法在执行时无意间修改了数据，导致数据发生了预期之外的改变。即使方法返回值正确，副作用也可能导致程序中的其他部分出现问题。
+常见副作用：例如，一个计算方法在计算过程中无意间修改了数组的内容，或调整了数组的顺序。
+单一职责原则：一个方法应该只执行一个任务。如果一个方法的目的是计算某个值，那么它不应该同时修改数组内容。如果目的是修改数组，它不应同时执行计算任务。
+例如：findMostFrequent() 方法在寻找最频繁元素时排序了数组，这虽然计算结果是正确的，但副作用是修改了数组的顺序，这可能在其他地方引发问题。
+在编写方法时，应确保计算和修改操作是分开的，避免在计算过程中无意修改数据。
+在测试方法时，除了验证返回值是否正确，还应该检查输入数据是否保持原样，以确保没有副作用发生。
+
+
+// Java automatically imports the java.lang package, which allows a programmer to use the String class and corresponding methods.
+
+// private fields 私有字段
+// 除了公共成员方法之外，类定义还具有私有字段：成员方法可以访问但类用户不能访问的变量。每个私有字段声明前都有 private 访问修饰符。
+// private fields 作用:
+数据封装和保护：将字段设为 private 可以防止外部代码直接访问和修改它们。这样可以确保类的内部状态不会被外部意外修改，增加了数据的安全性和完整性。
+封装实现细节：private 字段隐藏了类的实现细节，外部只需通过公共方法与类交互，而不需要关心类的内部如何实现。这使得代码更灵活，类的实现细节可以在不影响外部代码的情况下修改。
+eg: 
+
+public class Restaurant {                        // Keeps a user's review of a restaurant
+   private String name;                          // private field
+   private int rating;                           // private field
+   
+   public void setName(String restaurantName) {  // Sets the restaurant's name        
+      ...
+   }
+}
+
+Restaurant.name    // error 因为name 属于private field， 只有method 可以访问， class 没法访问
+
+// 程序员在定义类时，首先命名类，声明私有字段，并定义公共成员方法。类的字段和方法统称为类成员。
+public class Restaurant {                          // Info about a restaurant
+   private String name;
+   private int rating;
+
+   public void setName(String restaurantName) {    // Sets the restaurant's name
+      name = restaurantName;
+   }
+
+   public void setRating(int userRating) {         // Sets the rating (1-5, with 5 best)
+      rating = userRating;
+   }
+
+   public void print() {                           // Prints name and rating on one line
+      System.out.println(name + " -- " + rating);
+   }
+}
+eg:实战参考代码:
+Kangaroo.java:
+
+import java.util.Scanner;
+
+public class KangarooData {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      Kangaroo kangaroo1 = new Kangaroo();
+      String userColor;
+      String userName;
+
+      userColor = scnr.next();
+      userName = scnr.next();
+
+      kangaroo1.setColor(userColor);
+      kangaroo1.setName(userName);
+
+      System.out.println("Color: " + kangaroo1.getColor());
+      System.out.println("Name: " + kangaroo1.getName());
+   }
+}
+
+KangarooData.java:
+
+import java.util.Scanner;
+
+public class KangarooData {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      Kangaroo kangaroo1 = new Kangaroo();
+      String userColor;
+      String userName;
+
+      userColor = scnr.next();
+      userName = scnr.next();
+
+      kangaroo1.setColor(userColor);
+      kangaroo1.setName(userName);
+
+      System.out.println("Color: " + kangaroo1.getColor());
+      System.out.println("Name: " + kangaroo1.getName());
+   }
+}
+
+
+// 修改器 mutators, 访问器 accessors
+// 类的公共方法通常分为两类：修改器（mutators） 和 访问器（accessors）。
+修改器方法（mutator） 可以修改类的字段，常见的修改器方法通常以 set 开头，被称为 setter。
+访问器方法（accessor） 仅访问类的字段，但不会修改它们，常见的访问器方法通常以 get 开头，被称为 getter。
+存在其他不与某个字段直接关联的修改器或访问器方法，如 print() 方法。
+eg:
+public class Restaurant {                          
+   private String name;
+   private int rating;
+
+   public void setName(String restaurantName) {  // Mutator
+      name = restaurantName;
+   }
+
+   public void setRating(int userRating) {       // Mutator
+      rating = userRating;
+   }
+
+   public String getName() {  // Accessor
+      return name;
+   }
+
+   public int getRating() {  // Accessor
+      return rating;
+   }
+
+   public void print() {      // Accessor
+      System.out.println(name + " -- " + rating);
+   }
+}
+
+
+// private helper method 私有辅助方法
+任何成员方法（公共或私有）都可以调用私有成员方法。
+类的用户可以调用公共成员方法，但不能直接调用私有成员方法（这会导致编译器错误）。
+eg:
+public class MyClass {
+   private int numA;
+
+   private int methodX() {
+      ...
+   }
+
+   public void method1() { 
+   
+
+   }
+}
+
+public class TestClass {
+   public static void main(String[] args) {
+      
+      MyClass someObj = new MyClass();
+
+      someObj.method1();               // Ok
+
+      ...
+
+      someObj.methodX();               // error
+   }
+}
+
+// private helper method 私有辅助方法的作用
+简化代码、提高可读性、增强代码复用性，并且隐藏实现细节，它们通常将某些复杂或重复的任务抽取成独立的方法，从而使得代码更易于维护和扩展。
+eg: 假设我们要创建一个 BankAccount 类，该类有一个用于打印账户信息的公共方法，但这个方法涉及多个步骤，比如格式化账户余额。我们可以将格式化的部分提取为一个私有辅助方法：
+代码简洁：printAccountInfo 负责打印信息，formatBalance 负责处理格式化，使得代码更加简洁明了。
+代码复用：如果以后需要在其他地方也使用相同的余额格式化逻辑，可以复用这个私有辅助方法。
+隐藏实现细节：外部无法直接调用 formatBalance，只能通过公共方法 printAccountInfo 使用它，保证了类的内部实现细节不会暴露。
+
+public class BankAccount {
+    private String accountNumber;
+    private double balance;
+
+    public BankAccount(String accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+
+    // 公共方法，用于打印账户信息
+    public void printAccountInfo() {
+        String formattedBalance = formatBalance(); // 使用私有方法格式化余额
+        System.out.println("Account: " + accountNumber + " | Balance: " + formattedBalance);
+    }
+
+    // 私有辅助方法，用于格式化余额
+    private String formatBalance() {
+        return String.format("$%.2f", balance);  // 格式化为两位小数的货币格式
+    }
+}
+
+// 构造函数 constructor (也可以参考java_note.java)  // 其实 构造函数 的运用 代码上 相当于 替换了 private 参数的初始值assign 和 一部分setter
+构造方法（constructor） 是 Java 中的一个特殊类成员方法，在创建类对象时被调用，用于初始化类的所有字段。
+构造方法的名称与类名相同，并且没有返回类型，甚至不使用 void。例如：public Restaurant() {...} 定义了 Restaurant 类的构造方法。
+程序员在创建对象时指定要调用的构造方法。例如：Restaurant favLunchPlace = new Restaurant(); 创建一个新的 Restaurant 对象并调用构造方法。
+如果类没有程序员定义的构造方法，Java 编译器会隐式地定义一个无参默认构造方法，并将所有字段初始化为默认值。
+A default constructor is implicitly defined by Java if a constructor doesn't exist. The default constructor initializes the capacity field to an int's default value, 0.
+eg:
+Restaurant.java:
+
+public class Restaurant {
+   private String name;
+   private int rating;
+
+   public Restaurant() {  // Constructor with no arguments
+      name = "NoName";    // Default name: NoName indicates name was not set
+      rating = -1;        // Default rating: -1 indicates rating was not set
+   }
+
+   public void setName(String restaurantName) {
+      name = restaurantName;
+   }
+
+   public void setRating(int userRating) {
+      rating = userRating;
+   }
+
+   public void print() {
+      System.out.println(name + " -- " + rating);
+   }
+}
+
+RestaurantFavorites.java:
+public class RestaurantFavorites {
+   public static void main(String[] args) {
+      Restaurant favLunchPlace = new Restaurant(); // Calls the constructor
+
+      favLunchPlace.print();
+
+      favLunchPlace.setName("Central Deli");
+      favLunchPlace.setRating(4);
+      favLunchPlace.print();
+   }
+}
+
+
+// deposing into classes
+类的分解：程序员通过将复杂问题分解成多个类来管理不同的对象和功能。例如，在管理足球队员时，程序员可能会创建一个 Person 类来代表每个队员。
+类的设计：每个类通常包含私有数据（如姓名、年龄）和公共方法（如 get/set 方法和打印方法）。私有数据保护对象内部状态，公共方法提供操作和访问这些数据的接口。
+eg:
+TeamPerson.java:
+
+public class TeamPerson {
+   private String fullName;
+   private int ageYears;
+   
+   public void setFullName(String firstAndLastName) {
+      fullName = firstAndLastName;
+   }
+   
+   public void setAgeYears(int ageInYears) {
+      ageYears = ageInYears;
+   }
+   
+   public String getFullName() {
+      return fullName;
+   }
+   
+   public int getAgeYears() {
+      return ageYears;
+   }
+   
+   public void print() {
+      System.out.println("Full name: " + fullName);
+      System.out.println("Age (years): " + ageYears);
+   }
+}
+
+SoccerTeam.java:
+public class SoccerTeam {
+   private TeamPerson headCoach;
+   private TeamPerson assistantCoach;
+   // Players omitted for brevity
+   
+   public void setHeadCoach(TeamPerson teamPerson) {
+      headCoach = teamPerson;
+   }
+   
+   public void setAssistantCoach(TeamPerson teamPerson) {
+      assistantCoach = teamPerson;
+   }
+   
+   public TeamPerson getHeadCoach() {
+      return headCoach;
+   }
+   
+   public TeamPerson getAssistantCoach() {
+      return assistantCoach;
+   }
+   
+   public void print() {
+      System.out.println("HEAD COACH: ");
+      headCoach.print();
+      System.out.println();
+      
+      System.out.println("ASSISTANT COACH: ");
+      assistantCoach.print();
+      System.out.println();
+   }
+}
+
+SoccerTeamPrinter.java:
+public class SoccerTeamPrinter {
+   public static void main(String[] args) {
+      SoccerTeam teamCalifornia = new SoccerTeam();
+      TeamPerson headCoach = new TeamPerson();
+      TeamPerson asstCoach = new TeamPerson();
+      
+      headCoach.setFullName("Mark Miwerds");
+      headCoach.setAgeYears(42);
+      teamCalifornia.setHeadCoach(headCoach);
+
+      asstCoach.setFullName("Stanley Lee");
+      asstCoach.setAgeYears(30);
+      teamCalifornia.setAssistantCoach(asstCoach);
+
+      teamCalifornia.print();
+   }
+}
+
+// testbench， unit testing
+// A testbench is a program whose job is to thoroughly test another program (or portion) via a series of input/output checks known as test cases. 
+// Unit testing means to create and run a testbench for a specific item (or "unit") like a method or a class.
+// good testbench include:
+自动检查：自动比较值，例如 testData.GetNum1() != 100，只打印失败的结果，以提高简洁性。
+独立测试用例：每个测试用例都独立，例如对 GetAverage() 的测试会赋予新的值，而不是依赖之前的值。
+100% 代码覆盖率：确保每行代码都被执行，良好的测试平台应有比当前测试更多的测试用例。
+包括边界案例：不仅测试典型值，还包括极端或不寻常的值，如 0、负数或大数，以确保全面验证代码的鲁棒性。
+eg:
+StatsInfo.java:
+public class StatsInfo {
+
+   // Note: This class intentionally has errors
+
+   private int num1;
+   private int num2;
+
+   public void setNum1(int numVal) {
+      num1 = numVal;
+   }
+
+   public void setNum2(int numVal) {
+      num2 = numVal;
+   }
+
+   public int getNum1() {
+      return num1;
+   }
+
+   public int getNum2() {
+      return num1;
+   }
+
+   public int getAverage() {
+      return num1 + num2 / 2;
+   }
+}
+
+testbench: StatsInfoTest.java
+public class StatsInfoTest {
+   public static void main(String[] args) {
+      StatsInfo testData = new StatsInfo();
+
+      // Typical testbench tests more thoroughly
+
+      System.out.println("Beginning tests.");
+
+      // Check set/get num1
+      testData.setNum1(100);
+      if (testData.getNum1() != 100) {
+         System.out.println("   FAILED set/get num1");
+      }
+
+      // Check set/get num2
+      testData.setNum2(50);
+      if (testData.getNum2() != 50) {
+         System.out.println("   FAILED set/get num2");
+      }
+
+      // Check getAverage()
+      testData.setNum1(10);
+      testData.setNum2(20);
+      if (testData.getAverage() != 15) {
+         System.out.println("   FAILED GetAverage for 10, 20");
+      }
+
+      testData.setNum1(-10);
+      testData.setNum2(0);
+      if (testData.getAverage() != -5) {
+         System.out.println("   FAILED GetAverage for -10, 0");
+      }
+
+      System.out.println("Tests complete.");
+   }
+}
+
+
+// Regression testing
+// 回归测试指的是在类或其他代码项修改后重新测试，以确保先前通过的测试用例仍然能够通过。如果之前通过的测试用例失败了，说明该代码项发生了“回归”。
+
+
+// constructor overloading
+构造方法重载：程序员可以通过定义多个参数类型不同的构造方法来支持不同的初始化方式。
+匹配调用：使用 new 操作符创建对象时，传递的参数会匹配相应的构造方法。
+显式定义默认构造方法：如果程序员定义了任何构造方法，编译器不会隐式定义默认构造方法。因此，最好显式定义一个无参默认构造方法，确保可以使用 new MyClass() 创建对象。
+If the programmer doesn't define any constructors, the compiler implicitly defines a default constructor having no statements.
+eg:
+public class Pet {
+   private String name;
+   private int age;
+
+   public Pet() {
+      name = "Unnamed";
+      age = -1;
+   }
+
+   public Pet(int yearsOld) {
+      name = "NoName";
+      age = yearsOld;
+   }
+
+   public Pet(String petName, int yearsOld) {
+      name = petName;
+      age = yearsOld;
+   }
+
+   public void print() {
+      System.out.println(name + ", " + age);
+   }
+}
+
+// class 的 reference理解
+A statement like TimeHrMin travelTime; declares a reference to an object of type TimeHrMin. while String firstName; declares a reference to an object of type String. 
+The reference variables do not store data for those class types. Instead, the programmer must assign each reference to an object, which can be created using the new operator.
+The statement TimeHrMin travelTime; declares a reference variable with an unknown value. A common error is to attempt to use a reference variable that does not yet refer to a valid object.
+The new operator allocates memory for an object, then returns a reference to the object's location in memory. 
+Thus, travelTime = new TimeHrMin(); sets travelTime to refer to a new TimeHrMin object in memory. travelTime now refers to a valid object and the programmer may use travelTime to access the object's methods. The reference variable declaration and object creation may be combined into a single statement: TimeHrMin travelTime = new TimeHrMin();
+eg:
+FlightInfo flightPlan;           // Declare a reference variable named flightPlan that can refer to an object of type FlightInfo. Do not create a new object.
+flightPlan = new FlightInfo();   // Write a statement that creates an object of FlightInfo and assigns the new object to the reference variable flightPlan.
+Two or more reference variables may refer to the same object
+eg:
+RunnerInfo lastRun;
+RunnerInfo currRun = new RunnerInfo();
+// Assign reference to lastRun
+lastRun = currRun;
+
+// 隐式参数（Implicit Parameter）
+隐式传递：调用对象的成员方法时，objectReference.method() 语法中的对象引用被隐式地作为参数传递给方法，等同于 method(objectReference, ...)。
+this 关键字：在成员方法内部，隐式传递的对象引用可以通过 this 访问，表示当前对象。例如，this.classMember 访问类成员。
+区分同名参数：当方法参数与类成员名称相同时，this 关键字用于区分，例如 this.sideLength 访问类字段，而 sideLength 代表参数。
+eg:
+class Square {
+    private int sideLength;
+
+    // 构造方法1
+    public Square() {
+        this(0);  // 调用另一个构造方法
+    }
+
+    // 构造方法2
+    public Square(int sideLength) {
+        this.sideLength = sideLength;  // 区分参数和成员变量
+    }
+
+    // 成员方法
+    public void setSideLength(int sideLength) {
+        this.sideLength = sideLength;  // 使用 this 区分类成员和参数
+    }
+
+    public int getSideLength() {
+        return this.sideLength;
+    }
+}
+eg:
+ShapeSquare.java:
+public class ShapeSquare {
+   // Private fields
+   private double sideLength;
+
+   // Public methods
+   public void setSideLength(double sideLength) {
+      this.sideLength = sideLength;
+      // Field member    Parameter
+   }
+
+   public double getArea() {
+      return sideLength * sideLength; // Both refer to field
+   }
+}
+
+ShapeTest.java:
+public class ShapeTest {
+   public static void main(String[] args) {
+      ShapeSquare square1 = new ShapeSquare();
+
+      square1.setSideLength(1.2);
+      System.out.println("Square's area: " + square1.getArea());
+   }
+}
+
+// this() 默认构造方法
+默认构造方法 中，程序员可以直接给字段赋值，比如 this.field = 0;。然而，使用 this(0, 0); 可以直接调用另一个带有两个参数的构造方法，这个构造方法负责初始化所有字段。通过这种方式，可以避免在每个构造方法中重复写相同的初始化代码
+eg:
+class Rectangle {
+    private int length;
+    private int width;
+
+    // 默认构造方法，调用重载构造方法
+    public Rectangle() {
+        this(0, 0);  // 调用有参构造方法，将长和宽初始化为0
+    }
+
+    // 带参数的构造方法
+    public Rectangle(int length, int width) {
+        this.length = length;
+        this.width = width;
+    }
+}
+
+
+// primitive type and reference type 原始类型和引用类型
+基本类型(Primitive types): 直接存储数据值，例如 int、double、char, 例如: int numStudents = 20;，变量 numStudents 直接存储值 20。
+引用类型(Reference types): 引用一个类的实例(对象 object), 而不是直接存储数据。例如: Integer maxPlayers = 10; maxPlayers 引用了 Integer 类的一个实例，该实例存储值 10。
+
+// Wrapper classes 
+包装类是 Java 提供的内置引用类型，用于增强基本类型
+例如，Integer 是 int 的包装类
+Wrapper class objects can be initialized in the same manner as variables of primitive types.
+eg:
+Integer gameScore = 81; // Ok recommand
+Integer gameScore = new Integer(81);  // also Ok
+
+作用:
+1. 允许将基本类型作为对象使用。使得像 ArrayList 等只能存储对象的类可以处理基本类型的包装类。例如：ArrayList<Integer> 可以存储 Integer 对象，但不能存储 int 基本类型
+eg: 
+Integer maxPlayers = 10;  // 创建 Integer 对象
+ArrayList<Integer> scores = new ArrayList<>();  // 使用 Integer 包装类创建 ArrayList
+2. 提供类型转换:
+a. 将基本类型与字符串之间相互转换的方法。
+b. 支持不同进制转换（如十进制转二进制）
+c. 提供了基本类型之间的转换（如 int 转 double）
+----------------------------------------------
+| Reference type | Associated primitive type |
+|----------------|---------------------------|
+| Character      | char                      |
+| Integer        | int                       |
+| Double         | double                    |
+| Boolean        | boolean                   |
+| Long           | long                      |
+----------------------------------------------
+
+A wrapper class object (as well as a String object) is immutable, meaning a programmer cannot change the object via methods or variable assignments after object creation.
+When the result of an expression is assigned to an Integer reference variable, memory for a new Integer object with the computed value is allocated, and the reference (or address) of this new object is assigned to the reference variable.
+A new memory allocation occurs every time a new value is assigned to an Integer variable, and the previous memory location to which the variable referred, remains unmodified.
+不可变性：包装类对象（例如 Integer）是不可变的，意味着在对象创建后，无法通过方法或变量赋值来更改该对象。
+新对象分配：当表达式结果赋值给 Integer 引用变量时，系统为带有计算值的 Integer 对象分配新的内存，并将该新对象的引用（地址）赋给变量。
+重复分配：每次给 Integer 变量赋新值时，都会进行新的内存分配，之前的value内存位置不受影响，不会被修改(会被系统自动回收)。
+
+// Limits on initialization values 初始化值的限制
+数值范围：使用字面量进行初始化时，程序员必须确保字面量的值在合适的数值范围内，例如 int 的范围是 -2,147,483,648 到 2,147,483,647。
+最大值与最小值：包装类（除了 Character 和 Boolean）声明了 MAX_VALUE 和 MIN_VALUE 静态字段，分别表示该类型可以表示的最大值和最小值。
+访问方式：程序员可以通过类名加点操作符访问这些字段，例如 Integer.MIN_VALUE 返回 -2,147,483,648。
+
+
+// 比较包装类对象 compare wrapper class object (equality and relational operators)
+// 注意事项:
+1. 避免使用 == 和 !=：对于包装类（如 Integer、Double、Boolean），使用 == 或 != 来比较两个引用变量会导致逻辑错误。== 比较的是两个引用是否指向同一个对象，而不是比较对象的内容。
+2. 包装类与基本类型或常量的比较：在比较包装类对象与基本类型或常量时，可以使用 == 和 !=，这不会导致问题，因为自动拆箱会将包装类转换为基本类型进行比较。
+3. 关系运算符：包装类对象可以使用 <、<=、> 和 >= 进行比较，但这些运算符通常不适用于其他引用类型(除了wrapper class的其他class)。
+4. 使用 equals() 和 compareTo()：包装类对象之间的比较应使用 equals() 方法（用于相等比较）和 compareTo() 方法（用于排序比较）。虽然这些方法比关系运算符稍显繁琐，但它们更适合不想记忆运算符细节的程序员，并且避免了错误。
+// 小表格总结: 
+| Comparison                   | Description                                                      |
+|-------------------------------|------------------------------------------------------------------|
+| `objectVar == objectVar`       | DO NOT USE. Compares references to objects, not the value of the objects. |
+| *(also applies to !=)*         |                                                                  |
+| `objectVar == primitiveVar`    | OK. Compares value of object to value of primitive variable.      |
+| *(also applies to !=)*         |                                                                  |
+| `objectVar == 100`             | OK. Compares value of object to literal constant.                |
+| *(also applies to !=)*         |                                                                  |
+| `objectVar < objectVar`        | OK. Compares values of objects.                                  |
+| *(also applies to <=, >, and >=)*|                                                               |
+| `objectVar < primitiveVar`     | OK. Compares values of object to value of primitive.             |
+| *(also applies to <=, >, and >=)*|                                                               |
+| `objectVar < 100`              | OK. Compares values of object to literal constant.               |
+| *(also applies to <=, >, and >=)*|                                                               |
+
+
+// 比较包装类对象 compare wrapper class object (equals, compareTo)
+使用 equals() 和 compareTo()：包装类对象可以使用 equals() 方法来检查对象是否相等，使用 compareTo() 方法进行大小比较。
+适用于所有包装类：这些方法不仅适用于 Integer，也适用于其他包装类如 Double、Boolean、String 等。
+方法的优点：虽然 equals() 和 compareTo() 的使用比关系运算符稍显繁琐，但它们提供了明确的比较规则，适合不想记忆具体运算符行为的程序员。
+总结：相比直接使用 == 和 <，这些方法避免了包装类对象比较中的潜在错误，并且在对象比较中更加可靠。
+eg:
+Integer num1 = 10;
+Integer num2 = 8;
+Integer num3 = 10;
+int regularInt = 20;
+num1.equals(num2) // Evaluates to false
+num1.equals(10)   // Evaluates to true
+!(num2.equals(regularInt)) // Evaluates to true because 8 != 20
+num1.compareTo(num2) // Returns value greater than 0, because 10 > 8 
+num2.compareTo(8)    // Returns 0 because 8 == 8
+num1.compareTo(regularInt)   // Returns value less than 0, because 10 < 20
+
+// autoboxing, unboxing
+是指Java在需要时自动地在基本数据类型（primitive types）和它们对应的包装类（Wrapper classes）之间进行转换的过程。以下是这两个概念的总结：
+Java为每种基本数据类型提供了一个对应的包装类。例如：
+int 对应 Integer
+double 对应 Double
+boolean 对应 Boolean
+// autoboxing是指基本类型自动转换为其对应的包装类。例如：
+int a = 10;
+Integer b = a; // 自动装箱
+// unboxing是指包装类对象自动转换为对应的基本类型。例如：
+Integer a = 10;
+int b = a; // 自动拆箱
+// Java允许在表达式中混合使用基本类型和包装类，自动进行转换。例如：
+Integer x = 5;
+int y = 10;
+int z = x + y; // x自动拆箱为int
+
+// wrapper class object convert to primitive types (包装类转换成primitive) (其实不用intValue这种手动转换，直接用autoboxing/unboxing 也行, 例如： int pinScore = totalPins.intValue(); 也可以: int pinScore = totalPins; )
+Given: 
+Integer num1 = 14;
+Double num2 = 6.7643;
+Double num3 = 5.6e12;
+// intValue()       Returns the value of the wrapper class object as a primitive int value, type casting if necessary.
+num2.intValue() // Returns 6
+// doubleValue()   Returns the value of the wrapper class object as a primitive double value, type casting if necessary.
+num1.doubleValue() // Returns 14.0
+// longValue()     Returns the value of the wrapper class object as a primitive long value, type casting if necessary.
+num3.longValue() // Returns 5600000000000
+// charValue()     similar function as above
+// booleanValue()  similar function as above
+
+// convert to and from String
+// btw: what does static method to be called?  answer: To call a static method, the name of the class and a '.' must precede the static method name, as in  Integer.toString(16);.
+eg:
+Given: 
+Integer num1 = 10;
+Double num2 = 3.14;
+String str1 = "32";
+int regularInt = 20;
+// toString() 
+num1.toString() // Returns "10"
+num2.toString() // Returns "3.14"
+// Integer.toString(someInteger) and other similar type
+Returns a String containing the decimal representation of the value of someInteger. someInteger may be an Integer object, a int variable, or an integer literal. This static method is also available for the other wrapper classes (e.g.,  Double.toString(someDouble)).
+Integer.toString(num1)       // Returns "10"
+Integer.toString(regularInt) // Returns "20"
+Integer.toString(3)          // Returns "3"
+// Integer.parseInt(someString) and other similar type
+Parses someString and returns an int representing the value encoded by someString. This static method is also available for the other wrapper classes (e.g., Double.parseDouble(someString)), returning the corresponding primitive type.
+Integer.parseInt(str1)    // Returns int value 32
+Integer.parseInt("2001") // Returns int value 2001
+// Integer.valueOf(someString) and other similar type
+Parses someString and returns a new Integer object with the value encoded by someString. This static method is also available for the other wrapper classes (e.g., Double.valueOf(someString)), returning a new object of the corresponding type.
+Integer.valueOf(str1)    // Returns Integer object with value 32
+Integer.valueOf("2001") // Returns Integer object with value 2001
+// Integer.toBinaryString(someInteger) and other similar type
+Returns a String containing the binary representation of someInteger. someInteger may be an Integer object, a int variable, or an integer literal. This static method is also available for the Long classes (e.g.,  Long.toBinaryString(someLong)).
+Integer.toBinaryString(num1)       // Returns "1010"
+Integer.toBinaryString(regularInt) // Returns "10100"
+Integer.toBinaryString(7)          // Return "111"
+
+// 所以我总结下: 
+// toString() 和 Integer.toString           1. 结果来说没有什么区别，只是实现方式的不同：toString() 是实例方法; Integer.toString()是静态方法
+//                                          2. Integer.toString只接受int，或Integer类型(其他类double啥的啊，以此类推), 但是可以指定进制
+// Integer.parseInt() 和 Integer.valueOf()  parseInt 返回 primitive 类型 int; valueOf 返回wrapper class Integer(其他类double啥的啊，以此类推)
+
+
+// ArrayList
+ArrayList 是 Java 提供的一个有序列表，能够存储引用类型的元素。
+每个存储在 ArrayList 中的元素称为 元素（element）。
+ArrayList 可以动态增长或缩小，适合在需要灵活处理元素数量的场景中使用。
+ArrayList 只能存储 引用类型（如 Integer, String 等），而不能存储 基本类型（如 int, char）。
+// import
+import java.util.ArrayList;
+// declare
+ArrayList<Integer> vals = new ArrayList<Integer>(); // vals 是一个 ArrayList 的引用变量，引用一个包含 Integer 对象的 ArrayList 实例。
+// common ArrayList methods:
+// 1. add(element)      Create space for and add the element at the end of the list.
+valsList.add(31); // List now: 31 
+valsList.add(41); // List now: 31 41
+// 2. get(index)
+// List originally: 31 41 59. Assume x is an int. 
+x = valsList.get(0);  // Assigns 31 to x
+x = valsList.get(1);  // Assigns 41
+x = valsList.get(2);  // Assigns 59
+x = valsList.get(3);  // Error: No such element
+// 3. set(index, element) 
+// List originally: 31 41 59 
+valsList.set(1, 119);  // List now 31 119 59
+// 4. size()           
+// List originally: 31 41 59. Assume x is an int. 
+x = valsList.size();  // Assigns x with 3
+
+// code example:
+Review.java:
+public class Review {
+   private int rating = -1;
+   private String comment = "NoComment";
+   
+   public void setRatingAndComment(int revRating, String revComment) {
+      rating = revRating;
+      comment = revComment;
+   }
+   public int getRating() { return rating; }
+   public String getComment() { return comment; }
+}
+
+Reviews.java:
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Reviews {
+   private ArrayList<Review> reviewList = new ArrayList<Review>();
+   
+   public void inputReviews(Scanner scnr) {
+      Review currReview;
+      int currRating;
+      String currComment;
+   
+      currRating = scnr.nextInt();
+      while (currRating >= 0) {
+         currReview = new Review();
+         currComment = scnr.nextLine(); // Gets rest of line
+         currReview.setRatingAndComment(currRating, currComment);
+         reviewList.add(currReview);
+         currRating = scnr.nextInt();
+      }
+   }
+   
+   public void printCommentsForRating(int currRating) {
+      Review currReview;
+      int i;
+   
+      for (i = 0; i < reviewList.size(); ++i) {
+         currReview = reviewList.get(i);
+         if (currRating == currReview.getRating()) {
+            System.out.println(currReview.getComment());
+         }
+      }
+   }
+   
+   public int getAverageRating() {
+      int ratingsSum;
+      int i;
+   
+      ratingsSum = 0;
+      for (i = 0; i < reviewList.size(); ++i) {
+         ratingsSum += reviewList.get(i).getRating();
+      }
+      return (ratingsSum / reviewList.size());
+   }
+}
+
+ReviewSystem.java:
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ReviewSystem {
+ 
+   public static void main(String [] args) {
+      Scanner scnr = new Scanner(System.in);
+      Reviews allReviews = new Reviews();
+      String currName;
+      int currRating;
+   
+      System.out.println("Type rating + comments. To end: -1");
+      allReviews.inputReviews(scnr);
+   
+      System.out.println("\nAverage rating: ");
+      System.out.println(allReviews.getAverageRating());
+   
+      // Output all comments for given rating
+      System.out.println("\nType rating. To end: -1");
+      currRating = scnr.nextInt();
+      while (currRating != -1) {
+         allReviews.printCommentsForRating(currRating);
+         currRating = scnr.nextInt();
+      }
+   }
+}
+//上述code如何借鉴:
+// 职责分离与封装：
+每个类应专注于完成一个明确的任务。Review 负责单个评价的表示，Reviews 负责管理多个评价，而 ReviewSystem 负责用户交互。你可以在开发中通过这种方法，使每个类更容易理解和维护。
+封装字段（将类的字段声明为 private），并通过 get 和 set 方法来访问它们，这样可以保护类的内部数据。
+// 高内聚、低耦合：
+高内聚意味着类的职责明确、专注，使得修改某个类的实现不会影响其他类。低耦合意味着类之间的依赖尽量少，通过接口或方法调用来沟通，而不是依赖于内部细节。在设计类时，尽量减少类之间的紧密联系，使系统更加模块化和灵活。
+// 聚合与组合：
+Reviews 类使用 ArrayList 来管理多个 Review 对象，这是聚合的一种形式。组合和聚合是面向对象编程中的关键设计模式，通过这种模式可以灵活地将多个对象组合在一起。
+// 可扩展性：
+当你在设计类时，考虑未来可能会增加哪些功能。比如在 Reviews 类中，你可以轻松添加新的方法来排序评论或过滤评论，而不需要修改已有的方法。这种设计提高了系统的可扩展性。
+// 用户交互与逻辑分离：
+在 ReviewSystem 中，用户交互与逻辑处理分开。交互代码只在主类中，逻辑处理都封装在业务类中。这种分离使得你可以更轻松地修改用户交互部分（比如换成图形界面）而不需要更改底层的逻辑代码。
+
+// another example code
+public class CallProducts {
+   public static void main(String[] args) {
+      Products allProducts = new Products();
+
+      allProducts.inputProducts();
+      allProducts.printAfterDiscount(3);
+   }
+}
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Products {
+   private ArrayList<Product> productList;
+
+   public Products() {
+      productList = new ArrayList<Product>();
+   }
+
+   public void inputProducts() {
+      Scanner scnr = new Scanner(System.in);
+      Product currProduct;
+      int currPrice;
+      String currName;
+
+      currPrice = scnr.nextInt();
+      while (currPrice >= 0) {
+         currProduct = new Product();
+         currName = scnr.next();
+         currProduct.setPriceAndName(currPrice, currName);
+         productList.add(currProduct);
+         currPrice = scnr.nextInt();
+      }
+   }
+
+   public void printAfterDiscount(int discountPrice) {
+      int i;
+      int currDiscountPrice;
+
+      for (i = 0; i < productList.size(); ++i) {
+         currDiscountPrice = productList.get(i).getPrice() - discountPrice;
+
+         System.out.println(productList.get(i).getName() + ": " + currDiscountPrice);
+      }
+   }
+}
+
+public class Product {
+   private int price;
+   private String name;
+
+   public void setPriceAndName(int productPrice, String productName) {
+      price = productPrice;
+      name = productName;
+   }
+
+   public int getPrice() {
+      return price;
+   }
+
+   public String getName() {
+      return name;
+   }
+}
+
+// Java Collections Framework
+ArrayList：
+适合频繁的访问操作，允许通过索引高效地获取元素。
+插入和删除操作较慢，因为在插入或删除时可能需要移动大量元素。
+LinkedList：
+适合频繁的插入和删除操作，插入/删除的效率较高，因为只需调整指针。
+访问操作相对较慢，尤其是需要访问中间元素时，必须遍历列表。
+Set：
+不允许存储重复元素。
+常见的实现有 HashSet 和 TreeSet。HashSet 基于哈希表，存取速度快，但无序；TreeSet 按照自然顺序排序。
+Queue：
+一种先进先出（FIFO）的数据结构，适合队列操作。
+常用的实现有 LinkedList 和 PriorityQueue。
+Map：
+存储键值对，允许通过键快速检索值。
+常见的实现有 HashMap 和 TreeMap。HashMap 基于哈希表，存取速度快；TreeMap 基于红黑树，按键排序。
+// 任务需求决定集合类型：程序员会根据任务的需求选择最适合的集合。
+如果需要高效的元素随机访问，选择 ArrayList。
+如果频繁需要插入或删除，选择 LinkedList。
+如果需要存储唯一元素，选择 Set。
+如果需要存储键值对，选择 Map。
+如果需要队列操作，选择 Queue。
+
+
+// Java Collection Framework (JCF)
+JCF 定义了常见 ADT（抽象数据类型）的接口和类，这些称为集合（Collections）。
+Collection 是一组通用对象的集合，称为元素。Java 中支持几种不同类型的集合，包括 List、Queue、Map 等。
+每种集合类型都是一个接口，定义了程序员可以访问的方法。
+
+
+// ArrayList common method
+// 1. get()     // Returns element at specified index.
+x = teamNums.get(3); // Assigns element 3's value 11 to x
+// 2. set()     // Replaces element at specified index with newElement. Returns element previously at specified index.
+teamNums.set(0, 25);     // Assigns 25 to element 0
+x = teamNums.set(3, 88); // Assigns 88 to element 3. Assigns previous element's value of 11 to x.
+// 3. size()    // Returns the number of elements in the ArrayList.
+teamNums.size()
+// 4. isEmpty() // Returns true if the ArrayList does not contain any elements. Otherwise, returns false.
+teamNums.isEmpty()
+// 5. clear()   // Removes all elements from the ArrayList.
+teamNums.clear()
+// 6. add()     // Adds newElement to the end of the ArrayList. ArrayList's size is increased by one.
+                // Adds newElement to the ArrayList at the specified index. Elements at that specified index and higher are shifted over to make room. ArrayList's size is increased by one.
+teamNums.add(77);   
+teamNums.add(0, 23);
+// 7. remove()  // boolean remove(T existingElement)                // Removes the first occurrence of an element which refers to the same object as existingElement. Elements from higher positions are shifted back to fill gap. ArrayList size is decreased by one. Return true if specified element was found and removed.
+boolean result = list.remove("Banana");                             // 返回 true，移除了 "Banana"
+System.out.println(result);                                         // 输出 true
+                // T remove(int index)                              // Removes element at specified index. Elements from higher positions are shifted back to fill gap. ArrayList size is decreased by one. Returns reference to element removed from ArrayList.
+String removedElement = list.remove(1);                             // 移除索引1处的 "Banana"
+System.out.println(removedElement);                                 // 输出 "Banana"
+
+
+// arrayList 易错点: 
+// Given:  ArrayList<Integer> itemsList = new ArrayList<Integer>(); 
+// After itemsList.set(0, 99), what is the ArrayList's size?
+// The ArrayList has no elements yet, so trying to access element 0 yields an error.
+
+
+// javadoc 工具和java类文档 (见 useful_example_code.java)
+Javadoc 是一个工具，用来解析源代码及特别格式化的注释，并生成文档，称为 API 文档。API 文档用于描述类及类成员的编程接口（API，Application Programming Interface）。
+Doc 注释 是多行注释，格式为 /** 开始，*/ 结束。
+注释中包含 "标签" 部分（block tags），例如：
+@author：指定类的作者。
+@version：指定类的版本号。
+@param：用于描述方法的参数。
+@return：用于描述方法的返回值。
+@see：用于引用其他方法或类，例如 @see ElapsedTime#getTimeMinutes()。
+
+类、方法、字段的 Doc 注释：
+类的注释：位于类定义之前，主要描述类的目的和功能。
+方法的注释：描述方法参数、返回值及其功能。
+字段的注释：没有常见的特定标签，但可以使用通用标签如 @see。
+
+API 文档的范围：
+Javadoc 默认只生成公共成员的文档，不包括私有成员，因为 API 文档是为外部应用程序提供的接口说明。
+私有成员（private）是类的内部实现，不会被外部类访问，因而通常不包含在 API 文档中。
+如果需要生成包含私有成员的文档，可以使用 -private 标志，如 javadoc -private -d destination class1.java class2.java。
+| Block tag  | Compatibility          | Description                                               |
+|------------|------------------------|-----------------------------------------------------------|
+| @author    | classes                | Used to specify an author.                                |
+| @version   | classes                | Used to specify a version number.                         |
+| @param     | methods, constructors  | Used to describe a parameter.                             |
+| @return    | methods                | Used to describe the value or object returned by the method.|
+| @see       | all                    | Used to refer reader to relevant websites or class members.|
+
+
+// 易错点 String, Integer 等的不可变性 immutable(所以作为parameter passing into method之后，无法对这个object改变; 但是数组是可以的，是mutable，虽然数组的引用本身在方法中不可修改（即不能让原始数组引用指向一个新的数组），但数组的内容是可以修改的)
+public class StringExample {
+    
+    public static void modifyString(String str) {
+        System.out.println("Inside method, before modification: " + str);
+        str = "New String"; // Creates a new String object, doesn't change the original
+        System.out.println("Inside method, after modification: " + str);
+    }
+
+    public static void main(String[] args) {
+        String originalStr = "Original String";
+        System.out.println("Before method call: " + originalStr);
+        
+        modifyString(originalStr); // Passing originalStr by reference
+        
+        System.out.println("After method call: " + originalStr); // originalStr is unchanged
+    }
+}
+
+
+// Static Fields（静态字段）
+使用 static 关键字声明的字段是静态字段，表示该变量在程序执行期间只会在内存中分配一次。
+静态变量位于程序的静态内存区域，具有全局作用域，因此可以从程序中的任何地方访问。
+静态字段是属于类的，而不是属于类的每个对象。
+静态字段独立于类的对象，可以不通过创建对象来访问。
+静态字段在类定义中声明并初始化。
+在类方法中，静态字段可以直接通过字段名访问。
+// 静态字段的访问：
+类内部：在类的方法中可以通过字段名直接访问静态字段。
+类外部：通过类名和点符号的方式访问（ClassName.fieldName）。
+// class variable (static fields) and instance variable(non static)
+静态字段也称为类变量（class variables）。
+非静态字段则称为实例变量（instance variables），每个对象有自己的一份副本。
+
+// static method 静态成员方法
+静态方法是独立的，属于类本身，而不是类的对象。
+静态方法通常用于访问和修改私有静态字段，从而允许外部访问或操作类的静态数据。（其实非静态方法也可以更改, 区别就在于要不要通过创建实例来修改）
+静态方法可以在不创建类对象的情况下调用。
+由于静态方法独立于类对象，this 参数不传递给静态方法。
+静态方法只能访问类的静态字段和静态方法，不能访问实例字段或实例方法。（实例方法可以通过创建对象来访问，例如在static main里）
+A public static method can be used to access or mutate a private static field.
+eg:
+public class Example {
+    public static int publicStaticVar = 100;
+}
+
+// 在其他类中可以直接访问
+System.out.println(Example.publicStaticVar);  // 输出 100
+
+public class Example {
+    private static int privateStaticVar = 100;
+
+    public static void printVar() {
+        System.out.println(privateStaticVar);  // 只能在类内访问
+    }
+}
+
+// 在其他类中无法访问
+// System.out.println(Example.privateStaticVar);  // 编译错误，无法访问
+
+eg: Static member method used to access a private static field.
+Store.java:
+public class Store {   
+   // Declare and initialize private static field
+   private static int nextId = 101;   
+
+   // Define private fields 
+   private String name;
+   private String type;
+   private int id;
+
+   public Store(String storeName, String storeType) {
+      name = storeName;
+      type = storeType;
+      id = nextId;
+
+      ++nextId;   // Increment each time a Store object is created
+   }
+
+   public int getId() {
+      return id;
+   }
+   
+   public static int getNextId() {
+      return nextId;
+   }
+}
+
+NewStores.java:
+public class NewStores {
+   public static void main(String[] args) {
+      Store store1 = new Store("Macy's", "Department");
+      Store store2 = new Store("Albertsons", "Grocery");
+      Store store3 = new Store("Ace", "Hardware");
+    
+      System.out.println("Store 1's ID: " + store1.getId());
+      System.out.println("Store 2's ID: " + store2.getId());
+      System.out.println("Store 3's ID: " + store3.getId());
+      System.out.println("Next ID: " + Store.getNextId());
+   }
+}
+
+public static int nextId = 30;：
+nextId 是一个静态字段，属于类 FoodType，而不是特定的对象。
+所有 FoodType 类的实例共享同一个 nextId 值，意味着对 nextId 的修改会影响所有的 FoodType 实例。
+静态字段在内存中只分配一次，类的所有实例访问的都是同一个 nextId。
+public int nextId = 30;：
+nextId 变为实例字段，这意味着每个 FoodType 对象都有自己独立的 nextId 副本。
+对一个实例的 nextId 的修改不会影响其他实例的 nextId。
+
+
+// common java packages
+| Package         | Sample package members              | Description                                                  |
+|-----------------|-------------------------------------|--------------------------------------------------------------|
+| `java.lang`     | `String`, `Integer`, `Double`, `Math` | Contains fundamental Java classes. Automatically imported by Java. |
+| `java.util`     | `Collection`, `ArrayList`, `LinkedList`, `Scanner` | Contains the Java collections framework classes and miscellaneous utility classes. |
+| `java.io`       | `File`, `InputStream`, `OutputStream` | Contains classes for system input and output.                |
+| `javax.swing`    | `JFrame`, `JTextField`, `JButton`  | Contains classes for building graphical user interfaces.      |
+
+
+// 使用包成员的方式 
+1. 使用完全限定名（Fully Qualified Name）：
+包含包名和类名，通过句点连接形成的名称。
+示例：java.util.Scanner 是 java.util 包中 Scanner 类的完全限定名
+java.util.Scanner scanner = new java.util.Scanner(System.in);
+
+2. 使用导入语句（Import Statement）导入包成员：
+通过导入语句可以将特定的包成员引入文件，允许直接使用该成员，而不必使用完全限定名。
+示例：import java.util.Scanner; 导入 Scanner 类，使程序员可以直接使用 Scanner。
+import java.util.Scanner;
+Scanner scanner = new Scanner(System.in); // 直接使用 Scanner
+
+3.使用导入语句导入整个包中的所有成员：
+使用通配符 * 来导入包中的所有成员，允许直接使用包中的所有类。
+示例：import java.util.*; 导入 java.util 包中的所有类，使程序员可以直接使用 Scanner 和 ArrayList 等。
+import java.util.*;
+Scanner scanner = new Scanner(System.in); // 直接使用 Scanner
+ArrayList<String> list = new ArrayList<>(); // 直接使用 ArrayList
+
+//Linked List：元素可以存储在任何内存位置，每个元素包含一个指向下一个元素的引用。
+eg: A basic example to introduce linked lists.
+IntNode.java:
+public class IntNode {
+   private int dataVal;         // Node data
+   private IntNode nextNodeRef; // Reference to the next node
+
+   public IntNode() {
+      dataVal = 0;
+      nextNodeRef = null;
+   }
+
+   // Constructor
+   public IntNode(int dataInit) {
+      this.dataVal = dataInit;
+      this.nextNodeRef = null;
+   }
+
+   /* Insert node after this node.
+    Before: this -- next
+    After:  this -- node -- next
+    */
+   public void insertAfter(IntNode nodeLoc) {
+      IntNode tmpNext;
+
+      tmpNext = this.nextNodeRef;
+      this.nextNodeRef = nodeLoc;
+      nodeLoc.nextNodeRef = tmpNext;
+   }
+
+   // Get location of nextNodeRef
+   public IntNode getNext() {
+      return this.nextNodeRef;
+   }
+
+   public void printNodeData() {
+      System.out.println(this.dataVal);
+   }
+}
+
+CustomLinkedList.java:
+public class CustomLinkedList {
+   public static void main(String[] args) {
+      IntNode headObj;  // Create IntNode reference variables
+      IntNode nodeObj1;
+      IntNode nodeObj2;
+      IntNode nodeObj3;
+      IntNode currObj;
+
+      // Front of nodes list
+      headObj = new IntNode(-1); 
+      
+      // Insert more nodes
+      nodeObj1 = new IntNode(555);
+      headObj.insertAfter(nodeObj1);
+
+      nodeObj2 = new IntNode(999);
+      nodeObj1.insertAfter(nodeObj2);
+
+      nodeObj3 = new IntNode(777);
+      nodeObj1.insertAfter(nodeObj3);
+
+      // Print linked list
+      currObj = headObj;
+      while (currObj != null) {
+         currObj.printNodeData();
+         currObj = currObj.getNext();
+      }
+   }
+}
+
+eg: Managing many new items using just a few reference variables.
+IntNode.java:
+public class IntNode {
+   private int dataVal;         // Node data
+   private IntNode nextNodeRef; // Reference to the next node
+
+   public IntNode() {
+      dataVal = 0;
+      nextNodeRef = null;
+   }
+
+   // Constructor
+   public IntNode(int dataInit) {
+      this.dataVal = dataInit;
+      this.nextNodeRef = null;
+   }
+
+   /* Insert node after this node.
+    Before: this -- next
+    After:  this -- node -- next
+    */
+   public void insertAfter(IntNode nodeLoc) {
+      IntNode tmpNext;
+
+      tmpNext = this.nextNodeRef;
+      this.nextNodeRef = nodeLoc;
+      nodeLoc.nextNodeRef = tmpNext;
+   }
+
+   // Get location of nextNodeRef
+   public IntNode getNext() {
+      return this.nextNodeRef;
+   }
+
+   public void printNodeData() {
+      System.out.println(this.dataVal);
+   }
+}
+
+CustomLinkedList.java:
+public class CustomLinkedList {
+   public static void main(String[] args) {
+      IntNode headObj; // Create IntNode reference variables
+      IntNode currObj;
+      IntNode lastObj;
+      int i;           // Loop index
+      
+      headObj = new IntNode(-1); // Front of nodes list
+      lastObj = headObj;
+      
+      for (i = 0; i < 20; ++i) { // Append 20 rand nums
+         int rand = (int)(Math.random() * 100000); // random int (0-99999)
+         currObj = new IntNode(rand);
+         
+         lastObj.insertAfter(currObj); // Append curr
+         lastObj = currObj;
+      }
+      
+      currObj = headObj; // Print the list
+      while (currObj != null) {
+         currObj.printNodeData();
+         currObj = currObj.getNext();
+      }
+   }
+}
+
+
+// Java 程序的内存区域总结
+在 Java 程序的内存使用中，通常包含以下四个不同的区域：
+1. 代码区域 (Code)
+存储程序指令和执行代码。
+静态内存 (Static Memory)
+2. 存储静态字段（static 变量），这些变量在程序运行期间只分配一次，生命周期贯穿程序的整个执行过程。
+名称“静态”意味着这些变量的地址在运行期间保持不变。
+3. 栈区域 (Stack)
+存储方法的局部变量，局部变量在方法调用时分配，并在方法返回时自动释放。
+这种内存分配和释放的方式类似于“堆栈”，因此称为栈。因为它是自动管理的，所以也被称为自动内存。
+4. 堆区域 (Heap)
+使用 new 操作符为对象分配内存。
+此区域也称为自由存储区，用于动态分配的对象。
+
+
+// 基本垃圾回收（Garbage Collection）
+1. 内存有限性：
+程序可用的内存是有限的，堆中分配的对象在不再需要时必须被释放。
+2. 垃圾回收机制：
+Java 使用垃圾回收机制自动管理内存，定期查找所有不可达（即未使用）已分配的内存位置，并自动释放这些内存，以便实现内存重用。
+3. 程序员的幻觉：
+垃圾回收机制使程序员感觉几乎拥有无限的内存供应，但这会带来运行时开销。
+4. 引用计数：
+Java 虚拟机（JVM）通过维护一个称为引用计数的机制来跟踪程序当前使用的对象。
+引用计数是指向对象的引用变量的数量。如果某个对象的引用计数为零，说明没有变量指向该对象，此时该对象被视为不可达对象，并有资格进行垃圾回收。
+5. 垃圾回收过程：
+JVM 标记不可达对象，并在下次调用垃圾回收器时进行内存回收。
+
+
+//垃圾回收与变量作用域总结
+1. 变量作用域与垃圾回收：
+程序员不需要显式地将引用变量设置为 null 来表明变量不再引用某个对象。**Java 虚拟机（JVM）**可以通过变量超出作用域（不再可见）自动推断为 null 引用。
+当局部变量超出作用域（例如方法返回时），JVM 会自动减少与该变量引用的对象相关的引用计数。
+2. 方法中局部变量的回收：
+当方法内声明的局部引用变量（如 binaryStr）超出作用域时，JVM 会减少该引用变量所引用对象的引用计数。如果引用计数为零，JVM 会将该对象标记为可回收对象。
+对象在垃圾回收器下次运行时会被回收。
+3. main 方法的情况：
+main() 也是一个方法，当 main() 返回时，所有在 main() 中声明的局部变量也会超出作用域，JVM 将减少与这些变量相关的对象的引用计数。
