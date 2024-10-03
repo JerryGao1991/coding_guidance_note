@@ -2365,3 +2365,589 @@ JVM 标记不可达对象，并在下次调用垃圾回收器时进行内存回�
 对象在垃圾回收器下次运行时会被回收。
 3. main 方法的情况：
 main() 也是一个方法，当 main() 返回时，所有在 main() 中声明的局部变量也会超出作用域，JVM 将减少与这些变量相关的对象的引用计数。
+
+
+// 输出流和输入流
+// PrintStream 和 System.out
+PrintStream类提供了几种将数据写入输出的方法。在内部， PrintStream通常将数据放入临时存储内存区域（称为缓冲区），然后系统在不同时间输出缓冲区。
+System.out是一个预定义的 PrintStream 对象，它与系统的标准输出（通常是计算机屏幕）相关联。System 类的out变量在 System 类中声明为PrintStream out;。请注意，由于 System 类是预定义的，因此程序员无需导入 System 类即可使用 System.out。
+// InputStream、System.in 和 throws 子句
+InputStream类提供了几种 read() 方法，用于从输入源提取数据字节。
+System.in是一个预定义的 InputStream 对象，它与系统的标准输入（通常是键盘）相关联。System.in 输入流会自动从操作系统用输入数据填充的缓冲区中读取标准输入。
+使用 InputStream 时，程序员必须将子句附加throws IOException到 main() 的定义中，throws子句表示在运行时，相应的方法可能由于异常而意外退出。
+import java.io.IOException;
+
+public class InputStreamReader {
+  public static void main (String[] args)
+  throws IOException {
+     int usrInput;    // input value: Amy\n
+
+     // Read 1st byte
+     usrInput = System.in.read();
+     // Read 2nd byte
+     usrInput = System.in.read();
+     // Read 3rd byte
+     usrInput = System.in.read();
+     // Read 4th byte
+     usrInput = System.in.read();
+     // Read 5th byte (empty buffer)
+     usrInput = System.in.read();
+  }
+}
+调用 System.in.read() 会导致操作系统读取标准输入并用输入数据填充缓冲区。当用户按下 Enter 键时，缓冲区会被填满，同时还会向缓冲区添加一个换行符。
+read() 方法从操作系统的缓冲区读取第一个可用的 8 位 ASCII 值。
+当缓冲区为空时，System.in.read() 会等待更多键盘输入。用户输入“more”并按下回车键，缓冲区将充满更多数据。
+System.in.read() 返回缓冲区中的第一个字节。main() 方法完成时数据仍在缓冲区中。
+
+// 扫描器 Scanner
+程序员经常需要从 InputStream 中提取整数或字符串。程序通常使用 Scanner 类来增强 System.in，而不是直接从 System.in 读取字节，该类通过自动扫描字节序列并将其转换为所需的数据类型来增强 System.in。要初始化 Scanner 对象，程序员可以将 InputStream（例如 System.in）作为参数传递给构造函数。例如：Scanner scnr = new Scanner(System.in);
+
+
+// output formatting
+printf() 和 format() 都是 System.out 提供的用于输出格式化的方法
+printf() 的第一个参数是格式字符串，它指定了要输出的文本格式，并包含若干个用于打印值的占位符。
+占位符是用来指定将要输出的值的类型，通常称为格式说明符。
+| Format specifier | Data type(s)            | Notes                                                  |
+|------------------|-------------------------|--------------------------------------------------------|
+| %c               | char                    | Prints a single Unicode character                      |
+| %d               | int, long, short         | Prints a decimal integer value.                        |
+| %o               | int, long, short         | Prints an octal integer value.                         |
+| %h               | int, char, long, short   | Prints a hexadecimal integer value.                    |
+| %f               | float, double            | Prints a floating-point value.                         |
+| %e               | float, double            | Prints a floating-point value in scientific notation.  |
+| %s               | String                   | Prints the characters in a String variable or literal. |
+| %%               |                         | Prints the "%" character.                              |
+| %n               |                         | Prints the platform-specific new-line character.       |
+
+// 子说明符 subspecifier
+控制输出的精度、宽度、以及其他格式化选项。例如：
+%(flags)(width)(.precision)specifier
+ploating point 浮点数是最经常用到 subspecifier的
+flags：可选，用于控制对齐、填充等格式。
+width：可选，指定最小的输出宽度。
+.precision：可选，用于指定小数点后的位数（精度）。
+specifier：必须，指定数据类型（如 %f 表示浮点数）。
+
+//浮点数格式：
+宽度width: 如果格式化的值包含的字符多于宽度，则不会截断该值。如果格式化的值包含的字符少于宽度，则输出将用空格填充（如果指定了“0”标志，则用 0 填充）
+精度precision: 指定小数点后要打印的位数。如果未指定精度，则使用默认精度 6。
+flag: -：根据指定的宽度左对齐输出，并用空格填充输出。
+      +：为正值打印前加“+”号。负数始终打印“-”号。
+      0: 当格式化值的字符数少于宽度时，用 0 填充输出。
+      space: 为正值打印前加空格。
+eg:
+float myFloat = 12.34f;
+System.out.printf("Value: %7.2f", myFloat);  // Value:   12.34 // 格式说明符 %7.2f 指定最小宽度为 7，保留 2 位小数。如果数字的长度小于 7，默认情况下会在左侧用空格填充。 // 因为flag没有 - ，所以是右对齐，补的空格在左边.
+
+float myFloat = 123456.78f;
+System.out.printf("Value: %7.2f", myFloat);  // Value: 123456.78   //虽然指定了最小宽度为 7，但由于数字 123456.78 本身占用了 9 个字符（包括小数点），因此不会被截断。
+
+float myFloat = 12.34f;
+System.out.printf("Value: %07.2f", myFloat); // Value: 0012.34     // %07.2f 指定了最小宽度为 7，并且使用 0 进行填充，而不是空格。
+
+float myFloat = 12.34f;
+System.out.printf("%.4f", myFloat);               // 12.3400
+System.out.printf("%3.4e", myFloat);              // 1.2340e+01
+System.out.printf("%.f", myFloat);                // 12
+System.out.printf("%f", myFloat);                 // 12.340000
+System.out.printf("%+f", myFloat);                // +12.340000
+System.out.printf("%08.2f", myFloat);             // 00012.34
+System.out.printf("%-10.2f\n", myFloat);          // 12.34      // 12.34 左对齐，后面用空格补充至宽度 10。
+System.out.printf("%010.2f\n", myFloat);          // 0000012.34
+System.out.printf("% 10.2f\n", myFloat);          //      12.34 //     
+
+// 整数格式:
+width: 指定要打印的最小字符数。如果格式化的值包含的字符多于宽度，则不会截断该值。如果格式化的值包含的字符少于宽度，则输出将用空格填充（如果指定了“0”标志，则用 0 填充）。
+flags: -：根据指定的宽度左对齐输出，并用空格填充输出。
+       +：为正值打印前面的 + 号。负数始终打印 - 号
+       0: 当格式化值的字符数少于宽度时，用 0 填充输出。
+       space: 为正值打印前面的空格。
+eg: 
+myInt = 301;
+System.out.printf("Value: %7d", myInt);               // Value:     301
+System.out.printf("%+d", myInt);                      // +301
+System.out.printf("%08d", myInt);                     // 00000301
+System.out.printf("%+08d", myInt);                    // +0000301
+
+int myInt = -713;
+System.out.printf("%+04d", myInt);                    // -713       myInt is a negative value, so the + sign is not printed. A - sign is printed for all negative values.
+System.out.printf("%+02d", myInt);                    // -713       
+
+// String格式:
+width: 指定要打印的最小字符数。如果字符串的字符数超过宽度，则不会截断该值。如果格式化的值的字符数少于宽度，则输出将用空格填充。
+precision: 指定要打印的最大字符数。如果字符串的字符数超过精度，则字符串将被截断。
+flag:  -：根据指定的宽度将输出左对齐，并用空格填充输出。
+eg:
+myString = "Formatting";
+System.out.printf("%20s String", myString);  //           Formatting String
+System.out.printf("%.6s", myString);         // Format
+
+
+// flushing output 
+// 输出缓冲机制:
+输出字符通常先被存储在一个缓冲区中，然后再写入输出设备（如屏幕）。因为将字符从缓冲区移动到输出设备需要占用大量处理器资源，系统会等到缓冲区满了或累积到一定数量的字符后，再将这些字符写入输出设备。
+缓冲区可以提高效率，因为移动较多字符（如 50 个字符）所花费的资源和移动少量字符（如 1 个字符）的资源是相近的。
+// 延迟输出的原因:
+如果缓冲区中的字符较少，或者系统资源繁忙，系统可能会等待更合适的时机再将缓冲区中的字符输出。
+在某些处理器密集型程序中，等待可能导致延迟或输出不流畅（如抖动）。
+// flush()
+flush() 方法强制将缓冲区中的内容立即写入输出设备，避免延迟。示例：System.out.flush(); 立即将 System.out 的缓冲区内容写到屏幕上。
+println() 方法或输出换行符通常会自动触发缓冲区的flush。
+
+
+// input string stream
+通过将 Scanner 对象与字符串关联，程序员可以从字符串而不是键盘（标准输入）读取数据。从字符串初始化的 Scanner 对象通常称为 input string stream
+eg:
+Scanner inSS = new Scanner(userInfo);
+该语句使用字符串 userInfo 的副本创建一个新的 Scanner 对象。然后，程序可以使用 next()、nextInt()、nextDouble() 等方法从 Scanner inSS 流中提取数据。
+
+// Line-by-Line Input Processing
+逐行处理输入是字符串流的常见用途，程序可以逐行读取用户输入并进行处理。
+scnr.nextLine() 用于从标准输入中读取一行数据，并将其存储到一个字符串变量中，
+inSS = new Scanner(lineString); 创建一个基于字符串 lineString 的 Scanner 对象（即输入字符串流）。
+一旦 Scanner 对象关联到输入字符串流，程序可以使用 next() 方法逐个提取单词，使用 nextInt() 方法提取整数，等等
+eg: Using a string stream to process a line of input text.
+import java.util.Scanner;
+
+public class ProcessInputText {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in); // Input stream for standard input
+      Scanner inSS = null;                   // Input string stream
+      String lineString;                     // Holds line of text
+      String firstName;                      // First name
+      String lastName;                       // Last name
+      int userAge;                           // Age
+      boolean inputDone;                     // Flag to indicate next iteration
+
+      inputDone = false;
+
+      // Prompt user for input
+      System.out.println("Enter \"firstname lastname age\" on each line");
+      System.out.println("(\"Exit\" as firstname exits).\n");
+
+      // Grab data as long as "Exit" is not entered
+      while (!inputDone) {
+
+         // Entire line into lineString
+         lineString = scnr.nextLine();
+
+         // Create new input string stream
+         inSS = new Scanner(lineString);
+
+         // Now process the line
+         firstName = inSS.next();
+
+         // Output parsed values
+         if (firstName.equals("Exit")) {
+            System.out.println("   Exiting.");
+
+            inputDone = true;
+         }
+         else {
+            lastName = inSS.next();
+            userAge = inSS.nextInt();
+
+            System.out.println("   First name: " + firstName);
+            System.out.println("   Last name: " + lastName);
+            System.out.println("   Age: " + userAge);
+            System.out.println();
+         }
+      }
+   }
+}
+
+
+// Output string stream 
+是一种可以写入String而不是standard output, Output string stream允许程序员在输出到文件或屏幕之前构建和格式化字符串
+Output string stream 是使用 StringWriter 和 PrintWriter 类创建的：
+import java.io.StringWriter; 
+import java.io.PrintWriter;
+StringWriter 类提供String stream来输出字符，
+PrintWriter 增强了String stream的功能，提供了 print() 和 println() 方法来输出不同的数据类型（如 int、double 和 String），类似于 System.out。
+Output string stream 通常用于在输出到文件或屏幕之前构建和格式化字符串，这样可以灵活地处理输出内容。
+eg:
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+public class StringOutputStream {
+  public static void main(String[] args) {
+     Scanner scnr = new Scanner(System.in);
+
+     // Basic character stream for age
+     StringWriter ageStream = new StringWriter();
+     // Augments character stream with print()
+     PrintWriter ageOSS = new PrintWriter(ageStream);
+
+     int userAge;           // Age (int)
+
+     // Gets user's age from input
+     userAge = scnr.nextInt();
+
+     // Writes userAge as characters to
+     // output string stream buffer (PrintWriter)
+     ageOSS.print(userAge);
+
+     // Appends " (minor)" to stream buffer
+     // if the user's age is less than 21
+     if (userAge < 21) {
+        ageOSS.print(" (minor)");
+     }
+
+     // Copies the stream's buffer to a String
+     // and outputs string to the screen
+     System.out.println("User's age: " + ageStream.toString());
+  }
+}
+
+
+// File input
+有时程序需要从文件获取输入，而不是从键盘输入。要读取文件输入，程序员可以创建一个来自文件的输入流，类似于从标准输入（System.in）获取输入。
+通过文件输入流，可以像使用 Scanner 和 System.in 那样从文件读取数据
+语句 fileByteStream = new FileInputStream(str); 创建了一个文件输入流，并打开由 str 变量表示的文件进行读取。str 是表示文件路径或文件名的字符串。
+也可以通过直接传递字符串字面值来指定文件名: fileByteStream = new FileInputStream("numFile.txt");
+eg:
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class FileReadNums {
+   public static void main (String[] args) throws IOException {
+      FileInputStream fileByteStream = null; // File input stream
+      Scanner inFS = null;                   // Scanner object
+      int fileNum1;                       // Data value from file
+      int fileNum2;                       // Data value from file
+
+      // Try to open file
+      System.out.println("Opening file numFile.txt.");
+      fileByteStream = new FileInputStream("numFile.txt");
+      inFS = new Scanner(fileByteStream);
+      
+      // File is open and valid if we got this far 
+      // (otherwise exception thrown)
+      // numFile.txt should contain two integers, else problems
+      System.out.println("Reading two integers.");
+      fileNum1 = inFS.nextInt();
+      fileNum2 = inFS.nextInt();
+
+      // Output values read from file
+      System.out.println("num1: " + fileNum1);
+      System.out.println("num2: " + fileNum2);
+      System.out.println("num1+num2: " + (fileNum1 + fileNum2));
+
+      // Done with file, so try to close it
+      System.out.println("Closing file numFile.txt.");
+      // close() may throw IOException if fails
+      fileByteStream.close(); 
+   }
+}
+
+
+//Reading Until the End of the File
+程序可以通过循环读取文件，直到文件中没有有效数据可供读取，或者达到了文件的末尾。
+hasNextInt() 方法用于检查文件中是否有下一个可供读取的整数。如果有整数可读取，返回 true。
+如果下一个数据项不是整数，或者流操作已经到达文件末尾，则返回 false。
+Scanner 类提供了多个 hasNext() 方法，用于不同的数据类型，例如 hasNextInt()（整数）、hasNextDouble()（双精度数）、hasNextLine()（字符串）。
+这些方法可以帮助程序在读取不同类型的数据时检查文件的有效性，并防止读取超出文件末尾。
+在处理文件时，程序员常常会使用 while 循环，结合 hasNext() 方法来逐个读取文件中的数据，直到文件末尾。
+// eg: Counting instances of a specific word
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class CountingWords {
+   public static void main(String[] args) throws IOException {
+      Scanner scnr = new Scanner(System.in);
+      FileInputStream fileByteStream = null; // File input stream
+      Scanner inFS = null;                   // Scanner object
+      String userWord;
+      int wordFreq = 0;
+      String currWord;
+
+      // Try to open file
+      System.out.println("Opening file wordFile.txt.");
+      fileByteStream = new FileInputStream("wordFile.txt");
+      inFS = new Scanner(fileByteStream);
+
+      // Word to be found
+      System.out.print("Enter a word: ");
+      userWord = scnr.next();
+
+      while (inFS.hasNext()) {
+         currWord = inFS.next();
+         if(currWord.equals(userWord)) {
+            ++wordFreq;
+         }
+      }
+
+      System.out.println(userWord + " appears in the file " +
+                         wordFreq + " times.");
+
+      // Done with file, so try to close it
+      fileByteStream.close(); // close() may throw IOException if fails
+   }
+}
+
+// 需要 IOException 的原因：
+I/O 操作的不可预测性：
+读取文件、写入文件、网络通信等操作涉及硬件或外部设备，这些操作是不可预测的，可能会出现设备未响应、文件损坏或不存在等情况。
+例如：
+试图读取不存在的文件。
+试图从无法访问的网络资源读取数据。
+磁盘读取错误。
+程序员必须显式地捕获并处理 IOException，或者在方法签名中声明 throws IOException。
+eg:
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class FileReadExample {
+    public static void main(String[] args) {
+        FileInputStream fileByteStream = null;
+        try {
+            fileByteStream = new FileInputStream("numFile.txt");
+            // 执行文件读取操作
+        } catch (IOException e) {
+            // 捕获并处理IOException
+            System.out.println("I/O error occurred: " + e.getMessage());
+        } finally {
+            // 关闭文件流，确保资源释放
+            if (fileByteStream != null) {
+                try {
+                    fileByteStream.close();
+                } catch (IOException e) {
+                    System.out.println("Error closing file: " + e.getMessage());
+                }
+            }
+        }
+    }
+}
+
+
+// file output
+FileOutputStream 是一个用于向文件写入数据的类，继承自 OutputStream。
+FileOutputStream 仅包含用于写入字节的方法。因此，无法直接使用它来写入字符串或其他常见的数据类型。
+为了写入字符串和其他常见的数据类型，通常会使用 PrintWriter 类。
+PrintWriter 包含 print() 和 println() 方法，这些方法支持写入字符串和其他数据类型。
+| Action                                      | Sample code                                                 |
+|---------------------------------------------|--------------------------------------------------------------|
+| Open the file `helloWorld.txt` for writing  | `FileOutputStream fileStream = new FileOutputStream("helloWorld.txt");` |
+| Create a PrintWriter to write to the file   | `PrintWriter outFS = new PrintWriter(fileStream);`           |
+| Write the string "Hello World!" to the file | `outFS.println("Hello World!");`                             |
+| Close the file after writing all desired data | `outFS.close();` 
+                                          |
+eg: write HTML
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class HTMLFileWriteSample {
+  static void writeHTMLFile(PrintWriter printer, String innerHTML) {
+     printer.println("<!DOCTYPE html>");
+     printer.println("<html>");
+     printer.println("  <body>");
+     printer.println("    <p>" + innerHTML + "</p>");
+     printer.println("  </body>");
+     printer.println("</html>");
+  }
+  public static void main(String[] args) throws IOException {
+     // Open an output file stream and create a PrintWriter
+     FileOutputStream fileStream = new FileOutputStream("simple.html");
+     PrintWriter filePrinter = new PrintWriter(fileStream);
+  
+     // Write the HTML file, then close filePrinter
+     writeHTMLFile(filePrinter, "Hello <b>HTML</b> world!");
+     filePrinter.close();
+
+     // Use the same function, writeHTMLFile, to write to the console
+     PrintWriter systemOutPrinter = new PrintWriter(System.out);
+     writeHTMLFile(systemOutPrinter, "Hello <b>HTML</b> world!");     
+     systemOutPrinter.close();
+  }
+}
+
+
+// Derived Classes 和 Inheritance 
+// Derived Class 概念：
+有时一个类和另一个类相似，但有一些额外的功能或变化。比如，一个商店库存系统可能有一个通用的 GenericItem 类，它包含 itemName 和 itemQuantity 成员；但对于生鲜产品，可能还需要 ProduceItem 类，它除了前两个数据成员外，还有 expirationDate 数据成员。
+// Inheritance（继承）：
+Derived Class（派生类）（或称为子类）是从另一个类（称为 Base Class 或基类/超类）派生的类。
+派生类继承了基类的属性，这一概念称为继承（inheritance）。
+派生类的对象可以访问all the members of the derived class，as well as the public and protected members of the base class (private member访问不了)
+// 派生类是通过在类名后使用 extends 关键字来声明的，格式如下
+class DerivedClass extends BaseClass { ... }
+// 使用 extends 关键字来声明派生类，这使得代码更具重用性和可扩展性，同时保护base class 的private member
+eg: Class ProduceItem is derived from class GenericItem.
+GenericItem.java:
+public class GenericItem {
+   private String itemName;
+   private int itemQuantity;
+
+   public void setName(String newName) {
+      itemName = newName;
+   }
+
+   public void setQuantity(int newQty) {
+      itemQuantity = newQty;
+   }
+
+   public void printItem() {
+      System.out.println(itemName + " " + itemQuantity);
+   }
+}
+
+ProduceItem.java:
+public class ProduceItem extends GenericItem { 
+   private String expirationDate;
+
+   public void setExpiration(String newDate) {
+      expirationDate = newDate;
+   }
+
+   public String getExpiration() {
+      return expirationDate;
+   }  
+}
+
+//Inheritance Scenarios
+1. derived class 可以作为另一个类的base class。
+2. 一个base class可以有多个derived class
+3. 一个类只能直接继承一个base class
+
+
+//Access by Members of Derived Classes
+不能访问基类的私有成员。这样确保了私有成员的封装性，即使派生类也无法直接访问基类的私有成员。
+除了 public 和 private，还有第三种access specifier：protected
+protected 成员 可以被派生类和同一个包（package）中的所有类访问，但其他类无法访问。
+这意味着派生类可以访问基类的 protected 成员，而包中的其他类也可以访问这些成员，但包外的类不能访问。
+
+public：任何类都可以访问。
+protected：派生类和同一包中的类可以访问，其他类不能访问。
+private：只有定义该成员的类可以访问，派生类和其他类都无法访问。
+no specifier: 只有定义该成员的类, 和同一包中的类可以访问
+| Specifier     | Description                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| private       | Accessible by self.                                                         |
+| protected     | Accessible by self, derived classes, and other classes in the same package. |
+| public        | Accessible by self, derived classes, and everyone else.                     |
+| no specifier  | Accessible by self and other classes in the same package.                   |
+
+eg:
+Business.java:
+public class Business{
+   protected String name;    // Member accessible by self and derived classes
+   private String address;   // Member accessible only by self
+
+   public void printMembers() { // Member accessible by anyone
+      // Print information ...
+   }
+   
+}
+
+Restaurant.java:
+public class Restaurant extends Business{
+   private int rating; 
+
+   public void displayRestaurant() {
+      // Attempted accesses
+      printMembers();             // OK
+      name = "Gyro Hero";         // OK    ("protected" above made this possible)
+      address = "5 Fifth St";    // ERROR
+   }
+
+   // Other class members ...
+}
+
+InheritanceAccessEx.java
+public class InheritanceAccessEx {
+   public static void main(String[] args) {
+      Business business = new Business();
+      Restaurant restaurant = new Restaurant();
+    
+      // Attempted accesses
+      business.printMembers();          // OK
+      business.name = "Gyro Hero";      // OK (protected also applies to other classes in the same package)
+      business.address = "5 Fifth St";  // ERROR
+      
+      restaurant.printMembers();        // OK
+      restaurant.name = "Gyro Hero";    // OK (protected also applies to other classes in the same package)
+      restaurant.rating = 5; // ERROR
+      
+      // Other instructions ...
+   }
+}
+
+// class definition
+// Separately, the keyword "public" in a class definition like public class DerivedClass {...} specifies a class's visibility in other classes in the program:
+public : A class can be used by every class in the program regardless of the package in which either is defined.
+no specifier : A class can be used only in other classes within the same package, known as package-private.
+
+
+// Overriding Member Methods
+// 方法重写（Overriding）：
+当派生类定义了一个与基类中具有相同名称和参数的方法时，称为**重写（overriding）**了基类的方法。
+派生类的该方法将覆盖基类中的相同方法。
+// @Override 注解：
+@Override 是一个注解，用于标识某个方法重写了基类中的方法。
+该注解是可选的，但推荐使用，因为它让编译器能够检测并验证基类中是否存在相同签名的方法。
+如果派生类的方法的参数与基类方法不同，或者方法名称有误，使用 @Override 将导致编译器报错，从而帮助程序员及时发现错误。
+// Business.java
+public class Business {
+   protected String name;
+   protected String address;
+   ... 
+
+   public String getDescription() {
+      return name + " -- " + address;
+   }
+}
+// Restaurant.java
+public class Restaurant extends Business {
+   private int rating;
+   ...
+   
+   @Override
+   public String getDescription() {
+      return name + " -- " + address +
+         "\n  Rating: " + rating;
+   }
+}
+
+
+// Overriding vs. Overloading 总结
+// 1. Overriding（重写）：
+重写 是指派生类中的方法与基类中的方法具有相同的名称、参数类型、参数个数和返回类型，用于覆盖基类中的方法。
+// 重写的特点：
+派生类的方法完全覆盖基类的同名方法。
+使用 @Override 注解可以帮助确认方法是正确重写的。
+目的是为了在派生类中提供基类方法的特定实现。
+// 2. Overloading（重载）：
+重载 是指同一个类中方法名称相同，但参数类型或参数个数不同的情况。
+// 重载的特点：
+方法的参数必须不同（参数类型或参数个数），可以有不同的返回类型。
+方法同名但功能不同，用于处理不同的输入参数。
+重载的方法不会隐藏基类中的同名方法。
+// 3. 区别：
+重写：派生类中方法必须与基类中的方法名称、参数和返回类型都相同，是为了提供新的实现。
+重载：在同一个类中使用相同的方法名称，但参数类型或个数不同，方法功能不同。
+
+
+// Calling a Base Class Method 
+super 是一个引用变量，用于在派生类中调用基类（父类）的成员方法或构造函数。
+super 的用途：
+调用基类的构造函数：使用 super() 来调用基类的构造函数。
+调用基类的成员方法：使用 super.methodName() 来调用被重写的基类方法。
+// ps 一个用法是 假如 想在derived class 里方法里调用 base class 里的private fields， 就可以用super，从而就有权限来调用
+eg: 
+class Business {
+    public String getDescription() {
+        return "This is a business";
+    }
+}
+
+class Restaurant extends Business {
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " and a restaurant.";
+    }
+}
+
