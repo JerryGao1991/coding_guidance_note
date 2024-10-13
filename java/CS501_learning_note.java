@@ -2156,7 +2156,7 @@ public static int nextId = 30;：
 nextId 是一个静态字段，属于类 FoodType，而不是特定的对象。
 所有 FoodType 类的实例共享同一个 nextId 值，意味着对 nextId 的修改会影响所有的 FoodType 实例。
 静态字段在内存中只分配一次，类的所有实例访问的都是同一个 nextId。
-public int nextId = 30;：
+public int nextId = 30;
 nextId 变为实例字段，这意味着每个 FoodType 对象都有自己独立的 nextId 副本。
 对一个实例的 nextId 的修改不会影响其他实例的 nextId。
 
@@ -2249,7 +2249,7 @@ public class CustomLinkedList {
       nodeObj1.insertAfter(nodeObj2);
 
       nodeObj3 = new IntNode(777);
-      nodeObj1.insertAfter(nodeObj3);
+      nodeObj2.insertAfter(nodeObj3);
 
       // Print linked list
       currObj = headObj;
@@ -2331,8 +2331,8 @@ public class CustomLinkedList {
 在 Java 程序的内存使用中，通常包含以下四个不同的区域：
 1. 代码区域 (Code)
 存储程序指令和执行代码。
-静态内存 (Static Memory)
-2. 存储静态字段（static 变量），这些变量在程序运行期间只分配一次，生命周期贯穿程序的整个执行过程。
+2. 静态内存 (Static Memory)
+存储静态字段（static 变量），这些变量在程序运行期间只分配一次，生命周期贯穿程序的整个执行过程。
 名称“静态”意味着这些变量的地址在运行期间保持不变。
 3. 栈区域 (Stack)
 存储方法的局部变量，局部变量在方法调用时分配，并在方法返回时自动释放。
@@ -2350,7 +2350,7 @@ Java 使用垃圾回收机制自动管理内存，定期查找所有不可达（
 3. 程序员的幻觉：
 垃圾回收机制使程序员感觉几乎拥有无限的内存供应，但这会带来运行时开销。
 4. 引用计数：
-Java 虚拟机（JVM）通过维护一个称为引用计数的机制来跟踪程序当前使用的对象。
+Java 虚拟机(JVM)通过维护一个称为引用计数的机制来跟踪程序当前使用的对象。
 引用计数是指向对象的引用变量的数量。如果某个对象的引用计数为零，说明没有变量指向该对象，此时该对象被视为不可达对象，并有资格进行垃圾回收。
 5. 垃圾回收过程：
 JVM 标记不可达对象，并在下次调用垃圾回收器时进行内存回收。
@@ -2808,13 +2808,13 @@ public class ProduceItem extends GenericItem {
    }  
 }
 
-//Inheritance Scenarios
+// Inheritance Scenarios
 1. derived class 可以作为另一个类的base class。
 2. 一个base class可以有多个derived class
 3. 一个类只能直接继承一个base class
 
 
-//Access by Members of Derived Classes
+// Access by Members of Derived Classes
 不能访问基类的私有成员。这样确保了私有成员的封装性，即使派生类也无法直接访问基类的私有成员。
 除了 public 和 private，还有第三种access specifier：protected
 protected 成员 可以被派生类和同一个包（package）中的所有类访问，但其他类无法访问。
@@ -2934,7 +2934,20 @@ public class Restaurant extends Business {
 // Calling a Base Class Method 
 super 是一个引用变量，用于在派生类中调用基类（父类）的成员方法或构造函数。
 super 的用途：
-调用基类的构造函数：使用 super() 来调用基类的构造函数。
+调用基类的构造函数：使用 super() 来调用基类的构造函数。 
+eg: 
+  
+  public Pet(String petName, int petAge) {
+      this.petName = petName;
+      this.petAge = petAge;
+  }  
+
+  ...
+  public Cat(String catName, int catAge, String catBreed) {
+    super(catName, catAge);  // 使用父类的构造函数来初始化 petName 和 petAge
+    this.catBreed = catBreed; // 初始化 Cat 类特有的成员变量
+  }
+  
 调用基类的成员方法：使用 super.methodName() 来调用被重写的基类方法。
 // ps 一个用法是 假如 想在derived class 里方法里调用 base class 里的private fields， 就可以用super，从而就有权限来调用
 eg: 
@@ -2948,6 +2961,513 @@ class Restaurant extends Business {
     @Override
     public String getDescription() {
         return super.getDescription() + " and a restaurant.";
+    }
+}
+
+
+// Object 类
+// Object 类是所有类的基类：
+Object 类 是所有 Java 类的直接或间接父类，所有类（包括用户定义的类）都继承自 Object 类。
+toString() 和 equals() 方法可以被子类重写，以提供自定义的字符串表示和内容比较行为。
+// Object 与 object 的区别：
+Object 类：指的是 Java 中内置的 Object 类。
+object（小写）：泛指任何类的实例。
+// 常用的 Object 类方法：
+// 1. toString() 方法：
+返回对象的字符串表示。
+默认返回对象所属的类名和该对象的哈希码（十六进制形式）。
+示例：java.lang.Object@372f7a8d
+// 2. equals(otherObject) 方法：
+比较当前对象和 otherObject 是否相同，返回 true 如果两个对象引用相同的实例。
+默认比较的是对象的引用地址，而不是对象的内容。
+eg:
+public class ObjectPrinter {
+  public static void main(String[] args) {
+     Object myObj = new Object();
+     Integer num = new Integer(100);
+     Business someBusiness = new Business();     
+
+     // Call toString() on each object and print result
+     System.out.println("myObj = " + myObj.toString());                   // myObj = java.lang.Object@1148ab5c
+     System.out.println("num = " + num.toString());                       // num = 100      // 注意： Integer 类返回的是值！
+     System.out.println("someBusiness = " + someBusiness.toString());     // someBusiness = Business@19469ea2
+  }
+}
+
+// toString() 的自动调用：
+当对象与字符串进行拼接，或者当 print() 或 println() 方法被调用时，编译器会自动调用该对象的 toString() 方法。
+例如，System.out.println(someObj) 实际上等价于 System.out.println(someObj.toString())
+
+
+// Polymorphism 多态
+多态性是指根据数据类型确定要执行哪些程序行为。方法重载是一种编译时多态性，其中编译器根据方法的参数确定要调用几个同名方法中的哪一个。
+另一种形式是运行时多态性，其中编译器无法做出决定，而是在程序运行时做出决定。
+运行时多态性的一种情况涉及派生类。程序员通常创建基类和派生类类型的对象集合。
+例如：该语句ArrayList<GenericItem> inventoryList = new ArrayList<GenericItem>();声明一个 ArrayList，它可以包含对 GenericItem 或 ProduceItem 类型的对象的引用。ProduceItem 派生自 GenericItem。
+eg: Runtime polymorphism.
+GenericItem.java:
+public class GenericItem {
+   public void setName(String newName) {
+      itemName = newName;
+   }
+
+   public void setQuantity(int newQty) {
+      itemQuantity = newQty;
+   }
+
+   public void printItem() {
+      System.out.println(itemName + " " + itemQuantity);
+   }
+
+   protected String itemName;
+   protected int itemQuantity;
+}
+
+ProduceItem.java:
+public class ProduceItem extends GenericItem { // ProduceItem derived from GenericItem
+   public void setExpiration(String newDate) {
+      expirationDate = newDate;
+   }
+
+   public String getExpiration() {
+      return expirationDate;
+   }
+
+   @Override
+   public void printItem() {
+      System.out.println(itemName + " " + itemQuantity
+                                    + " (Expires: " + expirationDate + ")");
+   }
+
+   private String expirationDate;
+}
+
+ItemInventory.java:
+import java.util.ArrayList;
+
+public class ItemInventory {
+   public static void main(String[] args) {
+      GenericItem genericItem1;
+      ProduceItem produceItem1;
+      ArrayList<GenericItem> inventoryList = new ArrayList<GenericItem>(); // Collection of "Items"
+      int i;                                                               // Loop index
+
+      genericItem1 = new GenericItem();
+      genericItem1.setName("Smith Cereal");
+      genericItem1.setQuantity(9);
+
+      produceItem1 = new ProduceItem();
+      produceItem1.setName("Apple");
+      produceItem1.setQuantity(40);
+      produceItem1.setExpiration("May 5, 2012");
+
+      genericItem1.printItem();
+      produceItem1.printItem();
+
+      // More common: Collection (e.g., ArrayList) of objs
+      // Polymorphism -- Correct  printItem()  called
+      inventoryList.add(genericItem1);
+      inventoryList.add(produceItem1);
+      System.out.println("\nInventory: ");
+      for (i = 0; i < inventoryList.size(); ++i) {
+         inventoryList.get(i).printItem(); // Calls correct printItem()
+      }
+   }
+}
+
+// 派生类到基类的引用转换：
+派生类的引用可以自动转换为基类的引用，不需要显式类型转换。这种转换非常直观
+示例：当 ProduceItem 类派生自 GenericItem 类时，可以将 ProduceItem 对象的引用赋值给 GenericItem 类型的变量或集合：
+ArrayList<GenericItem> inventoryList = new ArrayList<>();
+ProduceItem produceItem1 = new ProduceItem();
+inventoryList.add(produceItem1); // 自动转换 ProduceItem 到 GenericItem
+这种转换仅仅是让对象的引用变为基类类型，对象的实际类型并未改变。
+// 运行时多态性（Runtime Polymorphism）
+Java 虚拟机（JVM）自动执行运行时多态性，即根据对象的实际类型来调用正确的重写方法，而不是基于引用的类型。
+即使一个派生类的对象被转换为基类引用，调用重写的方法时，JVM 会根据对象的实际类型来决定调用的是基类还是派生类的实现。
+示例：如果 GenericItem 和 ProduceItem 都有 printItem() 方法，当通过基类引用调用 printItem() 时，JVM 会调用派生类 ProduceItem 中的 printItem()，如果该对象实际是 ProduceItem 类型。
+GenericItem item = new ProduceItem();
+item.printItem(); // 调用的是 ProduceItem 的 printItem()，而不是 GenericItem 的
+//总结：
+派生类对象可以自动转换为基类引用，这是安全的，不需要显式转换。
+运行时多态性使得在使用基类引用时，依然可以通过对象的实际类型来调用派生类的重写方法。
+动态绑定确保在运行时根据对象的实际类型决定调用的方法，实现了面向对象编程中的多态性。
+
+
+// ArrayLists of Objects
+由于所有类都是从 Object 类派生的，程序员可以利用运行时多态性来创建各种类类型的对象的集合（例如 ArrayList）并对元素执行操作。
+eg:
+public class Business {
+   protected String name;
+   protected String address;
+   
+   public Business() {}
+   
+   public Business(String busName, String busAddress) {
+      name = busName;
+      address = busAddress;
+   }
+   
+   @Override
+   public String toString() {
+      return name + " -- " + address;
+   }
+}
+
+import java.util.ArrayList;
+
+public class ArrayListPrinter {
+   
+   // Method prints an ArrayList of Objects
+   public static void printArrayList(ArrayList<Object> objList) {
+      int i;
+
+      for (i = 0; i < objList.size(); ++i) {
+         System.out.println(objList.get(i));
+      }
+   }
+   
+   public static void main(String[] args) {       
+      ArrayList<Object> objList = new ArrayList<Object>();
+      
+      // Add new instances of various classes to objList
+      objList.add(new Object());                         // java.lang.Object@4517d9a3                                                                       
+      objList.add(12);                                   // 12                                                             
+      objList.add(3.14);                                 // 3.14                                                               
+      objList.add(new String("Hello!"));                 // Hello!                                                                               
+      objList.add(new Business("ACME", "5 Main St"));    // ACME -- 5 Main St                                                                                                 
+      
+      // Print list of Objects
+      printArrayList(objList);   
+   }
+}
+// 请注意，对 Object 元素集合进行操作的方法只能调用基类（例如 Object 类）定义的方法。
+// 因此，对名为 objList 的 Objects ArrayList 元素调用 toString() 方法的语句（例如objList.get(i).toString()）是有效的，因为 Object 类定义了 toString() 方法。
+// 但是，对同一元素（即 ）调用 Integer 类的 intValue() 方法的语句objList.get(i).intValue()会导致编译器错误，即使该特定元素是 Integer 对象
+// println或者print 可以隐式调用 toString()
+
+
+// abstraction 抽象
+// 抽象类 Shape
+abstract class Shape {
+    // 抽象方法（没有实现）
+    public abstract double computeArea();
+
+    // 普通方法
+    public void printShape() {
+        System.out.println("This is a shape.");
+    }
+}
+
+// 子类 Circle 继承自 Shape 并实现 computeArea 方法
+class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    // 实现抽象方法
+    @Override
+    public double computeArea() {
+        return Math.PI * radius * radius;
+    }
+}
+// 抽象类可以包含抽象方法，这些方法没有具体实现，子类必须提供这些方法的具体实现。这可以确保所有的子类都拥有某些共同的行为。
+
+// abstraction class & concrete class
+抽象方法是未在基类中实现的方法，因此所有派生类都必须重写该函数。
+abstract double computeArea();声明一个名为 computeArea() 的抽象方法。
+abstraction class是不能实例化为对象的类，但它是子类的超类，并指定子类必须如何实现。抽象类由abstract类定义前面的关键字表示。任何具有一个或多个抽象方法的类都必须是抽象的。
+concrete class是非抽象的类，因此可以实例化。
+
+//Unified Modeling Language (UML)
+是一种软件设计语言，它使用不同类型的图表来可视化程序的结构和行为。
+a structural diagram 可视化软件的静态元素，例如程序中使用的属性（变量）和操作（方法）。
+A behavioral diagram 可视化软件的动态行为，例如算法流程
+
+// UML for inheritance
+UML 使用实线箭头和空心箭头表示一个类继承自另一个类。箭头指向超类。
+UML 使用斜体来表示抽象类。具体来说，UML 使用斜体来表示抽象类的名称以及类中的每个抽象方法。提醒一下，超类不必是抽象的。此外，任何具有抽象方法的类都必须是抽象的。
+
+
+// Interfaces
+接口可以指定一组抽象方法，实现类必须重写和定义这些方法。在接口中，抽象方法不需要abstract在方法签名前面添加关键字。
+要创建接口，程序员使用关键字interface。以下代码说明了两个名为 Drawable 和 DrawableASCII 的接口。
+import java.awt.Graphics2D;
+
+public interface Drawable {
+   public void draw(Graphics2D graphicsObject);
+}
+public interface DrawableASCII {
+   public void drawASCII(char drawChar);
+}
+// 任何实现接口的类都必须：
+在关键字implements后列出接口名称
+重写并实现接口的抽象方法
+尽管继承和多态允许类覆盖超类中定义的方法，但类只能从单个超类继承。类可以使用逗号分隔的列表实现多个接口。类实现的每个接口都意味着该类将遵守接口定义的规则。例如：Square 可以实现 Drawable 和 DrawableASCII 接口。
+eg: implementing an interface
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+public class Square implements Drawable, DrawableASCII {
+   private int sideLength;
+
+   public Square(int sideLength) {
+      this.sideLength = sideLength;
+   }
+
+   @Override
+   public void draw(Graphics2D graphicsObject) {
+      Rectangle shapeObject = new Rectangle(0, 0, this.sideLength, this.sideLength);
+      Color colorObject = new Color(255, 0, 0);
+      graphicsObject.setColor(colorObject);
+      graphicsObject.fill(shapeObject);
+   }
+
+   @Override
+   public void drawASCII(char drawChar) {
+      int rowIndex;
+      int columnIndex;
+
+      for (rowIndex = 0; rowIndex < this.sideLength; ++rowIndex) {
+         for (columnIndex = 0; columnIndex < this.sideLength; ++columnIndex) {
+            System.out.print(drawChar);
+         }
+         System.out.println();
+      }
+   }
+}
+
+interface vs abstract class
+使用建议:
+接口：如果你希望定义一组行为，并且让不相关的类都能实现这些行为，那么使用接口。例如，Flyable 可以应用于鸟、飞机等，它们没有共享的属性，但都有飞行的能力。
+抽象类：当你有一些通用的功能和属性希望共享给多个类时，并且想确保子类有相同的基类，实现部分通用行为
+### 接口 vs. 抽象类的区别：
+| **方面**                 | **接口（Interface）**                                   | **抽象类（Abstract Class）**                              |
+|--------------------------|--------------------------------------------------------|------------------------------------------------------------|
+| **目的**                 | 定义一组没有实现的**行为**，让实现类去实现这些行为。    | 提供一个类的**基础结构**，可以包含部分实现和抽象方法。      |
+| **实现和继承方式**        | 一个类**可以实现多个接口**。                            | 一个类**只能继承一个抽象类**（Java 中是单继承的）。        |
+| **方法的定义**           | 接口中的方法默认是**抽象的**，没有方法体。               | 抽象类可以包含**抽象方法**和**已经实现的方法**。            |
+| **字段（变量）的定义**     | 接口中的字段必须是**静态的**和**常量（final）的**。     | 抽象类可以包含**实例变量**，也可以有非静态的字段。          |
+| **适用场景**             | 当你需要定义一组行为，不关心具体实现细节时使用接口。     | 当你需要部分实现或通用逻辑，且希望为子类提供基础结构时使用抽象类。 |
+| **默认访问修饰符**         | 接口方法默认是 `public`（在 Java 8 之后支持 `default` 方法）。 | 抽象类的方法可以有 `public`、`protected` 或 `private` 修饰符。 |
+| **多继承**               | 支持类实现多个接口，实现多继承的效果。                   | 不支持多继承，但可以使用接口来实现类似多继承的功能。         |
+Interfaces can declare public static final fields and don't restrict a class' inheritance.
+Only abstract classes can provide variables/fields to the subclasses.
+An interface does not restrict future inheritance, so is the best choice if no other code is provided.
+
+
+
+// exception handling
+eg: Handling exceptions due to invalid input.
+import java.util.Scanner;
+import java.util.InputMismatchException;
+
+public class LightTravelTime {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      double distMiles = 0.0;
+      double lightTravelTime = 0.0;
+      boolean needInput = true;
+
+      while (needInput) {
+         System.out.print("Enter a distance in miles: ");
+         
+         try {
+            distMiles = scnr.nextDouble();
+            lightTravelTime = distMiles / 186282.0;
+            needInput = false;
+         }
+         catch (InputMismatchException e) {
+            scnr.nextLine(); // Throw away incorrect input
+         }
+      }
+
+      System.out.println("Light travels " + distMiles + 
+                         " miles in " + lightTravelTime +
+                         " seconds");
+   }
+}
+
+
+// exception Type
+| Type                            | Reason exception is thrown                                                                                          |
+|---------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| EOFException                    | End of file or end of stream has been reached unexpectedly during input                                              |
+| InputMismatchException          | Received input does not match expected type or the input is out of range for the expected type (thrown by Scanner)    |
+| ArrayIndexOutOfBoundsException   | An array has been accessed with an illegal index (negative or greater than array size)                               |
+| FileNotFoundException           | Attempt to open a file denoted by a filename failed                                                                  |
+| ArithmeticException             | Arithmetic condition failed (Ex: Divide by zero error)                                                               |
+
+// 程序可以使用 throw 语句在执行过程中显式抛出异常。
+ex:  throw new Exception("Invalid date");  // creates and throws an exception with the message "Invalid date".
+import java.util.Scanner;
+
+public class GasOilMixRatio {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      double gasVolume;
+      double oilVolume;
+      double mixRatio = 0.0;
+
+      try {
+         gasVolume = scnr.nextDouble();
+         oilVolume = scnr.nextDouble();
+
+         mixRatio = gasVolume / oilVolume;
+
+         if (Double.isNaN(mixRatio)) {
+            throw new Exception("mixRatio is NaN!");
+         }
+
+         System.out.println("mixRatio: " + mixRatio);
+      }
+      catch (Exception excpt) {
+         System.out.println(excpt.getMessage());
+      }
+   }
+}
+
+// 使用 exceptions 将错误检查与正常代码分开
+ex:
+import java.util.Scanner;
+
+public class DensityCalculator {
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      double massVal = 0;   // Object mass (kg)
+      double volumeVal = 0; // Object volume (m^3)
+      double densityCalc;   // Resulting density
+
+      try {
+         massVal = scnr.nextDouble();
+
+         // Error checking, non-negative mass
+         if (massVal < 0.0) {
+            throw new Exception("Invalid mass");
+         }
+
+         volumeVal = scnr.nextDouble();
+
+         // Error checking, non-negative volume
+         if (volumeVal < 0.0) {
+            throw new Exception("Invalid volume");
+         }
+
+         densityCalc = massVal / volumeVal;
+
+         System.out.print("Density: " + densityCalc);
+      }
+      catch (Exception excpt) {
+         // Prints the error message passed by the throw statement.
+         System.out.print(excpt.getMessage());
+      }
+   }
+}
+
+// Exception 是所有异常类型的基类，因此带有 Exception 参数类型的 catch 块可以捕获所有异常类型。
+ex:  catch (Exception excpt) {
+         ...
+     }
+
+// 指定方法抛出的异常
+public static double calcAvgInputVal(Scanner scnr) throws Exception {
+    ...
+}    
+
+
+// Checked vs unchecked exceptions
+Java有两种类型的异常：
+// 1. checked exception: 是程序员应该能够预见和处理的异常。例如：打开文件的程序应该预见并处理 FileNotFoundException。
+当方法可能抛出**受检异常（Checked Exception）**时，必须要遵循两种处理方式之一，否则代码将无法编译：
+    // a. 捕获异常（使用 catch 块）：
+    你可以在方法内部用 "try-catch" 块来捕获这个异常并处理它。比如：
+    try {
+        // 可能抛出异常的代码
+    } catch (IOException e) {
+        // 异常处理代码
+    }
+    
+    // b. 声明异常（使用 throws 关键字）：
+    如果你不打算在当前方法中处理这个异常，你可以通过 throws 关键字声明方法可能抛出该异常，然后让调用该方法的地方去处理。例如：
+    public void myMethod() throws IOException {
+        // 可能抛出 IOException 的代码
+    }
+// 2. unchecked exception: 是由硬件或逻辑错误引起的异常，程序员通常无法预料和处理。例如：程序应该尝试消除使用空引用的代码，而不是捕获和处理 NullPointerException。
+| Unchecked exception          | Notes                                                                                       |
+|------------------------------|---------------------------------------------------------------------------------------------|
+| [NullPointerException](#)     | Indicates a null reference.                                                                 |
+| [IndexOutOfBoundsException](#)| Indicates that an index (e.g., an index for an array) is outside the appropriate range.      |
+| [ArithmeticException](#)      | Indicates the occurrence of an exceptional arithmetic condition (e.g., integer division by zero). |
+| [IOError](#)                  | Indicates the failure of an I/O operation.                                                  |
+| [ClassCastException](#)       | Indicates an invalid attempt to cast an object to a type of which the object is not an instance (e.g., casting a Double to a String). |
+| [IllegalArgumentException](#) | Indicates an illegal or inappropriate method argument.                                      |
+|  InputMismatchException       |                                                                                             |
+
+
+// 抛出异常的传播机制：
+在 Java 中，一个方法可以调用另一个带有 throws 声明的方法。如果这个被调用的方法可能抛出异常，调用方法有两种选择：
+// 处理异常：调用方法可以通过 try-catch 块来处理这个异常。
+// 声明异常：如果调用方法不想处理异常，它必须在它的 throws 声明中，显式地声明自己可能抛出与被调用方法相同的异常。
+如果调用方法没有处理（捕获）被调用方法抛出的异常，并且也没有在自己的 throws 子句中声明这些异常，那么程序将无法编译。
+ex:
+import java.io.IOException;
+
+public class Example {
+    // 被调用的方法有一个 throws 声明，可能抛出 IOException
+    public void readFile() throws IOException {
+        throw new IOException("File not found");
+    }
+
+    // 调用方法1：处理异常
+    public void method1() {
+        try {
+            readFile();  // 调用 readFile 方法，处理可能的异常
+        } catch (IOException e) {
+            System.out.println("Caught an IOException: " + e.getMessage());
+        }
+    }
+
+    // 调用方法2：不处理异常，但声明可能抛出异常
+    public void method2() throws IOException {
+        readFile();  // 调用 readFile 方法，但不处理异常，直接将异常声明
+    }
+
+    public static void main(String[] args) {
+        Example ex = new Example();
+        ex.method1();  // 正常运行，因为 method1 捕获了异常
+        try {
+            ex.method2();  // 这里需要处理 method2 抛出的异常
+        } catch (IOException e) {
+            System.out.println("Caught in main: " + e.getMessage());
+        }
+    }
+}
+
+
+// try-with-resources 
+try-with-resources 语句是一种用于管理资源（如文件、数据库连接等）的结构，它可以确保在使用完资源后自动关闭它们，避免内存泄漏和其他资源管理问题。Java 7 及以后的版本支持这种语法。
+当 try 块执行完成后，无论是正常执行结束还是抛出异常，声明的资源都会自动关闭。这样你就不需要手动在 finally 块中关闭资源。
+你可以在同一个 try-with-resources 语句中声明多个资源，用分号分隔。
+ex: 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class TryWithResourcesExample {
+    public static void main(String[] args) {
+        // 使用 try-with-resources 语句来自动管理资源
+        try (BufferedReader br = new BufferedReader(new FileReader("example.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            // 处理可能出现的异常
+            System.out.println("文件读取出错: " + e.getMessage());
+        }
     }
 }
 

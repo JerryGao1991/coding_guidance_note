@@ -282,3 +282,320 @@ public class TimeDifference {
       System.out.println("Time difference is " + timeDiff + " minutes");
    }
 }
+
+/////////////////
+// composition //
+/////////////////
+method 1：
+
+public class Engine {
+    private int horsepower;
+
+    public Engine(int horsepower) {
+        this.horsepower = horsepower;
+    }
+
+    public int getHorsepower() {
+        return horsepower;
+    }
+}
+
+public class Car {
+    private Engine engine;  // Car 包含 Engine
+
+    public Car(int horsepower) {
+        engine = new Engine(horsepower);
+    }
+
+    public void startCar() {
+        System.out.println("Car starts with " + engine.getHorsepower() + " horsepower.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建一个 Car 对象，传入引擎的马力
+        Car myCar = new Car(300);  // 使用 300 马力的引擎
+        myCar.startCar();          // 输出：Car starts with 300 horsepower.
+        
+        // 可以再创建另一个 Car 对象，传入不同的马力值
+        Car anotherCar = new Car(500);  // 使用 500 马力的引擎
+        anotherCar.startCar();          // 输出：Car starts with 500 horsepower.
+    }
+}
+
+method 2:
+public class Car {
+    private Engine engine;
+
+    // Car 的构造函数需要一个引擎
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+    // 允许在运行时更换引擎
+    public void changeEngine(Engine newEngine) {
+        this.engine = newEngine;
+    }
+
+    public void startCar() {
+        System.out.println("Car starts with " + engine.getHorsepower() + " horsepower.");
+    }
+}
+
+// 测试代码
+public class Main {
+    public static void main(String[] args) {
+        Engine engine1 = new Engine(200); // 创建 200 马力的引擎
+        Engine engine2 = new Engine(500); // 创建 500 马力的引擎
+
+        Car myCar = new Car(engine1);     // 用 200 马力引擎创建汽车
+        myCar.startCar();                 // 输出: Car starts with 200 horsepower.
+
+        // 更换引擎
+        myCar.changeEngine(engine2);      // 用 500 马力的引擎替换旧引擎
+        myCar.startCar();                 // 输出: Car starts with 500 horsepower.
+    }
+}
+
+// method 1的优点:
+隐藏细节：Car 隐藏了 Engine 的实现细节。用户只需要提供汽车的马力，内部的 Engine 如何创建完全由 Car 管理。这种封装让 Car 更加易用，并且可以防止用户错误地操作 Engine。
+简化使用：用户不需要手动创建 Engine 对象，而只需传递一个简单的 int 参数。这让创建 Car 对象的流程变得更简洁，且代码更具可读性。
+封装性增强：通过这种设计，用户不需要直接操作 Engine 类，只需提供一个简单的马力值即可创建 Car，这增加了封装性并简化了调用。
+
+// method 1的缺点:
+灵活性限制：这种设计减少了直接创建 Engine 的灵活性。如果未来需要不同类型的 Engine 或更复杂的构造，可能需要回到传递 Engine 对象的方式。
+
+
+
+// 多态的代码示例:
+// 基类 Engine
+public class Engine {
+    protected int horsepower;  // 让子类可以访问
+
+    public Engine(int horsepower) {
+        this.horsepower = horsepower;
+    }
+
+    public int getHorsepower() {
+        return horsepower;
+    }
+
+    // 定义一个通用的启动方法，子类可以重写它
+    public void start() {
+        System.out.println("Engine with " + horsepower + " horsepower is starting.");
+    }
+}
+
+// 子类 GasEngine 表示汽油引擎
+public class GasEngine extends Engine {
+    public GasEngine(int horsepower) {
+        super(horsepower);  // 调用父类的构造函数
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Gas engine with " + horsepower + " horsepower is starting.");
+    }
+}
+
+// 子类 ElectricEngine 表示电动引擎
+public class ElectricEngine extends Engine {
+    public ElectricEngine(int horsepower) {
+        super(horsepower);  // 调用父类的构造函数
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Electric engine with " + horsepower + " horsepower is starting.");
+    }
+}
+
+public class Car {
+    private Engine engine;  // Car 包含 Engine 对象，但可以是不同的子类
+
+    // 通过构造函数传入引擎对象
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+    public void startCar() {
+        engine.start();  // 调用多态方法，根据传入的引擎类型调用不同的启动方法
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建不同类型的引擎对象
+        Engine gasEngine = new GasEngine(300);    // 300 马力的汽油引擎
+        Engine electricEngine = new ElectricEngine(500); // 500 马力的电动引擎
+
+        // 创建 Car 对象并传入不同的引擎
+        Car gasCar = new Car(gasEngine);
+        gasCar.startCar();  // 输出：Gas engine with 300 horsepower is starting.
+
+        Car electricCar = new Car(electricEngine);
+        electricCar.startCar();  // 输出：Electric engine with 500 horsepower is starting.
+    }
+}
+
+
+// interface的示例代码
+// 定义一个 Engine 接口，规定所有引擎都必须实现 start() 方法
+public interface Engine {
+    int getHorsepower();
+    void start();  // 接口中的方法没有实现，要求实现类必须定义
+}
+// 实现 Engine 接口的 GasEngine 类
+public class GasEngine implements Engine {
+    private int horsepower;
+
+    public GasEngine(int horsepower) {
+        this.horsepower = horsepower;
+    }
+
+    @Override
+    public int getHorsepower() {
+        return horsepower;
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Gas engine with " + horsepower + " horsepower is starting.");
+    }
+}
+
+// 实现 Engine 接口的 ElectricEngine 类
+public class ElectricEngine implements Engine {
+    private int horsepower;
+
+    public ElectricEngine(int horsepower) {
+        this.horsepower = horsepower;
+    }
+
+    @Override
+    public int getHorsepower() {
+        return horsepower;
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Electric engine with " + horsepower + " horsepower is starting.");
+    }
+}
+
+public class Car {
+    private Engine engine;  // Car 使用的是 Engine 接口，而不是具体的类
+
+    // 通过构造函数传入一个实现了 Engine 接口的引擎
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+    public void startCar() {
+        engine.start();  // 调用引擎的 start 方法，具体行为由实现类决定
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建不同类型的引擎对象，它们都实现了 Engine 接口
+        Engine gasEngine = new GasEngine(300);        // 300 马力的汽油引擎
+        Engine electricEngine = new ElectricEngine(500);  // 500 马力的电动引擎
+
+        // 使用 GasEngine 创建 Car 对象
+        Car gasCar = new Car(gasEngine);
+        gasCar.startCar();  // 输出：Gas engine with 300 horsepower is starting.
+
+        // 使用 ElectricEngine 创建 Car 对象
+        Car electricCar = new Car(electricEngine);
+        electricCar.startCar();  // 输出：Electric engine with 500 horsepower is starting.
+    }
+}
+
+// 接口 Engine：
+我们定义了 Engine 接口，规定所有实现它的类必须实现 getHorsepower() 和 start() 方法。接口不包含任何实现细节，只定义了类必须实现的行为。
+GasEngine 和 ElectricEngine 实现接口：
+GasEngine 和 ElectricEngine 实现了 Engine 接口，并提供了自己的 start() 方法实现。这样，两个类虽然实现了相同的接口，但具体行为不同。
+Car 类使用接口：
+Car 类不依赖于具体的引擎实现，而是使用 Engine 接口。通过这种方式，Car 可以和任何实现了 Engine 接口的对象一起工作，无需关心它们的内部实现。
+多态性：
+在 main 方法中，我们创建了两种不同的引擎（汽油引擎和电动引擎），并将它们传递给 Car 对象。由于 Car 依赖于接口，它能够处理不同类型的引擎，而不需要修改 Car 类本身。
+
+// 接口 vs. 继承的对比：
+// 继承：
+使用继承时，你必须从基类派生出子类，这在某些情况下可能会导致类层次结构过于复杂，限制了灵活性。
+继承还意味着子类会继承父类的所有行为和属性，适用于 "is-a" 的关系。
+// 接口：
+接口提供了更多的灵活性，允许不同类实现相同的行为，而不必存在直接的继承关系。
+接口适用于 "can-do" 的关系，强调的是行为的实现，而不是类之间的层次关系。
+类可以实现多个接口，这提供了类似多继承的灵活性，而在 Java 中类只能继承一个父类。
+
+
+// user defined exception type
+ex: A DensityCalculator program with two user-defined exception types.
+InvalidNegativeInputException.java
+
+public class InvalidNegativeInputException extends Exception {
+   public InvalidNegativeInputException(String varName) {
+      super("Variable " + varName + " is negative");
+   }
+}
+NaNException.java
+
+public class NaNException extends Exception {
+   public NaNException(String varName) {
+      super("Variable " + varName + " is NaN");
+   }
+}
+DensityCalculator.java
+
+import java.util.Scanner;
+
+public class DensityCalculator {
+   public static double getPositiveValue(Scanner scnr, String valName)
+                        throws InvalidNegativeInputException {
+
+      System.out.print("Enter " + valName + ": ");
+
+      double inputVal = scnr.nextDouble();
+
+      if (inputVal < 0.0) {
+          throw new InvalidNegativeInputException(valName);
+      }
+
+      return inputVal;
+   }
+
+   public static double getDensity(Scanner scnr)
+                        throws InvalidNegativeInputException, NaNException {
+
+      double massVal = getPositiveValue(scnr, "massVal");
+      double volumeVal = getPositiveValue(scnr, "volumeVal");
+      double densityCalc = massVal / volumeVal;
+
+      if (Double.isNaN(densityCalc)) {
+         throw new NaNException("densityCalc");
+      }
+
+      return densityCalc;
+   }
+
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+
+      try {
+         System.out.println("Density: " + getDensity(scnr));
+      }
+      catch (InvalidNegativeInputException excpt) {
+         System.out.println(excpt.getMessage());
+
+         // Handle ...
+      }
+      catch (NaNException excpt) {
+         System.out.println(excpt.getMessage());
+
+         // Handle ...
+      }
+   }
+}
