@@ -1100,7 +1100,7 @@ public static String[] resize(String[] arrayReference, int newSize) {
 2. 修改数组内容，但不改变数组大小：
 方法的目的是修改数组中的元素，但不会改变数组的大小。
 返回值类型：通常为 void，因为不需要返回新数组或数据。
-示例：void sort(int[] arrayReference)：排序数组，将数组中的元素重新排列为升序，方法没有返回值。
+示例：void (int[] arrayReference)：排序数组，将数组中的元素重新排列为升序，方法没有返回值。
 3. 创建新数组或改变数组大小：  // 这种情况下 建议在方法中创建一个新数组来return， 而不要使用argument的原数组。
 方法需要创建一个新的数组或调整数组大小。
 返回值：方法必须返回一个数组引用，因为数组的引用不能在方法内修改。
@@ -3471,3 +3471,1009 @@ public class TryWithResourcesExample {
     }
 }
 
+
+// 二分查找 binary Search
+The search terminates when the element is found or the search space is empty (element not found)
+// eg： 
+import java.util.Scanner;
+
+public class BinarySearch {
+   public static int binarySearch(int [] numbers, int key) {
+      int mid;
+      int low;
+      int high;
+      
+      low = 0;
+      high = numbers.length - 1;
+
+      while (high >= low) {
+         mid = (high + low) / 2;
+         if (numbers[mid] < key) {
+            low = mid + 1;
+         } 
+         else if (numbers[mid] > key) {
+            high = mid - 1;
+         } 
+         else {
+            return mid;
+         }
+      }
+
+      return -1; // not found
+   }
+
+   public static void main(String [] args) {
+      Scanner scnr = new Scanner(System.in);
+      int [] numbers = {2, 4, 7, 10, 11, 32, 45, 87};
+      int i;
+      int key;
+      int keyIndex;
+
+      System.out.print("NUMBERS: ");
+      for (i = 0; i < numbers.length; ++i) {
+         System.out.print(numbers[i] + " ");
+      }
+      System.out.println();
+
+      System.out.print("Enter a value: ");
+      key = scnr.nextInt();
+
+      keyIndex = binarySearch(numbers, key);
+
+      if (keyIndex == -1) {
+         System.out.println(key + " was not found.");
+      } 
+      else {
+         System.out.println("Found " + key + " at index " + keyIndex + ".");
+      }
+   }
+}
+
+// selection sort 选择排序
+eg:
+public class SelectionSort {
+   public static void selectionSort(int [] numbers) {
+      int i;
+      int j;
+      int indexSmallest;
+      int temp;      // Temporary variable for swap
+
+      for (i = 0; i < numbers.length - 1; ++i) {
+
+         // Find index of smallest remaining element
+         indexSmallest = i;
+         for (j = i + 1; j < numbers.length; ++j) {
+
+            if (numbers[j] < numbers[indexSmallest]) {
+               indexSmallest = j;
+            }
+         }
+
+         // Swap numbers[i] and numbers[indexSmallest]
+         temp = numbers[i];
+         numbers[i] = numbers[indexSmallest];
+         numbers[indexSmallest] = temp;
+      }
+   }
+
+   public static void main(String [] args) {
+      int numbers [] = {10, 2, 78, 4, 45, 32, 7, 11};
+      int i;
+
+      System.out.print("UNSORTED: ");
+      for (i = 0; i < numbers.length; ++i) {
+         System.out.print(numbers[i] + " ");
+      }
+      System.out.println();
+
+      /* initial call to selection sort with index */
+      selectionSort(numbers);
+
+      System.out.print("SORTED: ");
+      for (i = 0; i < numbers.length; ++i) {
+         System.out.print(numbers[i] + " ");
+      }
+      System.out.println();
+   }
+}
+
+
+// java 基本图形开发
+// JFrame 对象：
+Java 支持用于开发图形应用的对象，JFrame 是用于显示图形内容的窗口。
+图形应用程序通过在 JFrame 对象中显示绘图和其他图形对象来构建界面。
+// 构造和配置 JFrame：
+创建 JFrame 对象：构造一个 JFrame 对象后并不会立即显示窗口，需要进一步配置它。
+// 设置窗口大小： 
+使用 setSize(int width, int height) 方法来设置窗口的大小。
+例如：appFrame.setSize(400, 250)，如果忘记设置大小，窗口可能太小而无法看到。
+// 设置窗口标题：
+使用 setTitle(String title) 方法来设置窗口标题。
+或者在构造函数中直接设置标题，例如：JFrame appFrame = new JFrame("An Empty Frame")。
+// 设置关闭操作：
+使用 setDefaultCloseOperation() 方法设置关闭操作，例如：appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)，这样当用户关闭窗口时程序将退出。
+// 设置窗口可见性：
+使用 setVisible(true) 方法使窗口可见，例如：appFrame.setVisible(true)。
+
+
+// JComponent 
+JFrame 可以用来绘制图形对象，例如矩形、圆形和直线。
+为了在窗口中显示这些图形，程序员可以向 JFrame 中添加自定义的 JComponent 对象。
+JComponent 是一个空白的图形组件，程序员可以通过自定义代码对其进行扩展，以绘制基本的图形。
+通过扩展（或自定义）JComponent，可以创建一个可以绘制 2D 图形的类。
+
+// 总结来说，要在 Java 中绘制图形对象，主要步骤包括：
+1. 创建一个 JFrame 窗口。
+2. 创建一个自定义的类，继承 JComponent，并实现自定义绘制逻辑。
+3. 将这个自定义的 JComponent 添加到 JFrame 中，从而绘制图形对象。
+
+eg: Drawing a histogram in a frame.
+HistogramComponent.java:
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import javax.swing.JComponent;
+
+// HistogramComponent extends the functionality of a JComponent
+// in order to draw a histogram.
+public class HistogramComponent extends JComponent {
+   
+   // Paints a histogram with three bins
+   @Override
+   public void paintComponent(Graphics g) {  
+      // Cast to Graphics2D
+      Graphics2D graphicsObj = (Graphics2D) g;
+      
+      // Draw 1st bin as an olive colored rectangle at (10,10)
+      // with width = 200 and height = 50
+      Rectangle binRectangle1 = new Rectangle(10, 10, 200, 50); 
+      Color binColor1 = new Color(128, 128, 0);
+      graphicsObj.setColor(binColor1);
+      graphicsObj.fill(binRectangle1);
+      
+      // Draw 2nd bin as a teal blue rectangle at (10,75)
+      // with width = 150 and height = 50
+      Rectangle binRectangle2 = new Rectangle(10, 75, 150, 50); 
+      Color binColor2 = new Color(0, 200, 200);
+      graphicsObj.setColor(binColor2);
+      graphicsObj.fill(binRectangle2);
+      
+      // Draw 3rd bin as a gray rectangle at (10,140)
+      // with width = 350 and height = 50
+      Rectangle binRectangle3 = new Rectangle(10, 140, 350, 50); 
+      Color binColor3 = new Color(100, 100, 100);
+      graphicsObj.setColor(binColor3);
+      graphicsObj.fill(binRectangle3);
+   }
+}
+
+HistogramViewer.java:
+
+import javax.swing.JFrame;
+
+public class HistogramViewer {
+   public static void main(String[] args) {
+      JFrame appFrame = new JFrame();
+      HistogramComponent histogramComponent = new HistogramComponent();
+
+      appFrame.setSize(400, 250);
+      appFrame.setTitle("Histogram Viewer");
+      appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // Add the HistogramComponent object to the frame
+      appFrame.add(histogramComponent);
+      
+      // Set the frame and its contents visible
+      appFrame.setVisible(true);
+   }
+}
+
+// 例子中的 HistogramComponent 的绘图操作:
+// 1. 转换为 Graphics2D 对象：
+在 paintComponent() 方法中，将 Graphics 对象转换为 Graphics2D，以便支持绘制二维图形。
+例如：Graphics2D graphicsObj = (Graphics2D) g;。
+// 2. 创建 Rectangle 对象：
+Rectangle 对象用于存储矩形的位置和大小，构造函数接受位置和大小（以像素为单位）作为参数。
+构造函数形式为：Rectangle(int x, int y, int width, int height)。
+// 3. 创建 Color 对象：
+Color 对象表示红、绿、蓝（RGB）颜色空间中的颜色。
+构造函数接受 0 到 255 的整数值作为每个颜色通道的参数，例如：Color(int red, int green, int blue)。
+例如：Color binColor1 = new Color(128, 128, 0); 创建一个橄榄色的 Color 对象。
+// 4. 设置绘图颜色：
+使用 Graphics2D 的 setColor() 方法设置绘图对象的颜色，指定后续的绘制操作将使用该颜色。
+// 5. 绘制图形：
+使用 Graphics2D 对象提供的绘图方法绘制图形。
+draw() 方法：绘制形状的轮廓，例如矩形对象的轮廓。
+fill() 方法：绘制填充的形状，使用当前颜色填充形状的内部。
+
+
+// ### Summary of Common Shapes for Drawing
+| **Shape**             | **Description**                                                     | **Documentation**                                  |
+|-----------------------|---------------------------------------------------------------------|----------------------------------------------------|
+| **Rectangle**         | The `Rectangle` class for drawing a rectangle.                      | [Oracle's documentation for Rectangle class](https://docs.oracle.com/javase/8/docs/api/java/awt/Rectangle.html) |
+| **RoundRectangle2D**  | The `RoundRectangle2D` class for drawing a rectangle with rounded corners. | [Oracle's documentation for RoundRectangle2D class](https://docs.oracle.com/javase/8/docs/api/java/awt/geom/RoundRectangle2D.html) |
+| **Ellipse2D.Double**  | The `Ellipse2D.Double` class for drawing an ellipse with a size and location. | [Oracle's documentation for Ellipse2D.Double class](https://docs.oracle.com/javase/8/docs/api/java/awt/geom/Ellipse2D.Double.html) |
+| **Line2D.Double**     | The `Line2D.Double` class for drawing a line between two coordinate points. | [Oracle's documentation for Line2D.Double class](https://docs.oracle.com/javase/8/docs/api/java/awt/geom/Line2D.Double.html) |
+| **Polygon**           | The `Polygon` class for drawing a generic polygon with user-specified boundary points. | [Oracle's documentation for Polygon class](https://docs.oracle.com/javase/8/docs/api/java/awt/Polygon.html) |
+
+
+
+// 图形用户界面 (GUI) 与 Swing 组件
+Java 提供了一组称为 Swing GUI 组件 的工具，用于开发自定义的图形用户界面 (GUI)。GUI 使用户可以通过图形化的组件（如窗口、按钮、文本框等）与程序交互，而不是使用传统的命令行文本界面。
+// 主要 Swing 组件介绍：
+// 1. JTextField：
+用于显示和输入一行文本。
+可以通过 setText() 方法设置显示的文本，使用 setEditable(false) 来使文本不可编辑。
+引入方法：import javax.swing.JTextField;。
+// 2. JFrame：
+顶层 GUI 容器，用于包含所有其他组件，是 GUI 应用程序的主窗口。
+创建窗口的方法：JFrame frame = new JFrame("Title");。
+使用 add() 方法将组件（如 JTextField）添加到窗口。
+使用 pack() 方法调整窗口大小以适应所有包含的组件。
+配置关闭操作，使关闭窗口时终止程序：frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);。
+最后通过 setVisible(true) 显示窗口。
+// 创建 GUI 的基本步骤
+创建 GUI 组件（如 JTextField）。
+创建顶级 GUI 容器（如 JFrame）。
+将 GUI 组件添加到顶级容器。
+配置顶级容器（如设置默认关闭操作）。
+显示顶级容器（使窗口可见）。
+
+// eg: Displaying a yearly salary using a GUI.
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
+public class SalaryGUI {
+   public static void main(String[] args) {
+      int hourlyWage;  
+      JFrame topFrame = null;        // Application window
+      JTextField outputField = null; // Displays output salary
+
+      hourlyWage = 20;
+
+      // Create text field
+      outputField = new JTextField();
+      // Display program output using the text field
+      outputField.setText("An hourly wage of " + hourlyWage + "/hr" +
+                          " yields $" + (hourlyWage * 40 * 50) + "/yr.");
+
+      // Prevent user from editing output text
+      outputField.setEditable(false);
+
+      // Create window 
+      topFrame = new JFrame("Salary");
+
+      // Add text field to window
+      topFrame.add(outputField);
+
+      // Resize window to fit components 
+      topFrame.pack();
+
+      // Set program to terminate when window is closed
+      topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      // Display window
+      topFrame.setVisible(true);
+   }
+}
+
+
+//////////////////////////////////////
+// 使用 GridBagLayout 来布局 GUI 组件 //
+//////////////////////////////////////
+Java 的 GridBagLayout 布局管理器允许程序员在 JFrame 或其他容器内以二维网格的方式布置 GUI 组件。它是一种灵活的布局管理器，可以精确控制组件的位置和间距。
+主要步骤：
+// 设置布局管理器：
+使用 frame.setLayout(new GridBagLayout()); 来为 JFrame 设置一个 GridBagLayout 布局管理器。
+创建 GridBagConstraints 对象来设置布局的约束条件（例如位置和间距）。
+// 添加和定位 GUI 组件：
+GridBagConstraints 类用于指定组件在网格中的位置，以及组件之间的间距。
+例如，layoutConst.gridx = 0; 和 layoutConst.gridy = 0; 用于将组件放置在网格的左上角。
+使用 layoutConst.insets = new Insets(10, 10, 10, 10); 来设置组件四周（上、左、下、右）各 10 像素的间距。
+// JLabel 和 JTextField 组件：
+JLabel 用于描述其他 GUI 组件，例如显示“Hourly wage:”，帮助用户理解输入/输出的内容。
+JTextField 用于显示文本，且可以设置字段的宽度（例如列数）和编辑状态（是否可编辑）。
+// 扩展 JFrame 类：
+使用 extends JFrame 关键字来扩展 JFrame 类。
+例如：class SalaryLabelFrame extends JFrame，这使得 SalaryLabelFrame 具备 JFrame 的所有功能，同时可以添加自定义的 GUI 功能。
+构造函数（如 SalaryLabelFrame()）用于创建和初始化所有的 GUI 组件，这种方法可以使代码更加模块化和易读。
+在构造函数中直接调用父类 JFrame 的方法（例如 setTitle() 和 add()），不需要单独创建 JFrame 对象。
+// 在 main() 方法中创建自定义 GUI 窗口：
+SalaryLabelFrame myFrame = new SalaryLabelFrame(); 用于创建自定义的 GUI 窗口并调用构造函数。
+设置关闭操作 (setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE))，调整窗口大小 (pack())，并显示窗口 (setVisible(true))。
+总结：
+使用 GridBagLayout 来布置 GUI 组件，可以使组件在容器中的位置更加精确灵活。此外，通过扩展 JFrame 来创建自定义窗口类，可以使 GUI 的代码更清晰，便于维护和拓展。这种方法使 GUI 组件的创建和布局与主逻辑代码分离，提供了更好的可读性和可扩展性。
+
+// eg: Using a GridBagLayout to arrange GUI components.
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class SalaryLabelGUI {
+
+   public static void main(String[] args) {
+      int hourlyWage;             
+      JFrame topFrame = null;                // Application window
+      JLabel wageLabel = null;               // Label for hourly salary
+      JLabel salLabel = null;                // Label for yearly salary
+      JTextField salField = null;            // Displays hourly salary 
+      JTextField wageField = null;           // Displays yearly salary
+      GridBagConstraints layoutConst = null; // GUI component layout
+
+      hourlyWage = 20;
+
+      // Set hourly and yearly salary
+      wageLabel = new JLabel("Hourly wage:");
+      salLabel = new JLabel("Yearly salary:");
+
+      wageField = new JTextField(15);
+      wageField.setEditable(false);
+      wageField.setText(Integer.toString(hourlyWage));
+
+      salField = new JTextField(15);
+      salField.setEditable(false);
+      salField.setText(Integer.toString((hourlyWage * 40 * 50)));
+
+      // Create frame and add components using GridBagLayout
+      topFrame = new JFrame("Salary");
+      
+      // Use a GridBagLayout
+      topFrame.setLayout(new GridBagLayout());
+
+      // Create GridBagConstraints
+      layoutConst = new GridBagConstraints();
+      
+      // Specify component's grid location
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 0;
+      
+      // 10 pixels of padding around component
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      
+      // Add component using the specified constraints
+      topFrame.add(wageLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 0;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      topFrame.add(wageField, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      topFrame.add(salLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      topFrame.add(salField, layoutConst);
+
+      // Terminate program when window closes
+      topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      
+      // Resize window to fit components
+      topFrame.pack();
+      
+      // Display window
+      topFrame.setVisible(true);
+   }
+}
+
+eg: Using an alternative coding style that defines a custom JFrame class.
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class SalaryLabelFrame extends JFrame {
+   private JLabel wageLabel;     // Label for hourly salary
+   private JLabel salLabel;      // Label for yearly salary
+   private JTextField salField;  // Displays hourly salary 
+   private JTextField wageField; // Displays yearly salary
+
+   /* Constructor initializes the SalaryLabelFrame, 
+      creates GUI components, and adds them
+      using a GridBagLayout. */
+   public SalaryLabelFrame() {
+      int hourlyWage;                  // Hourly wage
+      GridBagConstraints layoutConst;  // Used to specify GUI component layout
+
+      hourlyWage = 20;
+
+      // Set frame's title
+      setTitle("Salary");
+
+      // Set hourly and yearly salary
+      wageLabel = new JLabel("Hourly wage:");
+      salLabel = new JLabel("Yearly salary:");
+
+      wageField = new JTextField(15);
+      wageField.setEditable(false);
+      wageField.setText(Integer.toString(hourlyWage));
+
+      salField = new JTextField(15);
+      salField.setEditable(false);
+      salField.setText(Integer.toString((hourlyWage * 40 * 50)));
+
+      // Use a GridBagLayout
+      setLayout(new GridBagLayout());
+
+      // Create GridBagConstraints
+      layoutConst = new GridBagConstraints();
+      
+      // Specify component's grid location
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 0;
+
+      // 10 pixels of padding around component
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+
+      // Add component using the specified constraints
+      add(wageLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 0;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(wageField, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(salLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(salField, layoutConst);
+   }
+
+   /* Creates a SalaryLabelFrame and makes it visible */
+   public static void main(String[] args) {
+      // Creates SalaryLabelFrame and its components
+      SalaryLabelFrame myFrame = new SalaryLabelFrame();
+
+      // Terminate program when window closes
+      myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      // Resize window to fit components
+      myFrame.pack();
+
+      // Display window
+      myFrame.setVisible(true);
+   }
+}
+
+
+// Java 的 Swing GUI 程序中处理用户输入，并使用 ActionListener 响应事件。
+// 1. 用户输入与 JTextField
+JTextField 组件：可用于显示文本，并且可以设置为允许用户输入和编辑。
+使用 setEditable(true) 可以使得 JTextField 组件允许用户输入值，例如：wageField.setEditable(true);。
+// 2. 事件处理与 ActionListener
+当用户在 GUI 中进行输入时，JTextField 等组件会生成动作事件（Action Events）。
+这些事件通知程序用户已经输入值并可以进行处理，例如按下回车键。
+ActionListener 是用于处理这些动作事件的接口，程序员需要实现 ActionListener 的 actionPerformed() 方法来定义事件触发后的处理方式。
+// 3. 实现 ActionListener 的步骤
+一个类可以实现 ActionListener 接口，例如：SalaryCalcFrame implements ActionListener。
+定义 actionPerformed() 方法：这个方法包含事件触发后的具体处理逻辑。
+使用 getText() 方法从 JTextField 中获取用户输入的文本，并将其转换为需要的类型，例如使用 Integer.parseInt(userInput) 将输入的字符串转换为整数。
+// 4. 注册 ActionListener
+程序员可以调用 GUI 组件的 addActionListener() 方法来注册合适的 ActionListener。
+例如，调用 wageField.addActionListener(this) 将当前类对象（this）注册为 wageField 的 ActionListener。这样，当用户输入值并按下回车键时，JVM 会调用当前类的 actionPerformed() 方法来处理该事件。
+// 5. 使用 JButton 作为触发按钮
+使用按钮进行事件触发通常比直接按下回车键更加直观。
+JButton：Swing GUI 组件，用于代表带有标签的按钮。
+可以通过 calcButton.addActionListener(this) 将 calcButton 按钮的事件处理程序注册到当前类，这样当用户按下按钮时，会自动调用 actionPerformed() 方法来进行处理。
+// 6. 类字段（Fields）的作用
+程序中的 GUI 组件（例如 wageLabel, salLabel）被声明为类中的字段。
+这样做是为了使类中的所有方法（例如构造函数和 actionPerformed() 方法）都可以访问这些组件。
+// 总结
+Java Swing GUI 允许开发者创建图形化界面，并通过 JTextField 等组件接受用户输入。使用 ActionListener 处理事件，使得程序可以根据用户的输入进行相应的逻辑处理，例如计算工资。为了便于管理，所有的 GUI 组件被声明为类的字段，从而允许类中的所有方法访问它们。
+
+// eg: Using a JTextField to enter a wage for a yearly salary calculation.
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class SalaryCalcFrame extends JFrame implements ActionListener {
+   private JLabel wageLabel;     // Label for hourly salary
+   private JLabel salLabel;      // Label for yearly salary
+   private JTextField salField;  // Displays hourly salary 
+   private JTextField wageField; // Displays yearly salary
+
+
+   /* Constructor creates GUI components and adds GUI components
+      using a GridBagLayout. */
+   SalaryCalcFrame() {
+      // Used to specify GUI component layout
+      GridBagConstraints layoutConst = null;
+
+      // Set frame's title
+      setTitle("Salary");
+
+      wageLabel = new JLabel("Hourly wage:");
+      salLabel = new JLabel("Yearly salary:");
+
+      // Set hourly and yearly salary
+      wageField = new JTextField(15);
+      wageField.setEditable(true);
+      wageField.setText("0");
+      wageField.addActionListener(this);
+
+      salField = new JTextField(15);
+      salField.setEditable(false);
+
+      // Use a GridBagLayout
+      setLayout(new GridBagLayout());
+      layoutConst = new GridBagConstraints();
+
+      // Specify component's grid location
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 0;
+
+      // 10 pixels of padding around component
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+
+      // Add component using the specified constraints
+      add(wageLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 0;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(wageField, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 0;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(salLabel, layoutConst);
+
+      layoutConst = new GridBagConstraints();
+      layoutConst.gridx = 1;
+      layoutConst.gridy = 1;
+      layoutConst.insets = new Insets(10, 10, 10, 10);
+      add(salField, layoutConst);
+   }
+
+   /* Method is automatically called when an event 
+    occurs (e.g, Enter key is pressed) */
+   @Override
+   public void actionPerformed(ActionEvent event) {
+      String userInput;      // User specified hourly wage
+      int hourlyWage;        // Hourly wage
+
+      // Get user's wage input
+      userInput = wageField.getText();
+      
+      // Convert from String to an integer
+      hourlyWage = Integer.parseInt(userInput);
+
+      // Display calculated salary
+      salField.setText(Integer.toString(hourlyWage * 40 * 50));
+   }
+
+   /* Creates a SalaryCalculatorFrame and makes it visible */
+   public static void main(String[] args) {
+      // Creates SalaryLabelFrame and its components
+      SalaryCalcFrame myFrame = new SalaryCalcFrame();
+
+      myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      myFrame.pack();
+      myFrame.setVisible(true);
+   }
+}
+
+
+
+
+// eg: Using a JButton to trigger a yearly salary calculation.
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class SalaryCalcButtonFrame extends JFrame implements ActionListener {
+   private JLabel wageLabel;     // Label for hourly salary
+   private JLabel salLabel;      // Label for yearly salary
+   private JTextField salField;  // Displays hourly salary 
+   private JTextField wageField; // Displays yearly salary
+   private JButton calcButton;   // Triggers salary calculation
+
+   /* Constructor creates GUI components and adds GUI components
+      using a GridBagLayout. */
+   SalaryCalcButtonFrame() {
+      // Used to specify GUI component layout
+      GridBagConstraints positionConst = null;
+
+      // Set frame's title
+      setTitle("Salary");
+
+      // Set hourly and yearly salary labels
+      wageLabel = new JLabel("Hourly wage:");
+      salLabel = new JLabel("Yearly salary:");
+
+      wageField = new JTextField(15);
+      wageField.setEditable(true);
+      wageField.setText("0");
+
+      salField = new JTextField(15);
+      salField.setEditable(false);
+
+      // Create a "Calculate" button
+      calcButton = new JButton("Calculate");
+      
+      // Use "this" class to handle button presses
+      calcButton.addActionListener(this);
+
+      // Use a GridBagLayout
+      setLayout(new GridBagLayout());
+      positionConst = new GridBagConstraints();
+
+      // Specify component's grid location
+      positionConst.gridx = 0;
+      positionConst.gridy = 0;
+      
+      // 10 pixels of padding around component
+      positionConst.insets = new Insets(10, 10, 10, 10);
+      
+      // Add component using the specified constraints
+      add(wageLabel, positionConst);
+
+      positionConst.gridx = 1;
+      positionConst.gridy = 0;
+      positionConst.insets = new Insets(10, 10, 10, 10);
+      add(wageField, positionConst);
+
+      positionConst.gridx = 0;
+      positionConst.gridy = 1;
+      positionConst.insets = new Insets(10, 10, 10, 10);
+      add(salLabel, positionConst);
+
+      positionConst.gridx = 1;
+      positionConst.gridy = 1;
+      positionConst.insets = new Insets(10, 10, 10, 10);
+      add(salField, positionConst);
+
+      positionConst.gridx = 0;
+      positionConst.gridy = 2;
+      positionConst.insets = new Insets(10, 10, 10, 10);
+      add(calcButton, positionConst);
+   }
+
+   /* Method is automatically called when an event 
+      occurs (e.g, button is pressed) */
+   @Override
+   public void actionPerformed(ActionEvent event) {
+      String userInput;      // User specified hourly wage
+      int hourlyWage;        // Hourly wage
+
+      // Get user's wage input
+      userInput = wageField.getText();
+      
+      // Convert from String to an integer
+      hourlyWage = Integer.parseInt(userInput);
+
+      // Display calculated salary
+      salField.setText(Integer.toString(hourlyWage * 40 * 50));
+   }
+
+   /* Creates a SalaryCalculatorFrame and makes it visible */
+   public static void main(String[] args) {
+      // Creates SalaryLabelFrame and its components
+      SalaryCalcButtonFrame myFrame = new SalaryCalcButtonFrame();
+
+      myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      myFrame.pack();
+      myFrame.setVisible(true);
+   }
+}
+
+
+// 带有格式化文本字段的 GUI 输入 ： JFormattedTextField
+JFormattedTextField是一个 Swing GUI 组件，它扩展了 JTextField，以便程序员可以指定文本字段组件可以显示或接受作为输入的适当类型和字符序列（即字符格式）。
+// eg: Using a JFormattedTextField to enter a formatted distance value for a travel time calculation.  ---此代码详见 useful_example_code.java
+// 用法：
+// distField distField = new JFormattedTextField(NumberFormat.getNumberInstance());
+程序通过语句创建一个 JFormattedTextField 对象，并将其引用分配给变量 distField distField = new JFormattedTextField(NumberFormat.getNumberInstance());。括号内的项目应为 Format 对象。Format对象指定 JFormattedTextField 组件显示的任何字符串的格式要求。该语句NumberFormat.getNumberInstance()创建一个NumberFormat对象，该对象指定字符串必须满足的格式要求才能表示实数
+JFormattedTextField 类通过跟踪输入到 JFormattedTextField 组件中（或由其显示）的最新且格式正确的值并丢弃任何格式不正确的输入来确保输入的有效性。如果用户输入了无效字符串（例如“two”），JFormattedTextField 不会更新存储的值，因为字符串“two”不符合上述 NumberFormat 对象指定的格式要求。
+// miles = ((Number)distField.getValue()).doubleValue();
+该程序使用 JFormattedTextField 的 getValue() 方法从 JFormattedTextField 组件中提取键入的输入。然后，该程序将返回的值转换为 Number，并使用 Number 类的 doubleValue() 方法以双精度形式获取实际距离值，从而得到语句miles = ((Number)distField.getValue()).doubleValue();
+getValue() 方法将返回值转换为正确类型的任务委托给程序员，以便该方法与各种不同的内置 Format 对象（如 NumberFormat、DateFormat 和 MessageFormat）或程序员定义的任何其他自定义 Format 对象保持兼容。请注意，本节仅讨论 NumberFormat，它为实数、整数、货币和百分比提供格式化支持。
+// 下表列出并描述了此类 NumberFormat 实例：
+数字	用于表示实数（例如 1.25）的通用数字格式	distField = new JFormattedTextField(NumberFormat.getNumberInstance());
+整数	用于表示整数（例如 10）的数字格式	indexField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+货币	一种将数字表示为货币值（如 $1.99）的数字格式	amountField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
+百分比	一种以百分比形式表示数字的数字格式，例如 10%	interestField = new JFormattedTextField(NumberFormat.getPercentInstance());
+
+// JOptionPane.showMessageDialog(this, "Invalid action!");
+
+
+// JSpinner, Spinner, ChangeListener
+JSpinner是一个 Swing GUI 组件，它支持用户输入，允许用户在预定的值范围内选择或输入特定值。JSpinner 支持双重功能，允许用户在格式化的文本字段中输入值，或者通过按下两个按钮之一来循环显示可用值。
+// eg: Using a JSpinner to enter a dog's age for a GUI that converts a dog's age into human years.   ---此代码详见 useful_example_code.java
+// Spinner 用于定义 JSpinner 所应处理和显示的值类型。
+// SpinnerNumberModel：用于表示数值的有限序列（例如 1, 2, 3 等）。
+spinnerModel = new SpinnerNumberModel(initValue, minValue, maxValue, stepValue);
+// JSpinner 支持多种模型，可以表示字符串、日期甚至自定义对象的序列。
+JSpinner yearsSpinner = new JSpinner(spinnerModel);
+
+// ChangeListener 与 ChangeEvent
+// JSpinner 会在用户更改值时产生 ChangeEvent，以通知程序该值已更改。ChangeListener 对象用于处理这些更改事件，并定义 stateChanged() 方法来响应这些事件。
+yearsSpinner.addChangeListener(this);
+
+// layout constraints
+// 在构建 GUI 布局时，使用 GridBagLayout 管理布局，其中有两个重要的布局约束：fill 和 anchor。
+// fill
+用于指定组件的拉伸方向。
+可能的值有：HORIZONTAL（水平拉伸）、VERTICAL（垂直拉伸）、BOTH（双向拉伸）以及 NONE（默认，按组件的默认尺寸）。
+// anchor
+用于指定组件在其所在单元格内的位置。
+常用值有：LINE_START（左对齐）、LINE_END（右对齐）、PAGE_START（顶部）、PAGE_END（底部）、CENTER（默认居中）。
+示例中，标签使用了 LINE_END 以便右对齐，便于与描述的组件靠近。
+
+
+// JTextArea
+// JTextArea 是一个 Swing GUI 组件，用于显示多行文本。
+JTextArea outputArea = new JTextArea(10, 15);  // 0：行数（Rows） 15：列数（Columns）
+// 默认情况下，用户可以编辑 JTextArea 中的内容, 可以调用 setEditable(false) 来使其不可编辑
+// JTextArea 的使用方法:
+outputArea.setText("");                 // 清空文本区域
+outputArea.append("Year 1: $1000\n");   // 追加文本
+
+// JScrollPane
+// JScrollPane 是用于为某个组件提供滚动视图的 Swing 组件
+// JTextArea 默认不会自动滚动，如果显示的文本超过组件的尺寸，用户无法查看完整内容。
+// 解决方案是将 JTextArea 添加到 JScrollPane，使得它可以支持滚动显示：
+JScrollPane scrollPane = new JScrollPane(outputArea);
+// 需要注意的是，应该将 JScrollPane 添加到框架中，而不是将 JTextArea 和 JScrollPane 同时添加到框架中，这样做会导致重复的问题，显示效果不正确。
+// Importantly, the statement add(scrollPane, layoutConst); adds the scrollPane, not the outputArea, to the frame. A common error is to add both a JScrollPane object and the JScrollPane's client to a frame, resulting in a GUI with both an empty scroll pane and the client component
+// eg: Using a JTextArea to display the amount of money in a savings account per year.   ---此代码详见 useful_example_code.java
+
+
+// JTable
+// JTable 是一个 Swing GUI 组件，用于以表格形式组织和显示数据，允许用户编辑数据。
+// 表格中的每个元素称为表格单元格，由行和列组成，类似于二维数组的元素。
+JTable arrayValsTable = new JTable(tableVals, columnHeadings);
+// tableVals：包含表格数据的二维数组。 // columnHeadings：包含列标题的字符串数组，用于显示表头。
+// 表格中的数据需要使用二维数组存储，以确保数据的索引与表格单元格的索引直接对应。
+String[][] tableVals = new String[8][1];
+String[] columnHeadings = {"Element"};
+// 尽管表格中显示的可能是整数值，但默认的表格模型将所有数据以字符串的形式显示。需要在使用时进行类型转换，例如使用 Integer.parseInt() 将字符串转换为整数。
+// 默认情况下，JTable 使用一个简单的表格模型来管理表格的数据。这个表格模型使用字符串表示所有单元格的值。
+// 尽管表格模型可以显示任何引用数据类型（如 Integer，Double），因为所有引用类型都隐式定义了 toString() 方法，但默认模型不会自动将用户输入的文本转换回适当的数据类型。
+// 添加进框架JFrame的方式：
+// 1. 表头也需要单独添加
+add(arrayValsTable.getTableHeader(), layoutConst);    // 添加表头
+add(arrayValsTable, layoutConst);                     // 添加单元格
+// 2. 使用 JScrollPane 作为表格容器（这样表头和单元格可以实现一起添加）
+JScrollPane scrollPane = new JScrollPane(arrayValsTable);
+add(scrollPane, layoutConst);  
+// eg: Calculating the maximum array value for an array displayed in a JTable.    ---此代码详见 useful_example_code.java
+
+
+// JSlider
+// JSlider 是 Swing 的 GUI 组件，用于允许用户从预定义的范围中选择一个数值。
+// JSlider 组件通过拖动滑块来选择数值，还可以显示刻度线和标签用于标识值。
+JSlider slider = new JSlider(min, max, init);
+heightFtSlider = new JSlider(0, 10, 5);    // 创建了一个可以选择 0 到 10 之间的值，初始值为 5 的滑块。
+// set TickSpacing 刻度线
+heightFtSlider.setMajorTickSpacing(10);    // 设置主刻度的间距 为 10
+heightFtSlider.setMinorTickSpacing(1);     // 设置次刻度的间距 为 1
+// 指定刻度标记间距后，程序员必须使用布尔文字 true 作为参数调用 JSlider 的 setPaintTicks() 才能显示刻度标记。
+heightInSlider.setPaintTicks(true);
+// JSlider 的 setPaintLabels() 方法采用布尔值作为参数，以允许程序员指定 JSlider 组件是否应在每个主要刻度处显示一个值
+heightInSlider.setPaintLabels(true);
+// 注册事件监听器
+heightFtSlider.addChangeListener(this);    // 注册滑块监听器，使当前对象可以监听滑块的值变化。
+// 当用户改变滑块的值时，会触发 stateChanged() 方法
+// 获取事件源，判断哪个滑块发生了改变：
+JSlider sourceEvent = (JSlider) event.getSource();
+// 使用 getValue() 方法获取滑块当前值，并更新对应的文本字段
+int sliderVal = heightFtSlider.getValue();
+// eg: Using JSliders to enter height in feet and inches.     ---此代码详见 useful_example_code.java
+// eg:  A seat reservation GUI involving a table, fields, and buttons.      ---此代码详见 useful_example_code.java
+
+
+
+// JFileChooser
+// JFileChooser的创建与使用：
+JFileChooser是一个Swing GUI组件，用于支持目录导航和文件选择。
+使用fileChooser = new JFileChooser();创建一个JFileChooser对象。默认情况下，它会显示用户的默认目录，可以指定不同的初始目录作为参数。
+// 文件选择对话框：
+通常不会将JFileChooser组件添加到顶级容器（如JFrame），而是创建一个单独的对话框。
+通过调用fileChooser.showOpenDialog(this);来创建包含JFileChooser组件的对话框，用户可以在此对话框中选择文件。
+方法showOpenDialog()返回一个整数值，表示用户的操作是"Open"、"Cancel"还是发生了错误。
+若用户按下"Open"，则可以使用fileChooser.getSelectedFile()方法获取选中的文件。
+// File类的使用：
+File类表示一个文件或目录路径，允许获取文件的信息（如文件名、位置、访问权限等）。
+需要通过import java.io.File;引入File类。
+// 文件读取操作：
+使用FileInputStream和Scanner对象来读取文件的内容，并将其打印到GUI的文本区域中。
+在执行文件读取的过程中，//try-catch// 块被用来捕获和处理可能出现的异常，从而确保程序能够处理文件输入/输出中的错误情况。
+// 错误处理：
+如果文件不可读，可以通过调用readFile.canRead()进行检查。
+如果文件不可读，程序会通过消息对话框向用户显示"Can't read file!"的信息。
+
+
+// Swing 和 javaFX 的对比：
+// Swing 是 Java 早期的 GUI 框架，更适合传统桌面应用开发。
+// JavaFX 是 Java 现代化 GUI 开发的选择，支持 3D 图形、动画、和 CSS 风格，是 Swing 的替代和升级。
+
+
+
+// javaFX
+// JavaFX中的主要类和对象：
+Application: JavaFX的基础类，提供了基本功能。JavaFX程序通过继承Application类来启动应用程序。
+Stage: 顶级容器，包含窗口中的所有内容，类似于Swing中的JFrame。
+Scene: 包含所有要一起显示的图形组件，一个应用程序可以包含多个场景，但一次只能显示一个。
+Pane: 用于控制图形组件的布局（位置和大小），用于将不同的组件组织在一起。
+// 启动JavaFX应用程序
+继承Application类并重写start()方法：
+创建一个JavaFX程序时，必须继承Application类，例如class SalaryGuiFx extends Application。
+在main()方法中调用launch(args);来启动应用程序，launch()方法会创建一个对象并调用start()方法。
+重写start()方法：start(Stage applicationStage)是程序启动时被调用的方法，用来定义应用程序的内容。
+// 创建场景和布局
+Pane和Scene：
+创建一个Pane对象来组织布局，例如pane = new Pane();。
+创建一个包含该Pane对象的Scene，例如scene = new Scene(pane);。
+将组件添加到Pane中：
+pane.getChildren().add(outputField);将图形组件（例如TextField）添加到Pane的子组件列表中。
+// 创建和配置图形组件
+TextField：
+TextField组件用于显示和输入文本，例如outputField = new TextField();。
+outputField.setText("An hourly ... ");可以设置要显示的文本。
+使用outputField.setEditable(false);可以防止用户编辑文本。
+设置宽度可以使用setPrefColumnCount()方法，例如outputField.setPrefColumnCount(22)。
+// 设置和显示场景
+设置场景和标题：
+使用applicationStage.setScene(scene);来设置要显示的场景。
+applicationStage.setTitle("Salary");用来设置窗口的标题。
+显示窗口：
+applicationStage.show();使窗口对用户可见，显示程序的GUI。
+
+// eg: Displaying a yearly salary using a GUI.          ---此代码详见 useful_example_code.java
+
+
+// GridPane
+GridPane 是 JavaFX 中的一个布局容器，用于将图形组件放置在一个二维网格中。
+每个网格位置使用两个索引表示，一个表示列，另一个表示行。
+网格的左上角位置索引为 (0, 0)。
+列索引向右递增，行索引向下递增。
+// Label
+Label 是 JavaFX 中的组件，用于显示不可编辑的文本。
+通常用于描述或标注其他 GUI 组件。
+通过 Label 的 setText() 方法可以动态设置标签的文本内容。例如：
+Label wageLabel = new Label("Hourly wage:");
+wageLabel.setText("Updated hourly wage:");
+要使用 Label，需引入 import javafx.scene.control.Label;。
+// 设置 GridPane 的属性
+GridPane 的 setPadding() 方法用于设置网格和窗口外部边缘之间的距离。
+通过 Insets 对象设置上下左右四个方向的边距。示例：
+Insets gridPadding = new Insets(10, 10, 10, 10); // 上、右、下、左边距各为 10 像素
+gridPane.setPadding(gridPadding);
+Insets 类需要通过 import javafx.geometry.Insets; 来引入。
+
+水平间距（Horizontal gap）和 垂直间距（Vertical gap）用于设置网格中列与列之间、行与行之间的距离。
+使用 setHgap() 方法设置水平间距，使用 setVgap() 方法设置垂直间距。例如：
+
+gridPane.setHgap(10); // 列之间的间距为 10 像素
+gridPane.setVgap(10); // 行之间的间距为 10 像素
+// GridPane 的使用场景
+布局组件：GridPane 非常适合用于需要将组件组织在一个规则网格中的场景，例如输入表单、计算器界面等。
+灵活布局：通过使用列和行的索引，可以精确控制每个组件在 GUI 中的位置。
+// eg: Using a GridPane to arrange graphical components.   ---此代码详见 useful_example_code.java
+
+
+
+// button
+// Button 是 JavaFX 中的 GUI 组件，用于表示用户可以按下的带标签的按钮。
+// 创建一个按钮可以通过 new Button("Calculate")，并将按钮添加到 GridPane 中。例如：
+calcButton = new Button("Calculate");
+gridPane.add(calcButton, 0, 2);
+要使用 Button 类，需引入：import javafx.scene.control.Button;
+// Event, EventHandler 事件和事件处理程序
+事件（Event）：当用户与组件交互（例如按下按钮）时，会生成一个事件来通知程序发生了交互。
+ActionEvent 是用于通知程序发生组件相关事件的对象，需引入：import javafx.event.ActionEvent;。
+事件处理程序（EventHandler）：用于定义程序如何响应特定事件，如按钮按下后的 ActionEvent。
+EventHandler 通过实现 handle() 方法来定义如何响应事件，需引入：import javafx.event.EventHandler;。
+// 设置按钮的事件处理程序
+要为按钮指定事件处理程序，可以调用按钮的 setOnAction() 方法，传入一个 EventHandler 对象。例如：
+calcButton.setOnAction(new EventHandler<ActionEvent>() {
+    @Override
+    public void handle(ActionEvent event) {
+        // 响应事件的指令，例如计算并显示工资
+    }
+});
+// 验证用户输入
+GUI 程序通常会验证用户输入的值，以确保输入的有效性。如果输入无效（例如负值），程序应向用户报告。
+可以使用按钮的 EventHandler 来获取用户输入，并检查输入是否有效。
+例如，使用 TextField 的 getText() 方法获取用户输入。
+// Alert 弹窗
+Alert 是一个 JavaFX 弹窗，用于向用户显示信息或警告。
+创建 Alert 对象：
+Alert alert = new Alert(AlertType.ERROR, "Enter a positive hourly wage value.");
+AlertType.ERROR 指定这是一个错误类型的警报窗口
+showAndWait() 方法使弹窗可见，并等待用户响应。程序在用户按下弹窗中的 "OK" 按钮后继续执行：
+alert.showAndWait();
+
+// eg: Using a Button to trigger a yearly salary calculation.             ---此代码详见 useful_example_code.java
+// eg: Displaying an Alert for invalid wage inputs.                       ---此代码详见 useful_example_code.java
+
+// Summary of common Alert types.
+// 类型	描述	文档链接
+AlertType.NONE	配置 Alert 显示一个基本消息。	AlertType.NONE 来自 Oracle 的 Java 文档
+AlertType.ERROR	配置 Alert 显示一个错误或失败消息，并附有确认选项。	AlertType.ERROR 来自 Oracle 的 Java 文档
+AlertType.CONFIRMATION	配置 Alert 以从用户那里请求确认，显示的消息通常是一个带有确认或取消选项的问题。	AlertType.CONFIRMATION 来自 Oracle 的 Java 文档
+AlertType.INFORMATION	配置 Alert 显示一个信息消息，并附有确认选项。	AlertType.INFORMATION 来自 Oracle 的 Java 文档
+AlertType.WARNING	配置 Alert 显示一个看起来像是警告的消息，并附有确认选项。
+
+
+// javaFX basic graphic 
+// JavaFX 基础图形绘制概述
+JavaFX 提供了一组用于开发图形应用程序的对象，图形应用程序可以显示绘图和其他图形对象。
+通常，图形应用程序将内容显示在一个 Canvas 对象中，并将该 Canvas 添加到 JavaFX 应用程序中。
+// JavaFX 应用程序的基本模板
+定义类并继承 Application：
+类定义了一个名为 EmptyCanvasFx 的类，并继承了 Application 类，Application 提供了 JavaFX 程序的基本功能。
+该类应保存为与类名相同的文件名（即 EmptyCanvasFx.java)
+// 创建 Canvas 对象：
+Canvas 是一个可以在其上绘制图形对象的图像。
+创建 Canvas 对象时可以指定宽度和高度，例如：
+Canvas canvas = new Canvas(400, 200); // 上述代码创建了一个宽度为 400 像素，高度为 200 像素的 Canvas 对象。
+// 获取 GraphicsContext 对象：
+GraphicsContext 是一个支持在 Canvas 上绘制形状的对象，可以通过以下代码获取：
+GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+// 设置应用程序的标题：
+使用 Stage 对象的 setTitle() 方法可以设置应用程序窗口的标题，例如：
+applicationStage.setTitle("Empty canvas");
+
+// 使用 GraphicsContext 和 Color 绘制柱状图
+HistogramViewerFX 应用程序使用 GraphicsContext 和 Color 对象绘制了一个包含三个区块的简单直方图。绘制过程如下：
+// 创建 Color 对象：
+Color 对象表示颜色，可以使用 Color.rgb() 方法构造一个颜色对象，该方法接收 0 到 255 之间的整数参数来指定红、绿、蓝三种颜色的值。例如：
+Color binColor1 = Color.rgb(128, 128, 0);
+// 设置填充颜色：
+使用 GraphicsContext 对象的 setFill() 方法可以设置绘制形状内部所使用的颜色，例如：
+graphicsContext.setFill(binColor1);
+// 绘制形状：
+GraphicsContext 对象提供了多种绘制形状的方法。例如，fillRect() 方法用于绘制矩形并填充其内部，参数包括矩形的位置和大小：
+graphicsContext.fillRect(double x, double y, double w, double h);
+其中 x, y 表示矩形的位置，w 和 h 分别表示矩形的宽度和高度
+
+// 常见绘图形状汇总
+// 形状	描述
+线	strokeLine() 在两个坐标点之间画一条线。
+长方形	fillRect() 绘制一个填充的矩形。strokeRect() 绘制一个矩形的轮廓。
+圆角矩形	fillRoundRect() 绘制一个带圆角的填充矩形。strokeRoundRect() 绘制一个带圆角的矩形的轮廓。
+椭圆形	fillOval() 方法根据程序员指定的宽度、高度和位置绘制椭圆。strokeOval() 方法根据程序员指定的宽度、高度和位置绘制椭圆的轮廓。
+多边形	fillPolygon() 使用程序员指定的边界点绘制填充的多边形。strokePolygon() 使用程序员指定的边界点绘制多边形的轮廓。
+
+// eg: Template for creating a JavaFX application to draw 2D graphics.     ---此代码详见 useful_example_code.java
+// eg: Drawing a histogram.                                                ---此代码详见 useful_example_code.java
+
+// Arrays.toString
+System.out.println("Initialized binary number is: " + Arrays.toString(binaryNumber1.data) + "\n");
+// Initialized binary number is: [1, 1, 1, 0, 1, 1, 1]

@@ -745,3 +745,14 @@ public class Main {
 }
 
 
+// Character.getNumericValue(char ch) 和  Integer.parseInt(String str)
+如果你需要将 单个字符（如 '3'）转换为数字值，使用 Character.getNumericValue()。
+如果你需要将 完整的数字字符串（如 "1234"）转换为整数，使用 Integer.parseInt()。
+只能对表示数字的字符串进行解析。如果字符串包含非数字字符，它会抛出 NumberFormatException 异常。
+支持更广泛的字符集，不仅限于阿拉伯数字，还包括罗马数字、Unicode 字符等。
+Character.getNumericValue('A') 返回 10（十六进制值）。
+
+
+// StringBuilder 替换字符串拼接
+StringBuilder binaryStr = new StringBuilder();
+binaryStr.append(intList[i]);
