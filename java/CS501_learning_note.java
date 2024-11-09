@@ -4477,3 +4477,6 @@ graphicsContext.fillRect(double x, double y, double w, double h);
 // Arrays.toString
 System.out.println("Initialized binary number is: " + Arrays.toString(binaryNumber1.data) + "\n");
 // Initialized binary number is: [1, 1, 1, 0, 1, 1, 1]
+
+
+getter 和 setter 方法：当字段被设为 private 时，应该通过 getter 和 setter 来访问和修改它们。

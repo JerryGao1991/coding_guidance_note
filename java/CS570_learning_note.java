@@ -517,3 +517,311 @@ ListTraverseReverse(list) {
 | 希尔排序     | 链表中无法跨越元素之间的间隔，每个元素之间都必须逐一遍历。  |
 | 快速排序     | 分区操作需要在数组的右部分进行反向遍历，单向链表不支持反向遍历。 |
 | 堆排序       | 在下移过程中需要通过索引访问以常量时间找到子节点。          |
+
+
+// 链表中的虚拟节点（Dummy Nodes）
+// 什么是虚拟节点（Dummy Nodes）？
+虚拟节点，也叫头节点，是一个在链表中始终存在但不包含有效数据的节点，通常放在链表的头部或尾部。
+虚拟节点的作用是简化链表的操作，因为它确保了链表的头指针和尾指针始终不会为 null，从而减少了特殊情况下的边界处理。
+// 单向链表的虚拟节点实现
+当创建一个带虚拟节点的 单向链表 时，虚拟节点被分配并且链表的 头指针和尾指针 都指向该虚拟节点。
+常见的链表操作（如追加、前插、插入、删除等）由于虚拟节点的存在而变得更简单：
+追加（Append）、前插（Prepend） 和 插入（Insert After） 不再需要判断链表的头指针是否为空，因为头节点总是存在且指向虚拟节点。
+删除（Remove After） 操作无需针对删除第一个节点进行特殊处理，因为第一个有效节点总是在虚拟节点之后。
+// eg: Singly-linked list with dummy node: append, prepend, insert after, and remove after operations.    ---- please check CS570_example_code.java
+// 双向链表的单个虚拟节点实现
+双向链表 也可以使用虚拟节点。
+在双向链表中，虚拟节点的 prev 指针设置为 null，且链表的头指针总是指向虚拟节点。
+删除操作（ListRemove） 不允许删除虚拟节点，因为它始终存在，用于简化链表的结构和操作逻辑。
+// eg: Doubly-linked list with dummy node: append, prepend, insert after, and remove operations.          ---- please check CS570_example_code.java
+// 双向链表的头尾虚拟节点（Dummy Head and Tail Nodes）
+在 双向链表 中，可以使用两个虚拟节点，一个在链表头部，另一个在链表尾部。
+这样做可以进一步简化链表的实现，特别是可以消除更多的边界条件判断，例如在插入或删除时无需判断当前节点是否在链表的首位或末尾。
+移除 ListInsertAfter 和 ListRemove 中的 if 语句
+如果使用头尾虚拟节点，链表的许多操作可以通过移除边界条件的 if 语句来简化。
+在 ListInsertAfter 中，可以移除判断条件，假设前提是 curNode 不能指向虚拟尾节点。
+在 ListRemove 中，可以移除判断条件，假设前提是 curNode 不能指向任何一个虚拟节点（头或尾）。
+通过这些假设，链表操作不再需要复杂的边界条件判断，从而简化了代码实现。
+// eg: Doubly-linked list with 2 dummy nodes: append, prepend, insert after and remove operations.        ---- please check CS570_example_code.java
+// 总结
+虚拟节点的作用：通过在链表的头或尾部设置虚拟节点，使链表的操作更加简化，尤其是在添加或删除节点时。
+单向链表中的应用：虚拟节点消除了链表为空或在头部进行插入/删除时的特殊处理。
+双向链表中的应用：可以使用一个或两个虚拟节点，分别位于链表的头和尾部，来简化链表的双向操作。
+减少边界条件判断：虚拟节点的存在可以消除链表操作中的特殊情况，减少 if 语句的使用，使代码更简洁易懂。
+
+
+// 链表（Linked List）数据结构 
+// 链表通常通过两种数据结构来实现：
+列表数据结构（List Data Structure）：这个结构包含链表的头（head）和尾（tail）指针，可能还包含其他信息，比如链表的大小（size）。
+链表节点数据结构（List Node Data Structure）：这个结构维护链表中每个元素的实际数据和指向其他节点的指针。
+// 列表数据结构的作用
+列表数据结构 并不是实现链表的必要条件，但它为链表的管理提供了便利。
+头和尾指针管理：通过将头和尾指针封装在一个列表数据结构中，操作链表时更方便，尤其是访问链表的头部和尾部。
+存储附加信息：还可以存储一些附加信息，比如链表的大小，从而为链表的操作提供更多便利（例如快速获取链表的长度）。
+// 函数的简化
+使用 列表数据结构 后，操作链表的函数只需要接受一个参数，即包含头尾指针的列表结构，从而简化了函数调用和链表管理。
+而不使用列表数据结构时，函数可能需要独立的节点指针变量来跟踪链表的头节点和尾节点，这会让管理变得更加复杂。
+
+
+// 循环链表（Circular Linked List） 的知识点总结：
+// 1. 什么是循环链表？
+循环链表 是一种特殊的链表，其中尾节点的 next 指针指向链表的头节点，而不是 null。
+这种设计使得链表的节点形成一个循环，从尾节点可以直接回到头节点，链表没有明确的终点。
+// 2. 循环链表的用途
+表示循环过程：循环链表适用于表示重复发生的过程，比如自然界中的水循环（海洋水蒸发形成云，云降雨落在陆地上，水流通过河流再返回到海洋）。
+在这些场景中，循环链表可以很好地模拟这个循环关系，便于理解和实现重复性过程。
+// 3. 循环链表的头节点
+循环链表的头节点通常被称为起始节点（start node），从该节点开始可以遍历整个链表，并且在到达尾节点后会重新返回到起始节点。
+// 4. 遍历循环链表
+遍历方法：遍历循环链表类似于遍历普通链表，但需要注意，遍历时不会到达 null。相反，遍历结束的条件是再次到达头节点。
+终止条件：与标准链表的遍历不同，循环链表的遍历必须在到达头节点第二次时终止，而不是在遇到 null 时终止。这可以防止进入无限循环。
+
+
+
+// 栈抽象数据类型（Stack Abstract Data Type, Stack ADT）
+// 1. 什么是栈（Stack）？
+栈 是一种抽象数据类型（Abstract Data Type, ADT），它的特点是元素只能在栈的顶端插入或移除。
+栈的操作分为两种：
+压入（Push）：将一个元素插入栈顶。
+弹出（Pop）：移除并返回栈顶的元素。
+// 2. 栈的工作方式
+栈按照**后进先出（Last-In, First-Out, LIFO）**的原则进行操作。
+// 3. 栈的特性
+后进先出（LIFO）：栈中的元素遵循后进先出的顺序，这意味着最后压入栈中的元素最先被弹出。
+栈的这种操作顺序使得它非常适合实现递归、函数调用栈等需要逆序操作的场景。
+// 4. 栈的实现
+// 栈可以通过多种方式实现：
+链表（Linked List）：使用链表实现栈时，通常通过在链表的头部插入和删除元素来实现栈的 push 和 pop 操作。
+数组（Array）：使用数组实现栈时，可以使用一个变量来跟踪栈顶位置，操作比较简单但需要固定的数组大小。
+向量（Vector）：类似于数组，但向量的大小可以动态调整，因此更灵活一些。
+// 常见的栈 ADT 操作
+操作	描述	示例（初始栈为：99, 77，栈顶为 99）
+Push(stack, x)	将 x 插入栈顶	Push(stack, 44) 后栈变为：44, 99, 77
+Pop(stack)	返回并移除栈顶元素	Pop(stack) 返回 99，栈变为：77
+Peek(stack)	返回但不移除栈顶元素	Peek(stack) 返回 99，栈保持不变：99, 77
+IsEmpty(stack)	如果栈没有元素则返回 true	IsEmpty(stack) 返回 false
+GetLength(stack)	返回栈中元素的个数	GetLength(stack) 返回 2
+
+
+// Stacks using linked lists  使用链表实现栈
+使用链表来实现栈时，链表的头节点（head）作为栈的栈顶（top）。
+这样，每次压入（push）或者弹出（pop）操作都只涉及链表头部节点，非常高效，时间复杂度为 O(1)。
+// Push 操作：
+创建一个新的链表节点。
+将新节点的数据设置为要压入栈的值。
+将新节点添加到链表的头部（Prepend 操作）。
+这样新节点成为链表的头节点，即栈的栈顶。
+// Pop 操作：
+将链表头节点的数据保存到一个局部变量中。
+移除链表的头节点（Remove Head 操作）。
+返回保存的数据，表示栈顶元素被弹出。
+// 
+// 使用链表实现栈，动态分配内存，栈的大小可以灵活扩展，不会像数组实现一样存在固定大小的限制。
+// 在链表的头部进行插入和删除操作的时间复杂度都是 O(1)，非常高效。
+// eg: Stack implementation using a linked list.
+StackPush(stack, item) {
+   newNode = Allocate new linked list node
+   newNode⇢next = null
+   newNode⇢data = item
+
+   // Insert as list head (top of stack)
+   ListPrepend(stack, newNode)
+}
+
+StackPop(stack) {
+   headData = stack⇢head⇢data
+   ListRemoveAfter(stack, null)
+   return headData
+}
+// StackPush(stack, 45)
+// StackPush(stack, 56)
+// StackPush(stack, 11)
+// poppedValue = StackPop(stack)
+
+
+
+// Array-based stacks 数组实现的栈
+// 栈的数组实现
+// 栈（Stack） 可以使用数组来实现，用来存储元素。
+// 需要两个额外的变量来跟踪数组和栈的状态：
+allocationSize：表示数组的分配大小（容量）。
+length：表示栈当前的长度（即栈中元素的数量）。
+栈底元素 存储在 array[0]，栈顶元素 存储在 array[length - 1]。
+如果栈为空，则 length 为 0。
+// 无界栈（Unbounded Stack）
+无界栈 是没有长度上限的栈，栈的长度可以无限增长。
+对于无界栈，栈的数组分配大小（allocationSize）可以根据需要不断增加。
+// 有界栈（Bounded Stack）
+有界栈 的长度不能超过设定的最大值（通常为初始的数组分配大小）。
+例如，有界栈的 allocationSize = 100，则最多只能包含 100 个元素。
+当栈的长度等于最大长度时，栈被称为满栈。
+// 支持有界和无界的单一实现
+数组实现的栈可以通过使用 maxLength 来支持有界和无界的栈操作。
+如果 maxLength 为负数，则表示栈是无界的，长度可以无限增加。
+如果 maxLength 为非负数，则表示栈是有界的，最大长度为 maxLength。
+// Push 操作的逻辑：
+当 length == maxLength 时，不允许再进行 Push 操作。
+如果 maxLength 为负数：
+条件 length == maxLength 永远不会为真，因此所有的 Push 操作都被允许，这使得栈是无界的。
+如果 maxLength 为非负数：
+当栈的长度达到 maxLength 时，条件为真，因此不允许再 Push，这样栈就是有界的。
+//eg: Stack push, resize, and pop operations.                          ---- please check CS570_example_code.java
+
+
+
+// 队列（Queue）
+// 定义和特点：
+队列（Queue） 是一种 先进先出（FIFO, First In First Out） 的数据结构。
+入队（Enqueue） 操作：将元素插入到队列的末尾。
+出队（Dequeue） 操作：从队列的前端移除并返回一个元素。
+例子：
+如果先执行 "Enqueue 7"，"Enqueue 14"，"Enqueue 9"，接着执行 "Dequeue"，会返回 7，因为它是最早入队的元素。
+再次执行 "Dequeue"，会返回 14。
+// 队列的实现：
+链表实现队列：可以使用链表来实现队列，链表的头节点是队列的前端，尾节点是队列的末尾。
+数组实现队列：也可以使用数组来实现队列，通过维护前端和尾端索引来进行入队和出队操作。
+
+操作	描述	示例（队列初始状态：43, 12, 77，43 为队首）
+Enqueue(queue, x)	在队列末尾插入元素 x	Enqueue(queue, 56). 队列：43, 12, 77, 56
+Dequeue(queue)	移除并返回队列前端的元素	Dequeue(queue) 返回：43. 队列：12, 77
+Peek(queue)	返回但不移除队列前端的元素	Peek(queue) 返回：43. 队列仍然是：43, 12, 77
+IsEmpty(queue)	如果队列为空，则返回 true	IsEmpty(queue) 返回：false
+GetLength(queue)	返回队列中的元素数量	GetLength(queue) 返回：3
+
+
+// 链表实现队列 Queues using linked lists
+// 队列通常可以用链表来实现。
+**头节点（head node）表示队列的前端，负责出队（dequeue）**操作。
+**尾节点（tail node）表示队列的末端，负责入队（enqueue）**操作。
+// 入队（Enqueue）操作：
+创建一个新的链表节点，节点的数据部分存储待入队的元素。
+将该节点追加到链表的尾部，使它成为新的尾节点。
+尾节点用于确保新元素被添加到队列的末尾，从而维持队列的顺序。
+// 出队（Dequeue）操作：
+将队列头节点的数据存储到一个局部变量中。
+移除头节点，使下一个节点成为新的头节点。
+返回之前保存的局部变量值，即队列前端的元素。
+这确保队列遵循**先进先出（FIFO）**原则。
+// eg: Queue implemented using a linked list.
+QueueEnqueue(queue, item) {
+   newNode = Allocate new linked list node
+   newNode⇢next = null
+   newNode⇢data = item
+
+   // Insert node as list tail (end of queue)
+   ListAppend(queue, newNode)
+}
+
+QueueDequeue(queue) {
+   headData = queue⇢head⇢data
+   ListRemoveAfter(queue, null)
+   return headData
+}
+
+
+// 数组的队列实现 Array-based Queues
+// 1. 队列的数组存储
+// 队列可以用数组实现，除了数组本身，还需要以下三个变量：
+allocationSize：整数，表示数组的分配大小。
+length：整数，表示队列中元素的数量。
+frontIndex：整数，表示队列前端元素的索引。
+// 队列的内容从 array[frontIndex] 开始，连续存储 length 个元素。如果数组末尾存储满了，剩余的元素会从索引 0 开始存储（即循环数组）。
+// 2. 有界队列 vs 无界队列
+// 有界队列：
+队列的长度不能超过指定的最大值，需要额外的变量 maxLength。
+maxLength 通常在队列创建时赋值，并在整个队列生命周期内保持不变。
+当队列长度等于 maxLength 时，队列被认为是满的。
+// 无界队列：
+队列的长度可以无限增长，因此不需要指定最大长度。
+如果 maxLength 为负数，则表示队列为无界队列。
+// 3. 灵活的实现和调整大小操作
+// 数组实现的队列可以支持有界和无界两种操作，通过设置 maxLength 来控制：
+如果 maxLength 为负数，则为无界队列。
+如果 maxLength 为非负数，则为有界队列。
+调整大小操作：在需要时分配一个更大的数组，一般是当前大小的两倍。对于有界队列，分配的新数组大小是 maxLength 和当前大小的两倍中的较小值，保证队列不会超过最大长度。
+所有现有的数组元素都会被复制到新的数组中，并将 frontIndex 重置为 0。
+// 4. 入队和出队操作
+// 入队操作（enqueue）：
+比较 length 和 maxLength，如果两者相等，则队列已满，入队失败，返回 false。
+比较 length 和 allocationSize，如果相等，则执行调整大小操作。
+计算要入队元素的索引为 (frontIndex + length) % allocationSize，并将元素存储到该位置。例如，在 frontIndex = 2，length = 3，allocationSize = 8 的情况下，入队元素 42 会被存储在索引 (2 + 3) % 8 = 5 处。
+length 加 1，然后返回 true。
+// 出队操作（dequeue）：
+复制 frontIndex 位置的数组元素。
+length 减 1。
+frontIndex 增加 1，如果增加后的值等于 allocationSize，则将其重置为 0。
+返回复制的元素。
+// 5. 最坏情况下的时间复杂度
+无论是有界队列还是无界队列，在最坏情况下的时间复杂度是：
+入队操作：O(N)（需要调整数组大小时）。
+出队操作：O(1)。
+另一种有界队列实现方式是将 maxLength 设置为初始分配大小，这样的实现永远不需要调整大小，因此入队操作的最坏情况下的时间复杂度为 O(1)。
+// eg: Array-based queue resize operation.
+ArrayQueueResize(queue) {
+   newSize = queue⇢allocationSize * 2
+   if (queue⇢maxLength >= 0 && newSize > queue⇢maxLength) {
+      newSize = queue⇢maxLength
+   }
+   newArray = Allocate new array of size newSize
+   for (i = 0; i < queue⇢length; i++) {
+      itemIndex = (queue⇢frontIndex + i) % queue⇢allocationSize
+      newArray[i] = queue⇢array[itemIndex]
+   }
+   queue⇢array = newArray
+   queue⇢allocationSize = newSize
+   queue⇢frontIndex = 0
+}
+
+// eg: Array-based queue enqueue and dequeue operations.
+ArrayQueueEnqueue(queue, item) {
+   if (queue⇢length == queue⇢maxLength) {
+      return false
+   }
+   if (queue⇢length == queue⇢allocationSize) {
+      ArrayQueueResize(queue)
+   }
+
+   itemIndex = (queue⇢frontIndex + queue⇢length) % queue⇢allocationSize
+   queue⇢array[itemIndex] = item
+   queue⇢length += 1
+   return true
+}
+  
+ArrayQueueDequeue(queue) {
+   toReturn = queue⇢array[queue⇢frontIndex]
+   queue⇢length -= 1
+   queue⇢frontIndex = (queue⇢frontIndex + 1) % queue⇢allocationSize
+   return toReturn
+}
+
+
+// Deque 双端队列
+// 双端队列（Deque，读作 "deck"，全称为 double-ended queue）是一种抽象数据类型（ADT），其特点是可以在前端和后端同时进行插入和删除。
+// 基本操作
+Push-front：在双端队列的前端插入一个元素。
+Push-back：在双端队列的后端插入一个元素。
+Pop-front：移除并返回双端队列前端的元素。
+Pop-back：移除并返回双端队列后端的元素。
+// 实现方式
+链表：双端队列可以使用双向链表来实现，这样可以很方便地在前端和后端进行插入和删除操作。
+数组：双端队列也可以使用数组来实现，可以通过循环数组的方式支持前后双向插入和删除。
+// 用途和优势
+双端队列是一种灵活的数据结构，支持从两端进行插入和删除，提供比单向队列或栈更灵活的操作方式，适合用于需要双端访问的场景。
+例如，在一些需要保持双端动态的场景（如滑动窗口、缓存管理等）中，双端队列是非常有用的数据结构。
+
+// Common deque ADT operations
+| Operation           | Description                                           | Example starting with deque: 59, 63, 19 (front is 59)     |
+|---------------------|-------------------------------------------------------|-----------------------------------------------------------|
+| PushFront(deque, x) | Inserts x at the front of the deque                   | PushFront(deque, 41). Deque: 41, 59, 63, 19                |
+| PushBack(deque, x)  | Inserts x at the back of the deque                    | PushBack(deque, 41). Deque: 59, 63, 19, 41                 |
+| PopFront(deque)     | Returns and removes item at front of deque            | PopFront(deque) returns 59. Deque: 63, 19                  |
+| PopBack(deque)      | Returns and removes item at back of deque             | PopBack(deque) returns 19. Deque: 59, 63                   |
+| PeekFront(deque)    | Returns but does not remove the item at front of deque| PeekFront(deque) returns 59. Deque is still: 59, 63, 19    |
+| PeekBack(deque)     | Returns but does not remove the item at back of deque | PeekBack(deque) returns 19. Deque is still: 59, 63, 19     |
+| IsEmpty(deque)      | Returns true if the deque is empty                    | IsEmpty(deque) returns false.                              |
+| GetLength(deque)    | Returns the number of items in the deque              | GetLength(deque) returns 3.                                |
+
+
+
+
+
