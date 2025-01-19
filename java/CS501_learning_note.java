@@ -267,7 +267,7 @@ System.out.print("" + let1 + let2);    // ab           注意！！！
 
 // String 是引用类型：存储的是对 String 对象的引用，而不是直接存储字符串的值。
 字符串赋值会创建新的对象：当你赋值一个字符串文字时，实际上是在创建一个新的 String 对象。
-引用赋值不会创建新对象：如果将一个 String 变量赋值给另一个 String 变量，它们会指向同一个对象，而不会创建新的对象。
+引用赋值不会创建新对象：如果将一个 String 变量赋值给另一个 String 变量，它们会指向同一个对象，而不会创建新的对象。//（关键！！！由于不可变性，即使多个引用指向同一个 String 对象，对其中一个引用的修改不会影响其他引用。// 其他引用类型（除了String），就会修改到
 eg: 
 Q: Suppose string str1 is initially "Hello" and str2 is "Hi".
 After str1 = str2; and then str2 = "Bye";, what is str1?
@@ -3239,6 +3239,49 @@ public class Square implements Drawable, DrawableASCII {
       }
    }
 }
+
+// 理解接口的使用方式
+// 在 Java 中，接口（Interface）有两种主要的使用方式：
+1. 类实现接口（Implements an Interface）：
+当一个类 implements 一个接口时，意味着该类承诺实现接口中定义的所有抽象方法。
+这种方式适用于需要特定类具有某些行为的场景，例如 Drawable 接口用于要求实现该接口的类具有绘制能力。
+2. 类使用接口作为类型（Using an Interface as a Type）：
+类可以将接口作为成员变量的类型，允许传入任何实现了该接口的对象。
+这种方式提高了代码的灵活性和可扩展性，因为你可以在运行时传入不同的实现，而无需修改类本身。
+// eg: 首先，我们定义一个 HashFunction 接口，作为哈希函数的抽象：
+@FunctionalInterface
+public interface HashFunction<K> {
+    int hash(K key);
+}
+// 接下来，我们定义 MyHashTable 类，它 使用 HashFunction 接口，而不是 实现 它：
+public class MyHashTable<K, V> {
+    private HashNode<K, V>[] buckets;
+    private int tableSize;
+    private HashFunction<K> hashFunction;
+
+    // 构造函数
+    @SuppressWarnings("unchecked")
+    public MyHashTable(int tableSize, HashFunction<K> hashFunction) {
+        this.tableSize = tableSize;
+        this.hashFunction = hashFunction;
+        this.buckets = new HashNode[tableSize];
+        // 初始化每个桶为 null
+        for (int i = 0; i < tableSize; i++) {
+            buckets[i] = null;
+        }
+    }
+
+    // 计算键的索引
+    private int getIndex(K key) {
+        int hashValue = hashFunction.hash(key);
+        return Math.abs(hashValue) % tableSize;
+    }
+
+    // 之后我们会在这里添加 insert, search, remove 方法
+}
+
+
+
 
 interface vs abstract class
 使用建议:

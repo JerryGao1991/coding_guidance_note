@@ -756,3 +756,169 @@ Character.getNumericValue('A') 返回 10（十六进制值）。
 // StringBuilder 替换字符串拼接
 StringBuilder binaryStr = new StringBuilder();
 binaryStr.append(intList[i]);
+
+
+
+// 哈希表 Hashmap 常用操作
+
+| 操作               | 方法                           | 说明                                   | 示例代码                                   |
+|--------------------|--------------------------------|----------------------------------------|--------------------------------------------|
+| **创建哈希表**      | `new HashMap<>()`              | 创建一个空的哈希表                      | `HashMap<String, Integer> map = new HashMap<>();` |
+| **添加键值对**      | `put(key, value)`              | 向哈希表中添加键值对                    | `map.put("apple", 5);`                     |
+| **获取值**          | `get(key)`                     | 根据键获取对应的值                      | `map.get("apple");`                        |
+| **检查键是否存在**  | `containsKey(key)`             | 检查哈希表中是否包含指定的键            | `map.containsKey("apple");`               |
+| **检查值是否存在**  | `containsValue(value)`         | 检查哈希表中是否包含指定的值            | `map.containsValue(5);`                   |
+| **删除键值对**      | `remove(key)`                  | 删除指定键的键值对                      | `map.remove("apple");`                    |
+| **获取所有的键**    | `keySet()`                     | 获取哈希表中所有的键，返回一个 `Set`    | `map.keySet();`                            |
+| **获取所有的值**    | `values()`                     | 获取哈希表中所有的值，返回一个 `Collection` | `map.values();`                            |
+| **获取所有键值对**  | `entrySet()`                   | 获取哈希表中所有的键值对，返回一个 `Set<Map.Entry>` | `map.entrySet();`                          |
+| **获取大小**        | `size()`                      | 返回哈希表中键值对的数量                | `map.size();`                              |
+| **清空哈希表**      | `clear()`                      | 删除哈希表中的所有键值对                | `map.clear();`                             |
+| **替换值**          | `replace(key, value)`          | 替换指定键的值                          | `map.replace("apple", 10);`                |
+| **获取指定键的值**  | `getOrDefault(key, defaultValue)` | 获取指定键的值，如果键不存在，返回默认值 | `map.getOrDefault("banana", 0);`          |
+| **遍历键值对**      | `forEach((key, value) -> {...})` | 使用 Lambda 表达式遍历哈希表            | `map.forEach((key, value) -> System.out.println(key + ": " + value));` |
+| **合并键值对**      | `merge(key, value, remappingFunction)` | 合并键值对，如果键已存在，使用合并函数更新值 | `map.merge("apple", 2, (oldValue, newValue) -> oldValue + newValue);` |
+
+
+
+// 有关方法 中 数组引用方法前后的变化 ， 引用拷贝
+public class Main {
+    
+    // 这个方法试图修改传入的数组引用
+    public static void modifyArray(int[] arr) {
+        // 创建一个新的数组并给 arr 赋值，实际上这里修改的是 arr 的副本
+        arr = new int[10];  // 这不会影响调用者传入的 arr
+        arr[0] = 100;  // 只会修改方法内部 arr 的内容
+    }
+
+    public static void main(String[] args) {
+        int[] myArray = new int[5];  // 创建一个大小为 5 的数组
+        myArray[0] = 1;  // 初始化数组
+        myArray[1] = 2;
+        myArray[2] = 3;
+        myArray[3] = 4;
+        myArray[4] = 5;
+
+        System.out.println("Before modifyArray:");
+        System.out.println("myArray[0]: " + myArray[0]);  // 输出 1
+
+        // 调用 modifyArray 方法，传递 myArray
+        modifyArray(myArray);
+
+        System.out.println("After modifyArray:");
+        System.out.println("myArray[0]: " + myArray[0]);  // 仍然是 1
+    }
+}
+// 代码解析：
+1. 初始化数组：在 main 方法中，我们创建了一个包含 5 个元素的数组 myArray，并初始化了其中的值。
+2. 传递数组：我们将 myArray 传递给 modifyArray 方法。此时，方法接收到的 arr 变量只是 myArray 引用的一个副本。
+3. 方法内部的操作：在 modifyArray 方法中，arr 被重新赋值为一个新的数组 new int[10]，这个新数组的大小为 10。然后，我们在 arr 数组的第一个位置设置了值 100。
+4. 结果：但是，方法中的 arr 是 myArray 引用的副本，修改它并不会改变 main 方法中的 myArray 引用。所以，在 main 方法中，myArray[0] 仍然是原来的值 1。
+// 总结：
+Java 方法中传递数组时，传递的是数组引用的副本。
+如果在方法内部修改这个副本（比如让它指向一个新的数组），只会改变方法内部的引用，原始数组的引用不受影响。
+要修改原数组的内容，你需要操作数组中的元素，而不是改变数组引用本身。
+
+
+public class Main {
+    
+    // 这个方法修改数组中的元素
+    public static void modifyArrayContent(int[] arr) {
+        // 修改数组中的元素
+        arr[0] = 100;  // 修改数组第一个元素的值
+        arr[1] = 200;  // 修改数组第二个元素的值
+    }
+
+    public static void main(String[] args) {
+        int[] myArray = new int[5];  // 创建一个大小为 5 的数组
+        myArray[0] = 1;  // 初始化数组
+        myArray[1] = 2;
+        myArray[2] = 3;
+        myArray[3] = 4;
+        myArray[4] = 5;
+
+        System.out.println("Before modifyArrayContent:");
+        System.out.println("myArray[0]: " + myArray[0]);  // 输出 1
+        System.out.println("myArray[1]: " + myArray[1]);  // 输出 2
+
+        // 调用 modifyArrayContent 方法，传递 myArray
+        modifyArrayContent(myArray);
+
+        System.out.println("After modifyArrayContent:");
+        System.out.println("myArray[0]: " + myArray[0]);  // 输出 100
+        System.out.println("myArray[1]: " + myArray[1]);  // 输出 200
+    }
+}
+
+// 代码解析：
+1. 初始化数组：我们在 main 方法中创建了一个包含 5 个元素的数组 myArray，并初始化了数组的内容。
+2. 传递数组引用：我们将 myArray 数组传递给 modifyArrayContent 方法，传递的是数组引用的副本。
+3. 修改数组内容：在 modifyArrayContent 方法中，我们直接修改了数组的内容。例如，修改了 arr[0] 和 arr[1] 的值为 100 和 200。
+4. 结果：由于传递的是数组的引用副本（引用仍指向同一数组），因此在方法内部对数组元素的修改会影响到外部数组的内容。
+
+// 总结：
+当你传递一个数组到方法时，方法内部可以修改数组的内容（即数组元素的值），这些修改会直接影响到外部的数组，因为数组是引用类型。
+但是如果你在方法内部改变数组引用（让它指向一个新的数组），则不会影响原数组。
+
+
+
+// 为什么 String 是引用类型，但不具有普通引用类型的特性？
+不可变性：String 对象的内容一旦创建，就不能改变。这就避免了对 String 对象的修改可能带来的副作用，确保了它的安全性和一致性。
+字符串常量池（String Pool）：Java 使用字符串常量池来优化内存管理。当多个 String 对象拥有相同的值时，JVM 会使它们共享同一个内存位置，从而节省内存。
+String s1 = "Hello";
+String s2 = "Hello";  // s2 会指向和 s1 相同的内存位置
+
+System.out.println(s1 == s2);  // 输出 true，表示它们指向同一个对象
+
+// 关键！！！由于不可变性，即使多个引用指向同一个 String 对象，对其中一个引用的修改不会影响其他引用。
+
+
+
+// HashMap
+是 Java 中的一个基于哈希表的数据结构，用于存储键值对。它的核心原理是 通过哈希函数将键映射到数组中的一个位置（桶），从而实现快速的查找和存储。
+// 工作原理: 
+// 1. 计算哈希值：
+HashMap 使用键的 hashCode() 方法生成一个整数（哈希值）。
+// ps: 默认的 hashCode() 方法通常基于对象的内存地址生成哈希值。
+//     许多类都重写了 hashCode()，使其根据类的字段内容生成更有意义的哈希值。
+//     字符串的 hashCode()：字符值的加权和.  eg: hashCode("abc") = ('a' * 31^2) + ('b' * 31^1) + ('c' * 31^0)
+//     整数的 hashCode()： 对于 Integer，哈希值就是它的值本身：Integer x = 42;
+//                                                       System.out.println(x.hashCode()); // 输出：42
+然后，通过 hash值 % 数组长度 计算该键在数组中的位置（即桶索引）。
+String key = "apple";
+int hashCode = key.hashCode(); // 生成哈希值
+int bucketIndex = hashCode % buckets.length; // 计算桶索引
+// 2. 处理哈希冲突：
+不同的键可能映射到相同的桶索引，这被称为 哈希冲突。
+HashMap 使用链地址法来解决冲突：将冲突的键值对存储在链表中（Java 8 之后，当链表过长时会转换为红黑树）。
+// 3. 插入数据：
+根据桶索引找到对应的位置。如果没有冲突，直接插入；如果冲突了，将新的键值对添加到链表或树中。
+// 4. 查找过程
+计算哈希值和桶索引：与存储类似，使用键的 hashCode() 计算桶索引。
+定位到具体元素：
+如果桶中有链表，遍历链表找到匹配的键。
+如果是红黑树，则按照树的查找规则定位键值对。
+
+// HashMap 的优化措施
+// 1. 压缩哈希值：
+HashMap 对原始的哈希值进行了优化，通过 hash = key.hashCode() ^ (key.hashCode() >>> 16) 混合高低位，以减少冲突。
+// 2. 动态扩容：
+当装载因子（Load Factor）超过设定值（默认 0.75）时，HashMap 会自动扩容（将数组大小翻倍）。
+扩容时需要重新计算每个键的哈希值并重新分配位置，称为 rehashing。
+// 3. 链表转红黑树：
+当链表的长度超过 8 且数组大小超过 64 时，链表会转为红黑树，以提高查找效率。
+
+// 常用操作
+添加：put                                   map.put("apple", 10);
+获取：get                                   map.get("apple");
+删除：remove                                map.remove("apple");
+大小 size                                   map.size();
+清空 clear                                  map.clear();
+判断为空 isEmpty                             map.isEmpty();
+遍历：keySet、values、entrySet
+遍历示例:                                    for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                                               System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+                                            } 
+判断：containsKey、containsValue             map.containsKey("apple"); 
+
+// 注意点！！！ HashMap 的 key 和 value类型必须是对象类型，不能是原始数据类型， 例如 long 就要变成 Long， int 就要变成 Integer
